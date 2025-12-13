@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>K‑Culture Portfolio · ARA KOREA</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="logo-area">
+      <a href="index.html" class="logo">ARA KOREA</a>
+      <span class="logo-tagline">Immersive K‑Culture · Art Film & Performance</span>
+    </div>
+    <nav class="main-nav">
+      <button class="nav-toggle" aria-label="메뉴 열기">☰</button>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="about.html">About</a></li>
+        <li class="has-dropdown">
+          <button class="dropdown-toggle">K‑Culture</button>
+          <ul class="dropdown-menu">
+            <li><a href="kculture-gallery.html">Gallery</a></li>
+            <li><a href="kculture-portfolio.html" class="active">Portfolio</a></li>
+            <li><a href="kculture-video.html">Video</a></li>
+          </ul>
+        </li>
+        <li><a href="news.html">News</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="section">
+    <div class="section-header">
+      <h2>K‑Culture Portfolio</h2>
+      <p>공연–전시 연계 프로젝트, Space Art 퍼포먼스 기록</p>
+    </div>
+    <p style="max-width:46rem; color:var(--text-muted); font-size:0.92rem; line-height:1.8; margin-top:16px;">
+      공연–전시 연계로 진행된 프로젝트 사진들을 시리즈별로 정리하는 페이지입니다.
+      앞으로 개별 작품 단위(예: GANGA, 시간의 유령 등)로 포트폴리오가 축적될 예정입니다.
+    </p>
+  </main>
+
+  <script>
+    const navToggle = document.querySelector('.nav-toggle');
+    const navLinks = document.querySelector('.nav-links');
+    const dropdownToggles = document.querySelectorAll('.dropdown-toggle');
+    navToggle.addEventListener('click', () => navLinks.classList.toggle('open'));
+    dropdownToggles.forEach(btn => btn.addEventListener('click', () => btn.parentElement.classList.toggle('open')));
+  </script>
+</body>
+</html>
