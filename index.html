@@ -1,53 +1,182 @@
 <!doctype html>
 <html lang="ko">
 <head>
-  <meta charset="utf-8">
+  <meta charset="utf-8" />
   <title>AK ENM</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
-    html, body {
-      margin: 0;
-      padding: 0;
-      width: 100%;
-      height: 100%;
-      background: #000;
-      color: #fff;
-      overflow: hidden;
+    :root{
+      --fg: rgba(255,255,255,.92);
+      --fgDim: rgba(255,255,255,.62);
+      --bg: #000;
+    }
+    html, body{
+      margin:0; padding:0; width:100%; height:100%;
+      background:var(--bg); color:var(--fg);
+      overflow:hidden;
       font-family: system-ui, -apple-system, BlinkMacSystemFont,
-                   'Segoe UI', Roboto, 'Apple SD Gothic Neo',
-                   'Noto Sans KR', sans-serif;
+                   "Segoe UI", Roboto, "Apple SD Gothic Neo",
+                   "Noto Sans KR", sans-serif;
     }
-    #enter {
-      position: absolute;
-      inset: 0;
-      display: grid;
-      place-items: center;
-      letter-spacing: 0.4em;
-      cursor: pointer;
+
+    /* Fullscreen video */
+    #introWrap{
+      position:fixed; inset:0;
+      background: #000;
     }
-    iframe {
-      position: fixed;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      border: none;
+    #introVideo{
+      position:absolute; inset:0;
+      width:100%; height:100%;
+      object-fit:cover;
+      transform: translateZ(0);
+    }
+
+    /* subtle vignette so text reads well */
+    #vignette{
+      position:absolute; inset:-2px;
+      background: radial-gradient(ellipse at center,
+        rgba(0,0,0,0) 0%,
+        rgba(0,0,0,.28) 55%,
+        rgba(0,0,0,.58) 100%);
+      pointer-events:none;
+    }
+
+    /* ENTER overlay */
+    #enter{
+      position:absolute; inset:0;
+      display:grid;
+      place-items:center;
+      cursor:pointer;
+      user-select:none;
+      -webkit-tap-highlight-color: transparent;
+    }
+    #enter .label{
+      font-size:12px;
+      letter-spacing:.55em;
+      text-transform:uppercase;
+      padding:14px 18px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.22);
+      background: rgba(0,0,0,.18);
+      backdrop-filter: blur(10px);
+      transition: transform 140ms ease, opacity 140ms ease, border-color 140ms ease;
+    }
+    #enter:hover .label{
+      transform: translateY(-1px);
+      border-color: rgba(255,255,255,.34);
+    }
+
+    /* small helper text */
+    #hint{
+      position:absolute;
+      left:50%;
+      bottom:28px;
+      transform:translateX(-50%);
+      font-size:11px;
+      letter-spacing:.14em;
+      text-transform:uppercase;
+      color: var(--fgDim);
+      opacity:.9;
+      pointer-events:none;
+      white-space:nowrap;
+    }
+
+    /* Fade out on transition */
+    .fade-out{
+      animation: fadeOut 420ms ease forwards;
+    }
+    @keyframes fadeOut{
+      to { opacity:0; transform: scale(1.01); }
     }
   </style>
 </head>
 <body>
 
-<div id="enter">ENTER</div>
+  <!--
+    ✅ Put your UFO intro video here:
+       - Recommended path: /assets/intro.mp4
+       - If your file name is different, change src below.
+  -->
+  <div id="introWrap">
+    <video id="introVideo"
+           autoplay
+           muted
+           playsinline
+           preload="auto"
+           src="assets/intro.mp4"></video>
+    <div id="vignette"></div>
+
+    <div id="enter" aria-label="Enter to AK ENM">
+      <div class="label">ENTER</div>
+    </div>
+    <div id="hint">click ENTER • or wait</div>
+  </div>
 
 <script>
+  // ===== Config =====
+  const DESTINATION = 'ko/home.html';   // default entry (language toggle will be inside home)
+  const AUTO_ENTER_MS = 6500;           // auto enter after this time
+  const MIN_VIEW_MS  = 900;            // prevent instant skip if click happens immediately
+
+  const wrap  = document.getElementById('introWrap');
+  const video = document.getElementById('introVideo');
   const enter = document.getElementById('enter');
 
-  enter.addEventListener('click', () => {
-    const iframe = document.createElement('iframe');
-    // ✅ FIXED: correct path to home
-    iframe.src = 'ko/home.html';
-    document.body.appendChild(iframe);
-    enter.remove();
+  let startedAt = performance.now();
+  let navigated = false;
+
+  function goHome(){
+    if(navigated) return;
+    navigated = true;
+
+    // visual fade
+    wrap.classList.add('fade-out');
+
+    // stop video to avoid audio/CPU on navigation
+    try { video.pause(); } catch(e){}
+
+    // navigate
+    setTimeout(()=>{ window.location.href = DESTINATION; }, 260);
+  }
+
+  // Click ENTER
+  enter.addEventListener('click', ()=>{
+    const elapsed = performance.now() - startedAt;
+    // Ensure intro is visible at least briefly
+    if(elapsed < MIN_VIEW_MS){
+      setTimeout(goHome, MIN_VIEW_MS - elapsed);
+    } else {
+      goHome();
+    }
   });
+
+  // Keyboard: Enter / Space
+  window.addEventListener('keydown', (e)=>{
+    if(e.key === 'Enter' || e.key === ' '){
+      e.preventDefault();
+      goHome();
+    }
+  });
+
+  // Auto enter after timeout
+  const timer = setTimeout(goHome, AUTO_ENTER_MS);
+
+  // If video ends earlier than timeout, go home
+  video.addEventListener('ended', ()=>{
+    clearTimeout(timer);
+    goHome();
+  });
+
+  // Mobile autoplay policies: ensure it tries to play; if blocked, user can still click
+  video.addEventListener('error', ()=>{
+    // Video missing or blocked: still allow timed enter
+    console.warn('[AK ENM] intro video failed to load. Check assets/intro.mp4');
+  });
+
+  // In case browser delays autoplay, try play() explicitly
+  (async ()=>{
+    try { await video.play(); } catch(e) { /* ignore */ }
+  })();
 </script>
 
 </body>
