@@ -886,7 +886,7 @@ if(pointer.seen && pointer.down){
 
     // build home iframe behind the snapshot
     const iframe = document.createElement('iframe');
-    iframe.src = 'home.html';
+    iframe.src = 'ko/home.html';
     iframe.setAttribute('title','home');
     iframe.setAttribute('aria-hidden','false');
     iframe.style.position = 'fixed';
@@ -937,9 +937,9 @@ if(pointer.seen && pointer.down){
         try{
           // If we're still on index (iframe didn't show), go directly.
           if(!document.querySelector('iframe') || getComputedStyle(document.querySelector('iframe')).opacity !== '1'){
-            location.href = 'home.html';
+            location.href = 'ko/home.html';
           }
-        }catch(_e){ location.href = 'home.html'; }
+        }catch(_e){ location.href = 'ko/home.html'; }
       }, 1400);
 
 
@@ -953,7 +953,7 @@ if(pointer.seen && pointer.down){
         shot.remove();
         // optional: keep URL clean-ish
         try{
-          history.replaceState(null, '', 'home.html');
+          history.replaceState(null, '', 'ko/home.html');
           document.title = 'Home';
         }catch(_e){}
       }, 1200);
