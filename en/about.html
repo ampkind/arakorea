@@ -4,138 +4,210 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="color-scheme" content="dark" />
-  <title>AK ENM — ABOUT</title>
-  <meta name="description" content="AK ENM is a creative production studio designing music, film/visual works, and publishing based on foundational artistic research." />
-  <meta property="og:title" content="AK ENM — ABOUT" />
-  <meta property="og:description" content="AK ENM is a creative production studio designing music, film/visual works, and publishing based on foundational artistic research." />
-  <meta property="og:type" content="website" />
+  <title>AK ENM — About</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600&display=swap" rel="stylesheet">
+
   <style>
-    :root{ --bg:#05070d; --fg:#e9ecf1; }
-    html,body{ height:100%; margin:0; background:var(--bg); color:var(--fg); }
-    .wrap{ min-height:100%; display:flex; align-items:center; justify-content:center; padding:48px 18px;
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple SD Gothic Neo","Noto Sans KR","Malgun Gothic", sans-serif;
+    :root{ --bg:#04050a; --fg:#e9ecf1; --accent: 60,120,255; --accent2: 255,80,210; }
+    html,body{ height:100%; margin:0; background:var(--bg); overflow:hidden; }
+
+    body{
+      background:
+        radial-gradient(1200px 800px at 22% 18%, rgba(var(--accent),.14), rgba(0,0,0,0) 62%),
+        radial-gradient(900px 650px at 78% 62%, rgba(var(--accent2),.09), rgba(0,0,0,0) 60%),
+        linear-gradient(180deg, #060711 0%, #000 55%, #05060d 100%);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
     }
 
-    .prose{ margin-top:14px; }
-    h2{ margin:18px 0 8px; font-size:13px; letter-spacing:.12em; text-transform:uppercase; opacity:.86; }
-    .prose p{ margin:0 0 12px; opacity:.78; line-height:1.7; }
-    .prose p:last-child{ margin-bottom:0; }
-    
-    .card{ max-width:880px; width:100%; border:1px solid rgba(233,236,241,.14); border-radius:20px;
-      background:rgba(5,7,13,.35); backdrop-filter: blur(12px);
-      padding:28px 22px;
+    canvas{
+      position:fixed;
+      inset:0;
+      width:100vw;
+      height:100vh;
+      z-index:0;
+      display:block;
     }
-    h1{ margin:0 0 10px; letter-spacing:.14em; text-transform:uppercase; font-size:18px; }
-    p{ margin:0; opacity:.78; line-height:1.6; }
-    a{ color:rgba(233,236,241,.86); }
-    /* Top-right menu (⋯) + overlay list */
-    .top-menu{
-      position:fixed; right:18px; top:14px; z-index:20;
-      width:44px; height:44px; display:grid; place-items:center;
-      border-radius:999px; border:1px solid rgba(233,236,241,.14);
-      background:rgba(5,7,13,.14); backdrop-filter: blur(10px);
-      color:rgba(233,236,241,.86); letter-spacing:.18em; cursor:pointer;
+
+    main{
+      position: relative;
+      z-index: 2;
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 12vh 6vw;
+      color: var(--fg);
     }
-    .top-menu:hover{ border-color:rgba(233,236,241,.34); color:rgba(233,236,241,.96); }
-    .menu-overlay{ position:fixed; inset:0; z-index:30; display:none;
-      background:rgba(0,0,0,.55); backdrop-filter: blur(12px);
+
+    .about-panel{
+      background: rgba(8,10,16,.42);
+      border: 1px solid rgba(255,255,255,.14);
+      box-shadow: 0 40px 140px rgba(0,0,0,.7);
+      backdrop-filter: blur(14px);
+      padding: 56px 64px;
+      border-radius: 18px;
     }
-    .menu-overlay.open{ display:block; }
-    .menu-panel{ position:absolute; right:18px; top:68px; min-width:240px;
-      padding:14px 14px 10px; border-radius:18px;
-      border:1px solid rgba(233,236,241,.16); background:rgba(5,7,13,.52);
-      box-shadow: 0 18px 60px rgba(0,0,0,.45);
+
+    .about-panel h1{
+      margin:0 0 28px;
+      font-size: 13px;
+      letter-spacing: .32em;
+      font-weight: 600;
+      opacity:.85;
+      text-transform: uppercase;
     }
-    .menu-list{ list-style:none; padding:0; margin:0; }
-    .menu-list a{ display:block; padding:10px 10px; border-radius:12px; text-decoration:none;
-      color:rgba(233,236,241,.86); letter-spacing:.16em; text-transform:uppercase; font-size:12px;
-      border:1px solid transparent;
+
+    .about-panel p{
+      margin:0 0 30px;
+      font-size: 17px;
+      line-height: 1.9;
+      letter-spacing: -0.005em;
+      opacity:.94;
     }
-    .menu-list a:hover{ color:rgba(233,236,241,.96); border-color:rgba(233,236,241,.18); background:rgba(233,236,241,.06); }
-    .menu-sep{ height:1px; background:rgba(233,236,241,.12); margin:10px 6px; }
-    .lang-row{ display:flex; align-items:center; justify-content:flex-end; gap:10px; padding:6px 6px 2px;
-      font-size:12px; letter-spacing:.18em; color:rgba(233,236,241,.72); text-transform:uppercase;
+
+    .grain{
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      z-index:1;
+      opacity:.06;
+      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='.32'/%3E%3C/svg%3E");
+      background-size: 220px 220px;
+      mix-blend-mode: overlay;
     }
-    .lang-row a{ color:rgba(233,236,241,.72); text-decoration:none; padding:6px 8px; border-radius:999px;
-      border:1px solid rgba(233,236,241,.14); background:rgba(5,7,13,.20);
+
+    .vignette{
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      background:
+        radial-gradient(ellipse at center, rgba(0,0,0,0) 35%, rgba(0,0,0,.62) 100%);
+      mix-blend-mode:multiply;
     }
-    .lang-row a:hover{ color:rgba(233,236,241,.96); border-color:rgba(233,236,241,.34); }
   </style>
 </head>
-<body>
-  <button id="topMenu" class="top-menu" aria-label="Menu" title="Menu" type="button">⋯</button>
-  <div id="menuOverlay" class="menu-overlay" aria-hidden="true">
-    <div class="menu-panel" role="dialog" aria-label="Site menu">
-      <ul class="menu-list">
-        <li><a data-nav href="about.html">ABOUT</a></li>
-        <li><a data-nav href="music.html">MUSIC</a></li>
-        <li><a data-nav href="film-visual.html">FILM / VISUAL</a></li>
-        <li><a data-nav href="publish.html">PUBLISH</a></li>
-        <li><a data-nav href="artists.html">ARTISTS</a></li>
-        <li><a data-nav href="atelier.html">ATELIER</a></li>
-        <li><a data-nav href="contact.html">CONTACT</a></li>
-      </ul>
-      <div class="menu-sep"></div>
-      <div class="lang-row" aria-label="Language">
-        <a id="langKO" href="#" aria-label="Korean">KO</a>
-        <a id="langEN" href="#" aria-label="English">EN</a>
-      </div>
-    </div>
-  </div>
 
-  <div class="wrap">
-    <div class="card">
+<body>
+  <div class="grain" aria-hidden="true"></div>
+
+  <main>
+    <section class="about-panel">
       <h1>ABOUT</h1>
 
-      <div class="prose">
-        <h2>Production &amp; Foundations</h2>
-        <p>AK ENM operates as a creative production studio, developing music, film, and publishing based on foundational artistic research. We design and realize works where narrative, image, sound, and moving time converge into a single world.</p>
+      <p>
+        AK ENM develops and produces creative projects.<br>
+        When narrative, image, music, and moving image converge,<br>
+        we design the conditions that allow a world to take form.
+      </p>
 
-        <h2>Platform, Production, and Execution</h2>
-        <p>ARA KOREA is a platform where philosophy, space, and relationships converge. AK ENM translates that philosophy into music, film/visual works, and publishing. Through long-term study of classical forms and contemporary practices, we design structures that allow creative works to endure beyond trends. TIKOONZ executes these structures within popular culture—focusing on music, visual content, and performance—without sacrificing form, density, and continuity.</p>
+      <p>
+        We do not assemble content.<br>
+        We shape the point at which a project begins,<br>
+        and remain present as that point unfolds into work<br>
+        through planning, production, direction, and post‑production.
+      </p>
 
-        <h2>Our Standard</h2>
-        <p>Technology is not decoration; it is structure for focus. AK ENM chooses completion over spectacle, outcomes over explanation, and verification over exaggeration.</p>
-      </div>
+      <p>
+        From the first idea to whatever outcome emerges,<br>
+        we engage with the entire flow of making.
+      </p>
 
-    </div>
-  </div>
+      <p>
+        When appropriate,<br>
+        we participate as a production partner for external brands and channels,<br>
+        including records and music videos.<br>
+        Each project determines its own method of production.
+      </p>
 
-<script>
-(() => {
-  const topMenuBtn = document.getElementById('topMenu');
-  const menuOverlay = document.getElementById('menuOverlay');
+      <p>
+        arakoreagroup.com functions as a platform.<br>
+        If it connects space, operation, business units, and brands,<br>
+        AK ENM operates within it as a site of making.<br>
+        Roles remain deliberately distinct.
+      </p>
 
-  function openMenu(){ menuOverlay.classList.add('open'); menuOverlay.setAttribute('aria-hidden','false'); }
-  function closeMenu(){ menuOverlay.classList.remove('open'); menuOverlay.setAttribute('aria-hidden','true'); }
+      <p>
+        Technology is not ornament, but a structure for attention.<br>
+        AK ENM favors completion over spectacle,<br>
+        and chooses processes that speak without announcing results.
+      </p>
+    </section>
+  </main>
 
-  topMenuBtn.addEventListener('click', (e)=>{ e.stopPropagation(); menuOverlay.classList.contains('open') ? closeMenu() : openMenu(); });
-  menuOverlay.addEventListener('click', (e)=>{ if(e.target === menuOverlay) closeMenu(); });
-  addEventListener('keydown', (e)=>{ if(e.key === 'Escape') closeMenu(); });
+  <canvas id="c"></canvas>
+  <div class="vignette"></div>
 
-  const langKO = document.getElementById('langKO');
-  const langEN = document.getElementById('langEN');
+  <script>
+  (() => {
+    const canvas = document.getElementById('c');
+    const ctx = canvas.getContext('2d');
 
-  function siblingLangHref(target){
-  const url = new URL(location.href);
-  const path = url.pathname;
-  const suffix = url.search + url.hash;
+    const ACCENT = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '60,120,255';
+    const ACCENT2 = getComputedStyle(document.documentElement).getPropertyValue('--accent2').trim() || '255,80,210';
 
-  if(path.includes('/ko/')){
-    return (target === 'en' ? path.replace('/ko/','/en/') : path) + suffix;
-  }
-  if(path.includes('/en/')){
-    return (target === 'ko' ? path.replace('/en/','/ko/') : path) + suffix;
-  }
+    let w,h,dpr;
 
-  // Fallback for local previews without /ko/ or /en/ in the path
-  const parts = path.split('/').filter(Boolean);
-  const file = parts.length ? parts[parts.length-1] : 'home.html';
-  return (target === 'en' ? '../en/' : '../ko/') + file + suffix;
-}
-  langKO.href = siblingLangHref('ko');
-  langEN.href = siblingLangHref('en');
-})();
-</script>
+    function resize(){
+      dpr = Math.min(1.5, window.devicePixelRatio || 1);
+      w = canvas.width = Math.floor(innerWidth * dpr);
+      h = canvas.height = Math.floor(innerHeight * dpr);
+      canvas.style.width = innerWidth + 'px';
+      canvas.style.height = innerHeight + 'px';
+    }
+
+    addEventListener('resize', resize, {passive:true});
+    resize();
+
+    const pointer = { x:0, y:0, tx:0, ty:0 };
+    addEventListener('pointermove', (e)=>{
+      pointer.tx = (e.clientX/innerWidth - 0.5);
+      pointer.ty = (e.clientY/innerHeight - 0.5);
+    }, {passive:true});
+
+    const panels = Array.from({length:8}).map(()=>({
+      x: Math.random(),
+      y: Math.random(),
+      w: 0.18 + Math.random()*0.22,
+      h: 0.10 + Math.random()*0.18,
+      z: Math.random(),
+      phase: Math.random()*Math.PI*2
+    }));
+
+    let start = performance.now();
+
+    function draw(now){
+      const t = now - start;
+      pointer.x += (pointer.tx - pointer.x)*0.06;
+      pointer.y += (pointer.ty - pointer.y)*0.06;
+
+      ctx.fillStyle = '#05070d';
+      ctx.fillRect(0,0,w,h);
+
+      ctx.globalCompositeOperation = 'screen';
+
+      for(const p of panels){
+        const px = w*(p.x + Math.sin(t*0.0002 + p.phase)*0.01);
+        const py = h*(p.y + Math.cos(t*0.00018 + p.phase)*0.01);
+        const pw = w*p.w;
+        const ph = h*p.h;
+
+        const ox = pointer.x * (20 + p.z*40) * dpr;
+        const oy = pointer.y * (14 + p.z*28) * dpr;
+
+        ctx.fillStyle = `rgba(${ACCENT2},${0.03 + p.z*0.02})`;
+        ctx.fillRect(px+ox, py+oy, pw, ph);
+
+        ctx.fillStyle = `rgba(${ACCENT},${0.07 + p.z*0.12})`;
+        ctx.fillRect(px, py, pw, ph);
+      }
+
+      ctx.globalCompositeOperation = 'source-over';
+      requestAnimationFrame(draw);
+    }
+
+    requestAnimationFrame(draw);
+  })();
+  </script>
 </body>
 </html>
