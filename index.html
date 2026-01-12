@@ -886,7 +886,7 @@ if(pointer.seen && pointer.down){
 
     // build home iframe behind the snapshot
     const iframe = document.createElement('iframe');
-    iframe.src = 'stray_home_spatial_nav_final.html';
+    iframe.src = 'home.html';
     iframe.setAttribute('title','home');
     iframe.setAttribute('aria-hidden','false');
     iframe.style.position = 'fixed';
@@ -932,6 +932,17 @@ if(pointer.seen && pointer.down){
       // stop drawing in index after we have our snapshot on top
       STOP = true;
 
+      // Hard fallback: if the embedded home can't load (missing file/path), redirect normally.
+      setTimeout(()=>{
+        try{
+          // If we're still on index (iframe didn't show), go directly.
+          if(!document.querySelector('iframe') || getComputedStyle(document.querySelector('iframe')).opacity !== '1'){
+            location.href = 'home.html';
+          }
+        }catch(_e){ location.href = 'home.html'; }
+      }, 1400);
+
+
       requestAnimationFrame(()=>{
         iframe.style.opacity = '1';
         shot.style.opacity = '0';
@@ -942,7 +953,7 @@ if(pointer.seen && pointer.down){
         shot.remove();
         // optional: keep URL clean-ish
         try{
-          history.replaceState(null, '', 'home');
+          history.replaceState(null, '', 'home.html');
           document.title = 'Home';
         }catch(_e){}
       }, 1200);
