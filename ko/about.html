@@ -4,138 +4,209 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="color-scheme" content="dark" />
-  <title>AK ENM — ABOUT</title>
-  <meta name="description" content="AK ENM은 IP를 기획하고 제작하는 프로덕션입니다. ARA KOREA의 철학을 음악·영상·출판으로 구현합니다." />
-  <meta property="og:title" content="AK ENM — ABOUT" />
-  <meta property="og:description" content="AK ENM은 IP를 기획하고 제작하는 프로덕션입니다. ARA KOREA의 철학을 음악·영상·출판으로 구현합니다." />
-  <meta property="og:type" content="website" />
+  <title>AK ENM — About</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600&display=swap" rel="stylesheet">
+
   <style>
-    :root{ --bg:#05070d; --fg:#e9ecf1; }
-    html,body{ height:100%; margin:0; background:var(--bg); color:var(--fg); }
-    .wrap{ min-height:100%; display:flex; align-items:center; justify-content:center; padding:48px 18px;
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple SD Gothic Neo","Noto Sans KR","Malgun Gothic", sans-serif;
+    :root{ --bg:#04050a; --fg:#e9ecf1; --accent: 60,120,255; --accent2: 255,80,210; }
+    html,body{ height:100%; margin:0; background:var(--bg); overflow:hidden; }
+
+    body{
+      background:
+        radial-gradient(1200px 800px at 22% 18%, rgba(var(--accent),.14), rgba(0,0,0,0) 62%),
+        radial-gradient(900px 650px at 78% 62%, rgba(var(--accent2),.09), rgba(0,0,0,0) 60%),
+        linear-gradient(180deg, #060711 0%, #000 55%, #05060d 100%);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
     }
 
-    .prose{ margin-top:14px; }
-    h2{ margin:18px 0 8px; font-size:13px; letter-spacing:.12em; text-transform:uppercase; opacity:.86; }
-    .prose p{ margin:0 0 12px; opacity:.78; line-height:1.7; }
-    .prose p:last-child{ margin-bottom:0; }
-    
-    .card{ max-width:880px; width:100%; border:1px solid rgba(233,236,241,.14); border-radius:20px;
-      background:rgba(5,7,13,.35); backdrop-filter: blur(12px);
-      padding:28px 22px;
+    canvas{
+      position:fixed;
+      inset:0;
+      width:100vw;
+      height:100vh;
+      z-index:0;
+      display:block;
     }
-    h1{ margin:0 0 10px; letter-spacing:.14em; text-transform:uppercase; font-size:18px; }
-    p{ margin:0; opacity:.78; line-height:1.6; }
-    a{ color:rgba(233,236,241,.86); }
-    /* Top-right menu (⋯) + overlay list */
-    .top-menu{
-      position:fixed; right:18px; top:14px; z-index:20;
-      width:44px; height:44px; display:grid; place-items:center;
-      border-radius:999px; border:1px solid rgba(233,236,241,.14);
-      background:rgba(5,7,13,.14); backdrop-filter: blur(10px);
-      color:rgba(233,236,241,.86); letter-spacing:.18em; cursor:pointer;
+
+    main{
+      position: relative;
+      z-index: 2;
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 12vh 6vw;
+      color: var(--fg);
     }
-    .top-menu:hover{ border-color:rgba(233,236,241,.34); color:rgba(233,236,241,.96); }
-    .menu-overlay{ position:fixed; inset:0; z-index:30; display:none;
-      background:rgba(0,0,0,.55); backdrop-filter: blur(12px);
+
+    .about-panel{
+      background: rgba(8,10,16,.42);
+      border: 1px solid rgba(255,255,255,.14);
+      box-shadow: 0 40px 140px rgba(0,0,0,.7);
+      backdrop-filter: blur(14px);
+      padding: 56px 64px;
+      border-radius: 18px;
     }
-    .menu-overlay.open{ display:block; }
-    .menu-panel{ position:absolute; right:18px; top:68px; min-width:240px;
-      padding:14px 14px 10px; border-radius:18px;
-      border:1px solid rgba(233,236,241,.16); background:rgba(5,7,13,.52);
-      box-shadow: 0 18px 60px rgba(0,0,0,.45);
+
+    .about-panel h1{
+      margin:0 0 28px;
+      font-size: 13px;
+      letter-spacing: .32em;
+      font-weight: 600;
+      opacity:.85;
     }
-    .menu-list{ list-style:none; padding:0; margin:0; }
-    .menu-list a{ display:block; padding:10px 10px; border-radius:12px; text-decoration:none;
-      color:rgba(233,236,241,.86); letter-spacing:.16em; text-transform:uppercase; font-size:12px;
-      border:1px solid transparent;
+
+    .about-panel p{
+      margin:0 0 30px;
+      font-size: 17px;
+      line-height: 1.9;
+      letter-spacing: -0.005em;
+      opacity:.94;
     }
-    .menu-list a:hover{ color:rgba(233,236,241,.96); border-color:rgba(233,236,241,.18); background:rgba(233,236,241,.06); }
-    .menu-sep{ height:1px; background:rgba(233,236,241,.12); margin:10px 6px; }
-    .lang-row{ display:flex; align-items:center; justify-content:flex-end; gap:10px; padding:6px 6px 2px;
-      font-size:12px; letter-spacing:.18em; color:rgba(233,236,241,.72); text-transform:uppercase;
+
+    .grain{
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      z-index:1;
+      opacity:.06;
+      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='.32'/%3E%3C/svg%3E");
+      background-size: 220px 220px;
+      mix-blend-mode: overlay;
     }
-    .lang-row a{ color:rgba(233,236,241,.72); text-decoration:none; padding:6px 8px; border-radius:999px;
-      border:1px solid rgba(233,236,241,.14); background:rgba(5,7,13,.20);
+
+    .vignette{
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      background:
+        radial-gradient(ellipse at center, rgba(0,0,0,0) 35%, rgba(0,0,0,.62) 100%);
+      mix-blend-mode:multiply;
     }
-    .lang-row a:hover{ color:rgba(233,236,241,.96); border-color:rgba(233,236,241,.34); }
   </style>
 </head>
-<body>
-  <button id="topMenu" class="top-menu" aria-label="Menu" title="Menu" type="button">⋯</button>
-  <div id="menuOverlay" class="menu-overlay" aria-hidden="true">
-    <div class="menu-panel" role="dialog" aria-label="Site menu">
-      <ul class="menu-list">
-        <li><a data-nav href="about.html">ABOUT</a></li>
-        <li><a data-nav href="music.html">MUSIC</a></li>
-        <li><a data-nav href="film-visual.html">FILM / VISUAL</a></li>
-        <li><a data-nav href="publish.html">PUBLISH</a></li>
-        <li><a data-nav href="artists.html">ARTISTS</a></li>
-        <li><a data-nav href="atelier.html">ATELIER</a></li>
-        <li><a data-nav href="contact.html">CONTACT</a></li>
-      </ul>
-      <div class="menu-sep"></div>
-      <div class="lang-row" aria-label="Language">
-        <a id="langKO" href="#" aria-label="Korean">KO</a>
-        <a id="langEN" href="#" aria-label="English">EN</a>
-      </div>
-    </div>
-  </div>
 
-  <div class="wrap">
-    <div class="card">
+<body>
+  <div class="grain" aria-hidden="true"></div>
+
+  <main>
+    <section class="about-panel">
       <h1>ABOUT</h1>
 
-      <div class="prose">
-        <h2>AK ENM은 프로덕션입니다</h2>
-        <p>AK ENM은 IP를 기획하고, 실체를 제작하는 프로덕션 회사입니다. 서사·이미지·음악·영상이 하나의 세계로 결합될 때, 우리는 그 전체를 설계하고 완성합니다.</p>
+      <p>
+        AK ENM은 IP를 기획하고 제작하는 프로덕션 회사입니다.<br>
+        서사·이미지·음악·영상이 하나의 세계로 결합될 때,<br>
+        우리는 그 전체를 설계하고 완성합니다.
+      </p>
 
-        <h2>플랫폼과 프로덕션의 역할</h2>
-        <p>ARA KOREA는 철학과 공간, 관계를 통해 세계관을 구축하는 플랫폼이며, AK ENM은 그 철학을 음악·영상·출판으로 구현하는 프로덕션입니다. 우리는 순수예술의 기초와 고전을 지속적으로 연구하며, 그 축적 위에서 대중문화가 오래 작동할 수 있는 구조를 설계합니다. TIKOONZ는 이 구조를 대중의 현장에서 실행하는 제작 유닛으로, 유행을 좇기보다 형식과 밀도를 통해 지속 가능한 결과물을 만듭니다.</p>
+      <p>
+        AK ENM은 콘텐츠를 나열하지 않습니다.<br>
+        프로젝트가 시작되는 지점을 만들고,<br>
+        그 지점이 작품으로 이어지기까지<br>
+        기획·제작·연출·후반의 전 과정을 수행합니다.
+      </p>
 
-        <h2>우리의 기준</h2>
-        <p>기술은 장식이 아니라 집중을 위한 구조여야 합니다. AK ENM은 화려함보다 완성도, 설명보다 결과, 과장보다 검증을 선택합니다.</p>
-      </div>
+      <p>
+        아이디어에서 결과까지,<br>
+        제작의 흐름 전체를 다룹니다.
+      </p>
 
-    </div>
-  </div>
+      <p>
+        필요한 경우,<br>
+        음반·뮤직비디오 등 외부 브랜드 및 채널의<br>
+        제작 파트너로 참여하기도 합니다.<br>
+        제작의 방식은 프로젝트마다 다릅니다.
+      </p>
 
-<script>
-(() => {
-  const topMenuBtn = document.getElementById('topMenu');
-  const menuOverlay = document.getElementById('menuOverlay');
+      <p>
+        arakoreagroup.com은 플랫폼입니다.<br>
+        공간과 운영, 사업 단위와 브랜드를 연결하는 구조라면,<br>
+        AK ENM은 그 안에서 제작이 이루어지는 프로덕션입니다.<br>
+        역할은 분리되어 있습니다.
+      </p>
 
-  function openMenu(){ menuOverlay.classList.add('open'); menuOverlay.setAttribute('aria-hidden','false'); }
-  function closeMenu(){ menuOverlay.classList.remove('open'); menuOverlay.setAttribute('aria-hidden','true'); }
+      <p>
+        기술은 장식이 아니라 집중을 위한 구조여야 합니다.<br>
+        AK ENM은 화려함보다 완성도,<br>
+        설명보다 결과를 말하지 않는 과정을 택합니다.
+      </p>
+    </section>
+  </main>
 
-  topMenuBtn.addEventListener('click', (e)=>{ e.stopPropagation(); menuOverlay.classList.contains('open') ? closeMenu() : openMenu(); });
-  menuOverlay.addEventListener('click', (e)=>{ if(e.target === menuOverlay) closeMenu(); });
-  addEventListener('keydown', (e)=>{ if(e.key === 'Escape') closeMenu(); });
+  <canvas id="c"></canvas>
+  <div class="vignette"></div>
 
-  const langKO = document.getElementById('langKO');
-  const langEN = document.getElementById('langEN');
+  <script>
+  (() => {
+    const canvas = document.getElementById('c');
+    const ctx = canvas.getContext('2d');
 
-  function siblingLangHref(target){
-  const url = new URL(location.href);
-  const path = url.pathname;
-  const suffix = url.search + url.hash;
+    const ACCENT = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '60,120,255';
+    const ACCENT2 = getComputedStyle(document.documentElement).getPropertyValue('--accent2').trim() || '255,80,210';
 
-  if(path.includes('/ko/')){
-    return (target === 'en' ? path.replace('/ko/','/en/') : path) + suffix;
-  }
-  if(path.includes('/en/')){
-    return (target === 'ko' ? path.replace('/en/','/ko/') : path) + suffix;
-  }
+    let w,h,dpr;
 
-  // Fallback for local previews without /ko/ or /en/ in the path
-  const parts = path.split('/').filter(Boolean);
-  const file = parts.length ? parts[parts.length-1] : 'home.html';
-  return (target === 'en' ? '../en/' : '../ko/') + file + suffix;
-}
-  langKO.href = siblingLangHref('ko');
-  langEN.href = siblingLangHref('en');
-})();
-</script>
+    function resize(){
+      dpr = Math.min(1.5, window.devicePixelRatio || 1);
+      w = canvas.width = Math.floor(innerWidth * dpr);
+      h = canvas.height = Math.floor(innerHeight * dpr);
+      canvas.style.width = innerWidth + 'px';
+      canvas.style.height = innerHeight + 'px';
+    }
+
+    addEventListener('resize', resize, {passive:true});
+    resize();
+
+    const pointer = { x:0, y:0, tx:0, ty:0 };
+    addEventListener('pointermove', (e)=>{
+      pointer.tx = (e.clientX/innerWidth - 0.5);
+      pointer.ty = (e.clientY/innerHeight - 0.5);
+    }, {passive:true});
+
+    const panels = Array.from({length:8}).map(()=>({
+      x: Math.random(),
+      y: Math.random(),
+      w: 0.18 + Math.random()*0.22,
+      h: 0.10 + Math.random()*0.18,
+      z: Math.random(),
+      phase: Math.random()*Math.PI*2
+    }));
+
+    let start = performance.now();
+
+    function draw(now){
+      const t = now - start;
+      pointer.x += (pointer.tx - pointer.x)*0.06;
+      pointer.y += (pointer.ty - pointer.y)*0.06;
+
+      ctx.fillStyle = '#05070d';
+      ctx.fillRect(0,0,w,h);
+
+      ctx.globalCompositeOperation = 'screen';
+
+      for(const p of panels){
+        const px = w*(p.x + Math.sin(t*0.0002 + p.phase)*0.01);
+        const py = h*(p.y + Math.cos(t*0.00018 + p.phase)*0.01);
+        const pw = w*p.w;
+        const ph = h*p.h;
+
+        const ox = pointer.x * (20 + p.z*40) * dpr;
+        const oy = pointer.y * (14 + p.z*28) * dpr;
+
+        ctx.fillStyle = `rgba(${ACCENT2},${0.03 + p.z*0.02})`;
+        ctx.fillRect(px+ox, py+oy, pw, ph);
+
+        ctx.fillStyle = `rgba(${ACCENT},${0.07 + p.z*0.12})`;
+        ctx.fillRect(px, py, pw, ph);
+      }
+
+      ctx.globalCompositeOperation = 'source-over';
+      requestAnimationFrame(draw);
+    }
+
+    requestAnimationFrame(draw);
+  })();
+  </script>
 </body>
 </html>
