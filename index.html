@@ -149,13 +149,15 @@
   // ==========================
   let w,h,dpr;
   function resize(){
-    dpr = Math.min(2, window.devicePixelRatio || 1);
+    dpr = Math.min(1.5, window.devicePixelRatio || 1);
     w = canvas.width = Math.floor(innerWidth * dpr);
     h = canvas.height = Math.floor(innerHeight * dpr);
     canvas.style.width = innerWidth + 'px';
     canvas.style.height = innerHeight + 'px';
     resizeTrail();
-    buildWeb();
+    // buildWeb deferred for faster first paint
+    webBuilt = false;
+    buildWebAt = performance.now() + 180;
   }
   addEventListener('resize', resize, {passive:true});
 
@@ -453,6 +455,8 @@ function beamTarget(){
   let last = start;
   let STOP = false;
   let enterShown = false;
+  let webBuilt = false;
+  let buildWebAt = 0;
 
   function frame(now){
     if(STOP) return;
@@ -460,8 +464,17 @@ function beamTarget(){
     const dt = Math.min(0.05, (now - last) / 1000);
     last = now;
 
-    updateEnergy(t, dt);
-    diffuseEnergy(dt);
+    // Defer heavy web build until after first paint
+    if(!webBuilt && buildWebAt && now >= buildWebAt){
+      buildWeb();
+      webBuilt = true;
+    }
+
+    // If web isn't built yet, keep only lightweight scene (UFO + beam + subtle background)
+    if(webBuilt){
+      updateEnergy(t, dt);
+      diffuseEnergy(dt);
+    }
 
     // --- trail buffer fade (keeps only a short afterglow) ---
     tctx.globalCompositeOperation = 'source-over';
@@ -504,6 +517,9 @@ function beamTarget(){
     }
 
     drawBg(t);
+
+    const EDGE_DELAY = 950;    // ms: delay heavy edge rendering for faster first impression
+    const NODE_FULL_AT = 1200; // ms: ramp node density
 
     // composite trail (screen) under everything
     ctx.globalCompositeOperation = 'screen';
@@ -622,6 +638,8 @@ if(pointer.seen && pointer.down){
       ctx.globalCompositeOperation = 'source-over';
     }
 
+    // Heavy web render (deferred + staged)
+    if(webBuilt){
     // pre-project
     const P = new Array(nodes.length);
     for(let i=0;i<nodes.length;i++){
@@ -684,11 +702,14 @@ if(pointer.seen && pointer.down){
     }
 
     ctx.globalCompositeOperation = 'screen';
-    drawEdges(0);
-    drawEdges(1);
+    if(t > EDGE_DELAY){
+      drawEdges(0);
+      drawEdges(1);
+    }
 
     // Draw nodes: jewels light up instantly near pointer, fade away elsewhere
-    for(let i=0;i<nodes.length;i += (isMobile()? 2: 1)){
+    const nodeStep = isMobile() ? 2 : (t < NODE_FULL_AT ? 2 : 1);
+    for(let i=0;i<nodes.length;i += nodeStep){
       const n = nodes[i];
       const p = P[i];
       const e = n.e;
@@ -720,6 +741,8 @@ if(pointer.seen && pointer.down){
       ctx.fill();
     }
 
+
+    }
     ctx.globalCompositeOperation = 'source-over';
 
 
