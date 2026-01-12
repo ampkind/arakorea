@@ -1,1 +1,710 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="dark" />
+  <title>AK ENM — Home</title>
+  <style>
+    :root{ --bg:#05070d; --fg:#e9ecf1; }
+    html,body{ height:100%; margin:0; background:var(--bg); overflow:hidden; }
+    @supports (height: 100dvh){
+      html,body{ height:100dvh; }
+    }
+    canvas{ position:fixed; inset:0; display:block; }
+.vignette{
+      position:fixed; inset:0; pointer-events:none;
+      background:
+        radial-gradient(ellipse at center, rgba(0,0,0,0) 35%, rgba(0,0,0,.64) 100%),
+        linear-gradient(to bottom, rgba(0,0,0,.22), rgba(0,0,0,0) 25%, rgba(0,0,0,0) 75%, rgba(0,0,0,.30));
+      mix-blend-mode:multiply;
+    }
+  
+    /* Spatial navigation (mesh-born) */
+    .nav-layer{ position:fixed; inset:0; pointer-events:none; }
+    .nav-item{
+      position:absolute;
+      transform:translate(-50%,-50%);
+      pointer-events:auto;
+      text-decoration:none;
+      color:rgba(233,236,241,.78);
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple SD Gothic Neo","Noto Sans KR","Malgun Gothic", sans-serif;
+      letter-spacing:.14em;
+      text-transform:uppercase;
+      font-size:12px;
+      padding:10px 12px;
+      border-radius:999px;
+      border:1px solid rgba(233,236,241,.14);
+      background:rgba(5,7,13,.14);
+      backdrop-filter: blur(10px);
+      mix-blend-mode:screen;
+      opacity:0;
+      transition: opacity 800ms ease, transform 800ms ease, color 240ms ease, border-color 240ms ease, background 240ms ease;
+      will-change: transform, opacity, left, top;
+      user-select:none;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .nav-item.show{ opacity:1; transform:translate(-50%,-50%) scale(1); }
+    .nav-item:hover{
+      color:rgba(233,236,241,.96);
+      border-color:rgba(233,236,241,.34);
+      background:rgba(5,7,13,.22);
+    }
+    .nav-item:active{
+      transform:translate(-50%,-50%) scale(0.98);
+    }
+    @media (max-width: 560px){
+      .nav-item{
+        font-size:11px;
+        letter-spacing:.12em;
+        padding:9px 10px;
+      }
+    }
 
+  
+    /* Top-right menu (⋯) + overlay list */
+    .top-menu{
+      position:fixed; right:18px; top:14px; z-index:20;
+      width:44px; height:44px;
+      display:grid; place-items:center;
+      border-radius:999px;
+      border:1px solid rgba(233,236,241,.14);
+      background:rgba(5,7,13,.14);
+      backdrop-filter: blur(10px);
+      color:rgba(233,236,241,.86);
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple SD Gothic Neo","Noto Sans KR","Malgun Gothic", sans-serif;
+      letter-spacing:.18em;
+      cursor:pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .top-menu:hover{ border-color:rgba(233,236,241,.34); color:rgba(233,236,241,.96); }
+    .top-menu:focus{ outline:2px solid rgba(233,236,241,.20); outline-offset:6px; }
+
+    .menu-overlay{
+      position:fixed; inset:0; z-index:30;
+      display:none;
+      background:rgba(0,0,0,.55);
+      backdrop-filter: blur(12px);
+    }
+    .menu-overlay.open{ display:block; }
+    .menu-panel{
+      position:absolute; right:18px; top:68px;
+      min-width:240px;
+      padding:14px 14px 10px;
+      border-radius:18px;
+      border:1px solid rgba(233,236,241,.16);
+      background:rgba(5,7,13,.52);
+      box-shadow: 0 18px 60px rgba(0,0,0,.45);
+    }
+    .menu-list{ list-style:none; padding:0; margin:0; }
+    .menu-list a{
+      display:block;
+      padding:10px 10px;
+      border-radius:12px;
+      text-decoration:none;
+      color:rgba(233,236,241,.86);
+      letter-spacing:.16em;
+      text-transform:uppercase;
+      font-size:12px;
+      border:1px solid transparent;
+    }
+    .menu-list a:hover{
+      color:rgba(233,236,241,.96);
+      border-color:rgba(233,236,241,.18);
+      background:rgba(233,236,241,.06);
+    }
+    .menu-sep{
+      height:1px;
+      background:rgba(233,236,241,.12);
+      margin:10px 6px;
+    }
+    .lang-row{
+      display:flex;
+      align-items:center;
+      justify-content:flex-end;
+      gap:10px;
+      padding:6px 6px 2px;
+      font-size:12px;
+      letter-spacing:.18em;
+      color:rgba(233,236,241,.72);
+      text-transform:uppercase;
+    }
+    .lang-row a{
+      color:rgba(233,236,241,.72);
+      text-decoration:none;
+      padding:6px 8px;
+      border-radius:999px;
+      border:1px solid rgba(233,236,241,.14);
+      background:rgba(5,7,13,.20);
+    }
+    .lang-row a:hover{
+      color:rgba(233,236,241,.96);
+      border-color:rgba(233,236,241,.34);
+    }
+    @media (max-width:560px){
+      .top-menu{ right:12px; top:10px; }
+      .menu-panel{ right:12px; top:62px; min-width:220px; }
+    }
+
+  </style>
+</head>
+<body>
+  <canvas id="c"></canvas>
+
+  <div id="nav" class="nav-layer" aria-label="Site navigation"></div>
+
+  <button id="topMenu" class="top-menu" aria-label="Menu" title="Menu" type="button">⋯</button>
+
+  <div id="menuOverlay" class="menu-overlay" aria-hidden="true">
+    <div class="menu-panel" role="dialog" aria-label="Site menu">
+      <ul class="menu-list">
+        <li><a data-nav href="about.html">ABOUT</a></li>
+        <li><a data-nav href="music.html">MUSIC</a></li>
+        <li><a data-nav href="film-visual.html">FILM / VISUAL</a></li>
+        <li><a data-nav href="publish.html">PUBLISH</a></li>
+        <li><a data-nav href="artists.html">ARTISTS</a></li>
+        <li><a data-nav href="atelier.html">ATELIER</a></li>
+        <li><a data-nav href="contact.html">CONTACT</a></li>
+      </ul>
+      <div class="menu-sep"></div>
+      <div class="lang-row" aria-label="Language">
+        <a id="langKO" href="#" aria-label="Korean">KO</a>
+        <a id="langEN" href="#" aria-label="English">EN</a>
+      </div>
+    </div>
+  </div>
+
+
+<div class="vignette"></div>
+
+<script>
+(() => {
+  const canvas = document.getElementById('c');
+  const ctx = canvas.getContext('2d');  let w,h,dpr;
+  const view = { w: innerWidth, h: innerHeight };
+  function resize(){
+    const vw = (window.visualViewport ? visualViewport.width : innerWidth);
+    const vh = (window.visualViewport ? visualViewport.height : innerHeight);
+
+    dpr = Math.min(2, window.devicePixelRatio || 1);
+    w = canvas.width = Math.floor(vw * dpr);
+    h = canvas.height = Math.floor(vh * dpr);
+    canvas.style.width = vw + 'px';
+    canvas.style.height = vh + 'px';
+    view.w = vw; view.h = vh;
+  }
+  addEventListener('resize', resize, {passive:true});
+  resize();
+
+  const clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
+  const lerp=(a,b,t)=>a+(b-a)*t;
+
+  // Pointer for parallax + local interaction
+  const pointer = { x: 0, y: 0, tx: 0, ty: 0 };
+
+  // Local "touch" (click/press) effect: brighten nearby lines + slow geometric warping
+  const touch = {
+    down: false,
+    // normalized (-0.5..0.5)
+    tx: 0, ty: 0,
+    // smoothed normalized
+    x: 0, y: 0,
+    // canvas pixel position (in device pixels)
+    cx: 0, cy: 0,
+    // strength 0..1
+    s: 0
+  };
+
+  function updateTouchFromEvent(e){
+    const nx = (e.clientX/view.w - 0.5);
+    const ny = (e.clientY/view.h - 0.5);
+    pointer.tx = nx;
+    pointer.ty = ny;
+    touch.tx = nx;
+    touch.ty = ny;
+    // cache canvas-space position in device pixels (nodes are in device px)
+    touch.cx = e.clientX * dpr;
+    touch.cy = e.clientY * dpr;
+
+    // hover detection for navigation (in CSS pixels)
+    navHoverKey = null;
+    const mx = e.clientX;
+    const my = e.clientY;
+    // small hit radius; scales on mobile
+    const hit = (view.w < 700 ? 32 : 26);
+    let best = 1e9;
+    for(const item of navItems){
+      const p = item._screen;
+      if(!p) continue;
+      const dx = mx - p.x;
+      const dy = my - p.y;
+      const d2 = dx*dx + dy*dy;
+      if(d2 < hit*hit && d2 < best){ best = d2; navHoverKey = item.key; }
+    }
+    canvas.style.cursor = navHoverKey ? 'pointer' : 'default';
+  }
+
+  addEventListener('pointermove', (e)=>{
+    updateTouchFromEvent(e);
+  }, {passive:true});
+
+  addEventListener('pointerdown', (e)=>{
+    // If user presses near a navigation anchor, activate it.
+    if(navVisible && navHoverKey){
+      const el = navElByKey.get(navHoverKey);
+      if(el){ el.click(); }
+      return;
+    }
+    touch.down = true;
+    updateTouchFromEvent(e);
+  }, {passive:true});
+
+  addEventListener('pointerup', ()=>{
+    touch.down = false;
+  }, {passive:true});
+
+  addEventListener('pointercancel', ()=>{
+    touch.down = false;
+  }, {passive:true});
+
+  // Spatial navigation anchors (mesh nodes become menu)
+  const navLayer = document.getElementById('nav');
+  const navItems = [
+    { key:'about',   label:'ABOUT',        href:'about.html',        pos:{i:0.20, j:0.22, k:0.56} },
+    { key:'contact', label:'CONTACT',      href:'contact.html',      pos:{i:0.80, j:0.22, k:0.56} },
+
+    { key:'artists', label:'ARTISTS',      href:'artists.html',      pos:{i:0.50, j:0.52, k:0.92} },
+
+    { key:'music',   label:'MUSIC',        href:'music.html',        pos:{i:0.30, j:0.46, k:0.80} },
+    { key:'film',    label:'FILM / VISUAL',href:'film-visual.html',  pos:{i:0.70, j:0.46, k:0.80} },
+
+    { key:'publish', label:'PUBLISH',      href:'publish.html',      pos:{i:0.30, j:0.74, k:0.66} },
+    { key:'atelier', label:'ATELIER',      href:'atelier.html',      pos:{i:0.70, j:0.74, k:0.66} },
+  ];
+
+  const navElByKey = new Map();
+  for(const item of navItems){
+    const a = document.createElement('a');
+    a.className = 'nav-item';
+    a.href = item.href;
+    a.dataset.key = item.key;
+    a.textContent = item.label;
+    // prevent 300ms delay & keep interaction crisp
+    a.addEventListener('pointerdown', (e)=>{ e.stopPropagation(); }, {passive:true});
+    navLayer.appendChild(a);
+    navElByKey.set(item.key, a);
+  }
+
+  let navVisible = false;
+  let navHoverKey = null;
+
+// 3D lattice settings
+  let cols=22, rows=14, layers=10;
+  function setGrid(){
+    const vw = view.w, vh = view.h;
+    const diag = Math.hypot(vw, vh);
+
+    // Scale density with screen size (big monitors get more structure)
+    cols = Math.round(clamp(diag/55, 18, 44));
+    rows = Math.round(clamp(diag/95, 12, 28));
+    layers = Math.round(clamp(diag/170, 8, 16));
+  }
+  setGrid();
+  addEventListener('resize', setGrid, {passive:true});
+
+  // Build nodes in a 3D box (x,y,z in [-1,1])
+  let nodes = [];
+  function build(){
+    nodes.length = 0;
+    for(let k=0;k<layers;k++){
+      const z = lerp(-1, 1, k/(layers-1));
+      for(let j=0;j<rows;j++){
+        const y = lerp(-1, 1, j/(rows-1));
+        for(let i=0;i<cols;i++){
+          const x = lerp(-1, 1, i/(cols-1));
+          nodes.push({ x, y, z, sx:0, sy:0, sz:0, a: Math.random()*Math.PI*2 });
+        }
+      }
+    }
+  }
+  build();
+  addEventListener('resize', build, {passive:true});
+
+  // Indices helper
+  const idx = (i,j,k)=> k*(rows*cols) + j*cols + i;
+
+  function anchorNode(pos){
+    const i = Math.round(clamp(pos.i,0,1) * (cols-1));
+    const j = Math.round(clamp(pos.j,0,1) * (rows-1));
+    const k = Math.round(clamp(pos.k,0,1) * (layers-1));
+    return nodes[idx(i,j,k)];
+  }
+
+
+  // Camera/projection
+// Intro: start farther away, glide in for a natural "home enter" feel
+const cam = { fov: 2.25, z: -3.2 };
+const camBase = { fov: 2.25, z: -3.2 };
+const camIntro = { fov: 1.95, z: -6.8 };
+const introDur = 2200; // ms
+
+  function project(x,y,z){
+    const zz = z - cam.z; // camera space
+    const s = cam.fov / zz;
+    return { x: w*0.5 + x*s*w*0.28, y: h*0.56 + y*s*h*0.28, s };
+  }
+
+  // Hashy noise for motion (cheap)
+  const fract = (x)=>x-Math.floor(x);
+  function hash1(n){ return fract(Math.sin(n)*43758.5453); }
+
+  let start = performance.now();  function draw(now){
+    const t = now - start;
+
+// Intro camera glide (ease-out cubic)
+const tp = clamp(t / introDur, 0, 1);
+const ease = 1 - Math.pow(1 - tp, 3);
+cam.z = lerp(camIntro.z, camBase.z, ease);
+cam.fov = lerp(camIntro.fov, camBase.fov, ease);
+
+    // smooth pointer
+    pointer.x = lerp(pointer.x, pointer.tx, 0.08);
+    pointer.y = lerp(pointer.y, pointer.ty, 0.08);
+
+    // smooth touch + very slow release (so it feels like geometry is "responding")
+    touch.x = lerp(touch.x, touch.tx, 0.10);
+    touch.y = lerp(touch.y, touch.ty, 0.10);
+    touch.s = lerp(touch.s, touch.down ? 1 : 0, touch.down ? 0.10 : 0.045);
+// clear
+    ctx.fillStyle = '#05070d';
+    ctx.fillRect(0,0,w,h);
+    // (removed) keep background pure black — no flashlight wash
+
+    // global rotation (very subtle) + parallax
+    const ry = t*0.00018 + pointer.x*0.55;
+    const rx = t*0.00014 + pointer.y*0.45;
+    const cy = Math.cos(ry), sy = Math.sin(ry);
+    const cx = Math.cos(rx), sx = Math.sin(rx);
+
+    // precompute projected positions
+    for(let n=0;n<nodes.length;n++){
+      const p = nodes[n];
+
+      // "breathing" deformation: waves traveling through the box
+      const wave = Math.sin((p.x*2.2 + p.y*1.6 + p.z*2.8) + t*0.0011 + p.a) * 0.055;
+      const bulge = Math.sin((p.z*2.4) - t*0.0009) * 0.035;
+
+      let x = p.x + wave;
+      let y = p.y + wave*0.6;
+      let z = p.z + bulge;
+
+      // Local geometric warp near the pointer when pressed (slow + subtle)
+      if(touch.s > 0.001){
+        // map touch from (-0.5..0.5) to lattice space (-1..1)
+        const tx = touch.x * 2.0;
+        const ty = touch.y * 2.0;
+
+        const dx = (p.x - tx);
+        const dy = (p.y - ty);
+
+        // radial falloff in lattice XY (tight enough to feel "local")
+        const rr = 0.14; // influence radius^2
+        let infl = touch.s * Math.exp(-(dx*dx + dy*dy) / rr);
+        // make the influence slightly irregular (so it doesn't read as a perfect circle)
+        infl *= 0.72 + 0.28*Math.sin((p.x*12.0 + p.y*9.0 + p.z*7.0) + t*0.00045 + p.a);
+
+        // very slow "geometric" perturbation (bends lines locally)
+        const tt = t * 0.00022;
+        x += infl * 0.085 * Math.sin(tt + p.a*1.7);
+        y += infl * 0.070 * Math.cos(tt*0.92 + p.a*1.3);
+        z += infl * 0.120 * Math.sin(tt*0.78 + (dx - dy)*5.0);
+      }
+// rotate around Y
+      let x1 = x*cy + z*sy;
+      let z1 = -x*sy + z*cy;
+
+      // rotate around X
+      let y2 = y*cx - z1*sx;
+      let z2 = y*sx + z1*cx;
+
+      // depth cache
+      p.sz = z2;
+
+      const pr = project(x1, y2, z2);
+      p.sx = pr.x;
+      p.sy = pr.y;
+      p._s = pr.s;
+    }
+
+    // Update navigation positions (mesh-born anchors)
+    // Fade-in starts near the end of the intro glide.
+    const navT0 = introDur * 0.72;
+    const navT = clamp((t - navT0) / 1100, 0, 1);
+    const navEase = 1 - Math.pow(1 - navT, 3);
+    if(!navVisible && navEase > 0.02){
+      navVisible = true;
+      for(const it of navItems){ navElByKey.get(it.key).classList.add('show'); }
+    }
+    for(const it of navItems){
+      const p = anchorNode(it.pos);
+      // cache screen in CSS pixels for hit-test
+      const sx = p.sx / dpr;
+      const sy = p.sy / dpr;
+      it._screen = { x:sx, y:sy, z:p.sz };
+
+      const el = navElByKey.get(it.key);
+      // a gentle "settle" motion (feels attached to the mesh)
+      const bob = Math.sin(t*0.0006 + (p.a||0)) * 2.2;
+      el.style.left = (sx) + 'px';
+      el.style.top  = (sy + bob) + 'px';
+
+      // Depth-driven presence (center feels forward; others recede).
+      // z is in roughly [-1,1] after rotation; we map to 0..1 (near = 1).
+      const zN = clamp((p.sz + 1) * 0.5, 0, 1);
+      const baseScale = 0.74 + 0.26 * zN;          // 0.74..1.0
+      const easeScale = 0.98 + 0.02 * navEase;     // gentle settle
+      const s = baseScale * easeScale;
+
+      // opacity + slight blur by depth (keeps "sculptural" layering readable)
+      const baseA = 0.30 + 0.70 * zN;              // 0.30..1.0
+      el.style.opacity = (navEase * baseA).toFixed(3);
+      el.style.filter = `blur(${(1 - zN) * 0.9}px)`;
+
+      el.style.transform = `translate(-50%,-50%) scale(${s.toFixed(3)})`;
+
+      // emphasize hovered item subtly
+      if(navHoverKey === it.key){
+        el.style.color = 'rgba(233,236,241,.98)';
+        el.style.borderColor = 'rgba(233,236,241,.42)';
+        el.style.opacity = '1';
+        el.style.filter = 'blur(0px)';
+        el.style.transform = `translate(-50%,-50%) scale(${Math.max(s, 0.98).toFixed(3)})`;
+      }else{
+        el.style.color = 'rgba(233,236,241,.78)';
+        el.style.borderColor = 'rgba(233,236,241,.14)';
+      }
+    }
+
+    // Draw edges (wireframe). Back-to-front: sort by depth bucket (cheap)
+    // We'll draw layer by layer from far to near using k order:
+    const diag = Math.hypot(view.w, view.h);
+    ctx.lineWidth = clamp((0.85 + diag/1800) * dpr, 0.9*dpr, 2.2*dpr);
+    ctx.globalCompositeOperation = 'screen';
+
+    for(let k=0;k<layers;k++){
+      // map far->near based on z
+      const zt = k/(layers-1); // -1..1 originally but monotonic by layer
+      const depth = zt; // 0 far? doesn't matter too much
+      const alpha = 0.03 + depth*0.10;
+
+      ctx.strokeStyle = `rgba(233,236,241,${alpha})`;
+
+      // connect within this layer (grid lines)
+      for(let j=0;j<rows;j++){
+        // horizontal segments
+        ctx.beginPath();
+        for(let i=0;i<cols;i++){
+          const p = nodes[idx(i,j,k)];
+          if(i===0) ctx.moveTo(p.sx, p.sy);
+          else ctx.lineTo(p.sx, p.sy);
+        }
+        ctx.stroke();
+      }
+
+      for(let i=0;i<cols;i++){
+        // vertical segments
+        ctx.beginPath();
+        for(let j=0;j<rows;j++){
+          const p = nodes[idx(i,j,k)];
+          if(j===0) ctx.moveTo(p.sx, p.sy);
+          else ctx.lineTo(p.sx, p.sy);
+        }
+        ctx.stroke();
+      }
+
+      // connect to next layer (depth struts) sparsely for elegance
+      if(k < layers-1){
+        ctx.strokeStyle = `rgba(233,236,241,${alpha*0.55})`;
+        const strideI = 2, strideJ = 2;
+        for(let j=0;j<rows;j+=strideJ){
+          ctx.beginPath();
+          for(let i=0;i<cols;i+=strideI){
+            const a = nodes[idx(i,j,k)];
+            const b = nodes[idx(i,j,k+1)];
+            ctx.moveTo(a.sx, a.sy);
+            ctx.lineTo(b.sx, b.sy);
+          }
+          ctx.stroke();
+        }
+      }
+    }
+    // Local line highlight overlay when pressed (only nearby segments brighten)
+    if(touch.s > 0.02){
+      const r = 120 * dpr;
+      const r2 = r*r;
+      const boost = 0.30; // extra alpha at center (lines only)
+      ctx.globalCompositeOperation = 'screen';
+      ctx.lineWidth = 1.35 * dpr;
+
+      for(let k=0;k<layers;k++){
+        const zt = k/(layers-1);
+        const base = 0.02 + zt*0.06;
+
+        // horizontal segments
+        for(let j=0;j<rows;j++){
+          for(let i=0;i<cols-1;i++){
+            const a = nodes[idx(i,j,k)];
+            const b = nodes[idx(i+1,j,k)];
+            const mx = (a.sx + b.sx) * 0.5;
+            const my = (a.sy + b.sy) * 0.5;
+            const dx = mx - touch.cx;
+            const dy = my - touch.cy;
+            const d2 = dx*dx + dy*dy;
+            if(d2 > r2) continue;
+            let fall = Math.exp(-d2 / (r2*0.28));
+            // break the perfect circle: add gentle, irregular mask that moves slowly
+            const wob = 0.65 + 0.35*Math.sin((mx*0.012 + my*0.010) + t*0.0009);
+            fall *= wob;
+            const A = Math.min(0.9, base + touch.s * boost * fall);
+            ctx.strokeStyle = `rgba(233,236,241,${A})`;
+            ctx.beginPath();
+            ctx.moveTo(a.sx, a.sy);
+            ctx.lineTo(b.sx, b.sy);
+            ctx.stroke();
+          }
+        }
+
+        // vertical segments
+        for(let i=0;i<cols;i++){
+          for(let j=0;j<rows-1;j++){
+            const a = nodes[idx(i,j,k)];
+            const b = nodes[idx(i,j+1,k)];
+            const mx = (a.sx + b.sx) * 0.5;
+            const my = (a.sy + b.sy) * 0.5;
+            const dx = mx - touch.cx;
+            const dy = my - touch.cy;
+            const d2 = dx*dx + dy*dy;
+            if(d2 > r2) continue;
+            let fall = Math.exp(-d2 / (r2*0.28));
+            // break the perfect circle: add gentle, irregular mask that moves slowly
+            const wob = 0.65 + 0.35*Math.sin((mx*0.012 + my*0.010) + t*0.0009);
+            fall *= wob;
+            const A = Math.min(0.9, base + touch.s * boost * fall);
+            ctx.strokeStyle = `rgba(233,236,241,${A})`;
+            ctx.beginPath();
+            ctx.moveTo(a.sx, a.sy);
+            ctx.lineTo(b.sx, b.sy);
+            ctx.stroke();
+          }
+        }
+      }
+
+      const diag = Math.hypot(view.w, view.h);
+    ctx.lineWidth = clamp((0.85 + diag/1800) * dpr, 0.9*dpr, 2.2*dpr);
+      ctx.globalCompositeOperation = 'screen';
+    }
+
+    // Navigation anchor glyphs (subtle points that feel part of the mesh)
+    if(navVisible){
+      ctx.globalCompositeOperation = 'screen';
+      for(const it of navItems){
+        const p = anchorNode(it.pos);
+        const depth = clamp((p.sz + 1.2)/2.4, 0, 1);
+        const a = (0.06 + depth*0.18) * (0.35 + 0.65*navEase);
+        const r = ((navHoverKey === it.key) ? 3.6 : 2.4) * dpr * (0.85 + depth*0.25);
+        ctx.fillStyle = `rgba(233,236,241,${a})`;
+        ctx.beginPath();
+        ctx.arc(p.sx, p.sy, r, 0, Math.PI*2);
+        ctx.fill();
+      }
+      ctx.globalCompositeOperation = 'screen';
+    }
+
+    // Draw nodes (near ones a bit brighter -> depth cue)
+    for(let n=0;n<nodes.length;n+=2){
+      const p = nodes[n];
+      const depth = clamp((p.sz + 1.2)/2.4, 0, 1); // approx
+      const a = (0.05 + depth*0.22) * (0.9 + 0.1*Math.sin(t*0.001 + p.a));
+      const r = (0.6 + depth*1.2) * dpr * p._s;
+
+      ctx.fillStyle = `rgba(233,236,241,${a})`;
+      ctx.beginPath();
+      ctx.arc(p.sx, p.sy, Math.max(0.5*dpr, r), 0, Math.PI*2);
+      ctx.fill();
+    }
+
+    ctx.globalCompositeOperation = 'source-over';
+
+    // Thin scanline to add "device" vibe
+    const yscan = (t*0.10) % h;
+    ctx.fillStyle = 'rgba(233,236,241,0.02)';
+    ctx.fillRect(0, yscan, w, 2*dpr);
+requestAnimationFrame(draw);
+  }
+
+  requestAnimationFrame(draw);
+
+  // ==========================
+  // Top-right menu (⋯) overlay
+  // ==========================
+  const topMenuBtn = document.getElementById('topMenu');
+  const menuOverlay = document.getElementById('menuOverlay');
+
+  function openMenu(){
+    menuOverlay.classList.add('open');
+    menuOverlay.setAttribute('aria-hidden','false');
+  }
+  function closeMenu(){
+    menuOverlay.classList.remove('open');
+    menuOverlay.setAttribute('aria-hidden','true');
+  }
+  topMenuBtn.addEventListener('click', (e)=>{
+    e.stopPropagation();
+    if(menuOverlay.classList.contains('open')) closeMenu();
+    else openMenu();
+  });
+
+  // close on backdrop click
+  menuOverlay.addEventListener('click', (e)=>{
+    // only if clicking outside the panel
+    if(e.target === menuOverlay) closeMenu();
+  });
+
+  addEventListener('keydown', (e)=>{
+    if(e.key === 'Escape') closeMenu();
+  });
+
+  // keep menu links from triggering canvas interactions
+  for(const a of menuOverlay.querySelectorAll('a[data-nav]')){
+    a.addEventListener('pointerdown', (e)=>{ e.stopPropagation(); });
+  }
+
+  // Language switching: swap /ko/ <-> /en/ if present; fallback to sibling folders.
+  const langKO = document.getElementById('langKO');
+  const langEN = document.getElementById('langEN');
+
+  function siblingLangHref(target){
+  const url = new URL(location.href);
+  const path = url.pathname;
+  const suffix = url.search + url.hash;
+
+  if(path.includes('/ko/')){
+    return (target === 'en' ? path.replace('/ko/','/en/') : path) + suffix;
+  }
+  if(path.includes('/en/')){
+    return (target === 'ko' ? path.replace('/en/','/ko/') : path) + suffix;
+  }
+
+  // Fallback for local previews without /ko/ or /en/ in the path
+  const parts = path.split('/').filter(Boolean);
+  const file = parts.length ? parts[parts.length-1] : 'home.html';
+  return (target === 'en' ? '../en/' : '../ko/') + file + suffix;
+}
+  langKO.href = siblingLangHref('ko');
+  langEN.href = siblingLangHref('en');
+
+
+})();
+</script>
+</body>
+</html>
