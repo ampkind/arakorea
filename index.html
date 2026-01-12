@@ -149,15 +149,13 @@
   // ==========================
   let w,h,dpr;
   function resize(){
-    dpr = Math.min(1.5, window.devicePixelRatio || 1);
+    dpr = Math.min(1.25, window.devicePixelRatio || 1);
     w = canvas.width = Math.floor(innerWidth * dpr);
     h = canvas.height = Math.floor(innerHeight * dpr);
     canvas.style.width = innerWidth + 'px';
     canvas.style.height = innerHeight + 'px';
     resizeTrail();
-    // buildWeb deferred for faster first paint
-    webBuilt = false;
-    buildWebAt = performance.now() + 180;
+    buildWeb();
   }
   addEventListener('resize', resize, {passive:true});
 
@@ -455,26 +453,19 @@ function beamTarget(){
   let last = start;
   let STOP = false;
   let enterShown = false;
-  let webBuilt = false;
-  let buildWebAt = 0;
+  let frameCount = 0;
+  const P = [];
+  let lastEdgesDrawAt = 0;
 
   function frame(now){
     if(STOP) return;
     const t = now - start;
+    frameCount++;
     const dt = Math.min(0.05, (now - last) / 1000);
     last = now;
 
-    // Defer heavy web build until after first paint
-    if(!webBuilt && buildWebAt && now >= buildWebAt){
-      buildWeb();
-      webBuilt = true;
-    }
-
-    // If web isn't built yet, keep only lightweight scene (UFO + beam + subtle background)
-    if(webBuilt){
-      updateEnergy(t, dt);
-      diffuseEnergy(dt);
-    }
+    updateEnergy(t, dt);
+    diffuseEnergy(dt);
 
     // --- trail buffer fade (keeps only a short afterglow) ---
     tctx.globalCompositeOperation = 'source-over';
@@ -517,9 +508,6 @@ function beamTarget(){
     }
 
     drawBg(t);
-
-    const EDGE_DELAY = 950;    // ms: delay heavy edge rendering for faster first impression
-    const NODE_FULL_AT = 1200; // ms: ramp node density
 
     // composite trail (screen) under everything
     ctx.globalCompositeOperation = 'screen';
@@ -638,10 +626,8 @@ if(pointer.seen && pointer.down){
       ctx.globalCompositeOperation = 'source-over';
     }
 
-    // Heavy web render (deferred + staged)
-    if(webBuilt){
     // pre-project
-    const P = new Array(nodes.length);
+    if(P.length !== nodes.length) P.length = nodes.length;
     for(let i=0;i<nodes.length;i++){
       P[i] = project(nodes[i]);
     }
@@ -702,14 +688,11 @@ if(pointer.seen && pointer.down){
     }
 
     ctx.globalCompositeOperation = 'screen';
-    if(t > EDGE_DELAY){
-      drawEdges(0);
-      drawEdges(1);
-    }
+    drawEdges(0);
+    drawEdges(1);
 
     // Draw nodes: jewels light up instantly near pointer, fade away elsewhere
-    const nodeStep = isMobile() ? 2 : (t < NODE_FULL_AT ? 2 : 1);
-    for(let i=0;i<nodes.length;i += nodeStep){
+    for(let i=0;i<nodes.length;i += (isMobile()? 2: 1)){
       const n = nodes[i];
       const p = P[i];
       const e = n.e;
@@ -741,8 +724,6 @@ if(pointer.seen && pointer.down){
       ctx.fill();
     }
 
-
-    }
     ctx.globalCompositeOperation = 'source-over';
 
 
@@ -859,14 +840,17 @@ if(pointer.seen && pointer.down){
     ctx.fillRect(0, yscan, w, 2*dpr);
 
 
-    // Premium finishing: micro-grain + very subtle lens falloff
-    ctx.globalCompositeOperation = 'overlay';
-    ctx.globalAlpha = 0.06;
-    ctx.fillStyle = ctx.createPattern(grain, 'repeat');
-    ctx.translate(0,0); // no-op, keeps pattern stable
-    ctx.fillRect(0,0,w,h);
-    ctx.globalAlpha = 1.0;
-    ctx.globalCompositeOperation = 'source-over';
+    // Premium finishing: micro-grain (every other frame for performance)
+    if((frameCount & 1) === 0){
+        ctx.globalCompositeOperation = 'overlay';
+        ctx.globalAlpha = 0.06;
+        ctx.fillStyle = ctx.createPattern(grain, 'repeat');
+        ctx.translate(0,0); // no-op, keeps pattern stable
+        ctx.fillRect(0,0,w,h);
+        ctx.globalAlpha = 1.0;
+        ctx.globalCompositeOperation = 'source-over';
+    }
+
     if(!enterShown && t > 4200){
       enter.classList.add('show');
       enterShown = true;
@@ -889,8 +873,94 @@ if(pointer.seen && pointer.down){
     // prevent repeat
     if(goWarp._done) return;
     goWarp._done = true;
-    // index 내 iframe 금지: 즉시 KO 홈으로 이동
-    location.replace('ko/home.html');
+
+    // stop the render loop after we capture a snapshot
+    // (keeps the handoff clean and saves CPU)
+    const snap = new Image();
+    try{
+      snap.src = canvas.toDataURL('image/png');
+    }catch(_e){
+      // if tainted for any reason, fall back to solid color
+      snap.src = '';
+    }
+
+    // build home iframe behind the snapshot
+    const iframe = document.createElement('iframe');
+    iframe.src = 'stray_home_spatial_nav_final.html';
+    iframe.setAttribute('title','home');
+    iframe.setAttribute('aria-hidden','false');
+    iframe.style.position = 'fixed';
+    iframe.style.inset = '0';
+    iframe.style.width = '100%';
+    iframe.style.height = '100%';
+    iframe.style.border = '0';
+    iframe.style.opacity = '0';
+    iframe.style.transition = 'opacity 900ms ease';
+    iframe.style.zIndex = '2';
+
+    // snapshot overlay (top), fades out to reveal home
+    const shot = document.createElement('div');
+    shot.style.position = 'fixed';
+    shot.style.inset = '0';
+    shot.style.zIndex = '3';
+    shot.style.background = '#05070d';
+    shot.style.opacity = '1';
+    shot.style.transition = 'opacity 1100ms ease';
+    shot.style.pointerEvents = 'none';
+
+    if(snap.src){
+      snap.style.width = '100%';
+      snap.style.height = '100%';
+      snap.style.objectFit = 'cover';
+      snap.style.display = 'block';
+      shot.appendChild(snap);
+    }
+
+    // hide ENTER immediately (if it exists)
+    if(enter){
+      enter.classList.remove('show');
+      enter.style.opacity = '0';
+      enter.style.pointerEvents = 'none';
+    }
+
+    // append in order: iframe (below), snapshot (above)
+    document.body.appendChild(iframe);
+    document.body.appendChild(shot);
+
+    // once home is ready, crossfade
+    const startFade = ()=>{
+      // stop drawing in index after we have our snapshot on top
+      STOP = true;
+
+      requestAnimationFrame(()=>{
+        iframe.style.opacity = '1';
+        shot.style.opacity = '0';
+      });
+
+      // cleanup overlay after fade
+      setTimeout(()=>{
+        shot.remove();
+        // optional: keep URL clean-ish
+        try{
+          history.replaceState(null, '', 'home');
+          document.title = 'Home';
+        }catch(_e){}
+      }, 1200);
+    };
+
+    // if iframe loads quickly, great; otherwise still fade after a short beat
+    let fired = false;
+    iframe.addEventListener('load', ()=>{
+      if(fired) return;
+      fired = true;
+      startFade();
+    });
+
+    setTimeout(()=>{
+      if(fired) return;
+      fired = true;
+      startFade();
+    }, 650);
   }
 
   // Click/tap
@@ -904,9 +974,6 @@ if(pointer.seen && pointer.down){
       goWarp();
     }
   });
-
-    // Auto enter (6–7s)
-  setTimeout(goWarp, 6500);
 
   requestAnimationFrame(frame);
 })();
