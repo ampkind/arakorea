@@ -2,182 +2,891 @@
 <html lang="ko">
 <head>
   <meta charset="utf-8" />
-  <title>AK ENM</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="dark" />
+  <title>AKENM — Indra Honey (Premium)</title>
   <style>
-    :root{
-      --fg: rgba(255,255,255,.92);
-      --fgDim: rgba(255,255,255,.62);
-      --bg: #000;
-    }
-    html, body{
-      margin:0; padding:0; width:100%; height:100%;
-      background:var(--bg); color:var(--fg);
-      overflow:hidden;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont,
-                   "Segoe UI", Roboto, "Apple SD Gothic Neo",
-                   "Noto Sans KR", sans-serif;
-    }
-
-    /* Fullscreen video */
-    #introWrap{
-      position:fixed; inset:0;
-      background: #000;
-    }
-    #introVideo{
-      position:absolute; inset:0;
-      width:100%; height:100%;
-      object-fit:cover;
-      transform: translateZ(0);
-    }
-
-    /* subtle vignette so text reads well */
-    #vignette{
-      position:absolute; inset:-2px;
-      background: radial-gradient(ellipse at center,
-        rgba(0,0,0,0) 0%,
-        rgba(0,0,0,.28) 55%,
-        rgba(0,0,0,.58) 100%);
-      pointer-events:none;
-    }
-
-    /* ENTER overlay */
-    #enter{
-      position:absolute; inset:0;
-      display:grid;
-      place-items:center;
-      cursor:pointer;
-      user-select:none;
-      -webkit-tap-highlight-color: transparent;
-    }
-    #enter .label{
-      font-size:12px;
-      letter-spacing:.55em;
+    :root{ --bg:#05070d; --fg:#e9ecf1; }
+    html,body{ height:100%; margin:0; background:var(--bg); overflow:hidden; cursor:none; }
+    canvas{ cursor:none; }
+    canvas{ position:fixed; inset:0; display:block; }
+    .brand{
+      position:fixed; left:18px; top:16px;
+      font-size:12px; letter-spacing:.32em;
+      color:rgba(233,236,241,.80);
       text-transform:uppercase;
-      padding:14px 18px;
-      border-radius:999px;
-      border:1px solid rgba(255,255,255,.22);
-      background: rgba(0,0,0,.18);
+      pointer-events:none;
+      mix-blend-mode:screen;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple SD Gothic Neo","Noto Sans KR","Malgun Gothic", sans-serif;
+    }
+    .enter{
+      position:fixed; left:50%; top:50%;
+      transform:translate(-50%,-50%);
+      font-size:12px; letter-spacing:.38em;
+      color:rgba(233,236,241,.90);
+      opacity:0; transition:opacity 1.6s ease;
+      border:1px solid rgba(233,236,241,.22);
+      padding:14px 18px; border-radius:999px;
+      text-transform:uppercase;
+      pointer-events:auto;
+      background:rgba(5,7,13,.14);
       backdrop-filter: blur(10px);
-      transition: transform 140ms ease, opacity 140ms ease, border-color 140ms ease;
     }
-    #enter:hover .label{
-      transform: translateY(-1px);
-      border-color: rgba(255,255,255,.34);
-    }
-
-    /* small helper text */
-    #hint{
-      position:absolute;
-      left:50%;
-      bottom:28px;
-      transform:translateX(-50%);
-      font-size:11px;
-      letter-spacing:.14em;
-      text-transform:uppercase;
-      color: var(--fgDim);
-      opacity:.9;
-      pointer-events:none;
-      white-space:nowrap;
-    }
-
-    /* Fade out on transition */
-    .fade-out{
-      animation: fadeOut 420ms ease forwards;
-    }
-    @keyframes fadeOut{
-      to { opacity:0; transform: scale(1.01); }
+    .enter.show{ opacity:1; }
+    .enter{ cursor:pointer; }
+    .enter:focus{ outline:2px solid rgba(233,236,241,.25); outline-offset:6px; }
+    .hud{ display:none; }
+    .vignette{
+      position:fixed; inset:0; pointer-events:none;
+      background:
+        radial-gradient(ellipse at center, rgba(0,0,0,0) 35%, rgba(0,0,0,.72) 100%),
+        linear-gradient(to bottom, rgba(0,0,0,.12), rgba(0,0,0,0) 30%, rgba(0,0,0,0) 70%, rgba(0,0,0,.22));
+      mix-blend-mode:multiply;
     }
   </style>
 </head>
 <body>
-
-  <!--
-    ✅ Put your UFO intro video here:
-       - Recommended path: /assets/intro.mp4
-       - If your file name is different, change src below.
-  -->
-  <div id="introWrap">
-    <video id="introVideo"
-           autoplay
-           muted
-           playsinline
-           preload="auto"
-           src="assets/intro.mp4"></video>
-    <div id="vignette"></div>
-
-    <div id="enter" aria-label="Enter to AK ENM">
-      <div class="label">ENTER</div>
-    </div>
-    <div id="hint">click ENTER • or wait</div>
-  </div>
+  <canvas id="c"></canvas>
+    <div id="enter" class="enter" role="button" tabindex="0" aria-label="Enter">ENTER</div>
+  <div class="hud">UFO cursor • hover = instant light • press = tractor beam • idle = faint random pulses</div>
+  <div class="vignette"></div>
 
 <script>
-  // ===== Config =====
-  const DESTINATION = 'ko/home.html';   // default entry (language toggle will be inside home)
-  const AUTO_ENTER_MS = 6500;           // auto enter after this time
-  const MIN_VIEW_MS  = 900;            // prevent instant skip if click happens immediately
-
-  const wrap  = document.getElementById('introWrap');
-  const video = document.getElementById('introVideo');
+(() => {
+  const canvas = document.getElementById('c');
+  const ctx = canvas.getContext('2d');
   const enter = document.getElementById('enter');
 
-  let startedAt = performance.now();
-  let navigated = false;
-
-  function goHome(){
-    if(navigated) return;
-    navigated = true;
-
-    // visual fade
-    wrap.classList.add('fade-out');
-
-    // stop video to avoid audio/CPU on navigation
-    try { video.pause(); } catch(e){}
-
-    // navigate
-    setTimeout(()=>{ window.location.href = DESTINATION; }, 260);
+  // ==========================
+  // Trail buffer (light afterglow, premium)
+  // ==========================
+  const trail = document.createElement('canvas');
+  const tctx = trail.getContext('2d');
+  let tw=1, th=1;
+  function resizeTrail(){
+    tw = trail.width = w;
+    th = trail.height = h;
   }
 
-  // Click ENTER
-  enter.addEventListener('click', ()=>{
-    const elapsed = performance.now() - startedAt;
-    // Ensure intro is visible at least briefly
-    if(elapsed < MIN_VIEW_MS){
-      setTimeout(goHome, MIN_VIEW_MS - elapsed);
-    } else {
-      goHome();
-    }
-  });
+  // ==========================
 
-  // Keyboard: Enter / Space
-  window.addEventListener('keydown', (e)=>{
+  // Helpers
+  // ==========================
+  const clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
+  const TAU = Math.PI*2;
+
+  // ==========================
+  // Premium micro-grain (subtle, tiled) + beam particles
+  // ==========================
+  const grain = document.createElement('canvas');
+  const gctx = grain.getContext('2d');
+  let gw=256, gh=256;
+  function buildGrain(){
+    gw = grain.width = 256;
+    gh = grain.height = 256;
+    const img = gctx.createImageData(gw, gh);
+    // very subtle luminance noise
+    for(let i=0;i<img.data.length;i+=4){
+      const v = (Math.random()*255)|0;
+      img.data[i]=v; img.data[i+1]=v; img.data[i+2]=v; img.data[i+3]=26; // alpha
+    }
+    gctx.putImageData(img,0,0);
+  }
+  buildGrain();
+
+  const particles = [];
+  function spawnBeamParticles(sx,sy,tx,ty){
+    // limited count, spawn near the beam
+    const want = isMobile()? 2 : 3;
+    for(let i=0;i<want;i++){
+      particles.push({
+        t: Math.random()*0.55, // along beam
+        v: 0.55 + Math.random()*0.65,
+        o: (Math.random()*2-1) * (isMobile()? 9: 14) * dpr, // side offset
+        r: (0.9 + Math.random()*1.6) * dpr,
+        a: 0.22 + Math.random()*0.22
+      });
+    }
+    // cap
+    const cap = isMobile()? 90 : 140;
+    if(particles.length>cap) particles.splice(0, particles.length-cap);
+  }
+
+  function drawBeamParticles(sx,sy,tx,ty){
+    if(!particles.length) return;
+    const vx = tx - sx, vy = ty - sy;
+    const dist = Math.hypot(vx,vy) + 1e-6;
+    const nx = vx/dist, ny = vy/dist;
+    const px = -ny, py = nx;
+
+    ctx.globalCompositeOperation='screen';
+    for(let i=particles.length-1;i>=0;i--){
+      const p = particles[i];
+      p.t += (p.v * 0.010);
+      p.a *= 0.992;
+      if(p.t>1.02 || p.a<0.02){ particles.splice(i,1); continue; }
+
+      const tt = p.t;
+      const cx = sx + vx*tt + px*p.o;
+      const cy = sy + vy*tt + py*p.o;
+
+      const rr = p.r * (1.0 + 0.45*Math.sin((performance.now()*0.01) + tt*6.0));
+      const grad = ctx.createRadialGradient(cx,cy,0,cx,cy,rr*7.0);
+      grad.addColorStop(0, `rgba(233,236,241,${p.a})`);
+      grad.addColorStop(0.28, `rgba(233,236,241,${p.a*0.25})`);
+      grad.addColorStop(1, 'rgba(233,236,241,0)');
+      ctx.fillStyle = grad;
+      ctx.fillRect(cx-rr*8, cy-rr*8, rr*16, rr*16);
+    }
+    ctx.globalCompositeOperation='source-over';
+  }
+
+  function isPortrait(){ return innerHeight > innerWidth; }
+  function isMobile(){ return Math.min(innerWidth, innerHeight) < 820; }
+
+  // ==========================
+  // Sizing
+  // ==========================
+  let w,h,dpr;
+  function resize(){
+    dpr = Math.min(2, window.devicePixelRatio || 1);
+    w = canvas.width = Math.floor(innerWidth * dpr);
+    h = canvas.height = Math.floor(innerHeight * dpr);
+    canvas.style.width = innerWidth + 'px';
+    canvas.style.height = innerHeight + 'px';
+    resizeTrail();
+    buildWeb();
+  }
+  addEventListener('resize', resize, {passive:true});
+
+  // ==========================
+  // Pointer (NO smoothing -> instant)
+  // ==========================
+  const pointer = { px:0, py:0, vx:0, vy:0, down:false, seen:false };
+  let lastPointer = {px:0, py:0};
+  let lastMoveAt = performance.now();
+
+  function setPointerFromEvent(e){
+    const cx = (e.clientX ?? (e.touches && e.touches[0].clientX) ?? innerWidth*0.5);
+    const cy = (e.clientY ?? (e.touches && e.touches[0].clientY) ?? innerHeight*0.5);
+    pointer.px = cx * dpr;
+    pointer.py = cy * dpr;
+    pointer.seen = true;
+    lastMoveAt = performance.now();
+  }
+
+  addEventListener('pointermove', (e)=>{ setPointerFromEvent(e); }, {passive:true});
+  addEventListener('pointerdown', (e)=>{ pointer.down=true; setPointerFromEvent(e); }, {passive:true});
+  addEventListener('pointerup', ()=>{ pointer.down=false; }, {passive:true});
+  addEventListener('touchmove', (e)=>{ setPointerFromEvent(e); }, {passive:true});
+
+  // ==========================
+  // Indra Web (hex lattice)
+  // ==========================
+  let nodes = [];
+  let edges = [];
+  let hexSize = 36;
+  let cols=0, rows=0;
+
+  function buildWeb(){
+    nodes.length = 0;
+    edges.length = 0;
+
+    const short = Math.min(w,h);
+    const long  = Math.max(w,h);
+    const aspect = long/short;
+
+    // Dense on wide screens so it fills nicely
+    const base = short / (isMobile() ? 15.0 : 12.0);
+    const portraitFactor = isPortrait() ? 0.90 : 1.0;
+    const aspectFactor = clamp(1.0 - (aspect-1.0)*0.18, 0.72, 1.0);
+    const mobileFactor = isMobile() ? 0.85 : 1.02;
+
+    hexSize = clamp(base * portraitFactor * aspectFactor * mobileFactor, 16*dpr, 58*dpr);
+
+    const dx = hexSize;
+    const dy = hexSize * Math.sqrt(3)/2;
+
+    const padCols = isMobile()? 7 : (aspect>1.6 ? 12 : 9);
+    const padRows = isMobile()? 7 : (aspect>1.6 ? 10 : 9);
+
+    cols = Math.ceil(w/dx) + padCols;
+    rows = Math.ceil(h/dy) + padRows;
+
+    // depth for subtle 3D (cheap, static)
+    const zAmp = isMobile() ? 0.55 : 0.85;
+
+    for(let j=0;j<rows;j++){
+      for(let i=0;i<cols;i++){
+        const offset = (j%2)*0.5;
+        const x0 = (i + offset) * dx - dx*(padCols*0.55);
+        const y0 = j * dy - dy*(padRows*0.55);
+
+        // radial depth (center closer)
+        const nx = (x0 - w*0.5) / (Math.max(w,h));
+        const ny = (y0 - h*0.52) / (Math.max(w,h));
+        const r = Math.sqrt(nx*nx + ny*ny);
+        let z0 = (0.60 - r*1.15) * zAmp;
+        z0 = clamp(z0, -1, 1);
+
+        // energy = "honey/light" stored in nodes
+        nodes.push({
+          x0,y0,z0,
+          x:x0, y:y0, z:z0,
+          // instantaneous deformation offset (no heavy physics)
+          ox:0, oy:0,
+          e:0,     // energy 0..1
+          seed: ((Math.sin(i*127.1 + j*311.7)*43758.5453)%1+1)%1
+        });
+      }
+    }
+
+    const index = (i,j)=> j*cols + i;
+    function addEdge(a,b){
+      if(a<0||b<0||a>=nodes.length||b>=nodes.length) return;
+      edges.push([a,b]);
+    }
+
+    const wide = (aspect>1.6) && !isMobile();
+    const modA = wide ? 15 : 23;
+    const modB = wide ? 19 : 29;
+
+    for(let j=0;j<rows;j++){
+      for(let i=0;i<cols;i++){
+        const a = index(i,j);
+        addEdge(a, index(i+1,j));
+        addEdge(a, index(i + (j%2), j+1));
+        addEdge(a, index(i - (j%2==0?1:0), j+1));
+
+        // rare far links (Indra reflections)
+        if(((i*13 + j*7) % modA) === 0) addEdge(a, index(i+2, j+1));
+        if(((i*19 + j*11) % modB) === 0) addEdge(a, index(i-2, j+1));
+        if(wide && ((i*5 + j*9) % 31) === 0) addEdge(a, index(i+3, j));
+      }
+    }
+  }
+
+  // Projection (cheap 3D)
+  const cam = { z: -2.75, fov: 2.28, scale: 0.60 };
+
+  function project(n){
+    // depth with energy bulge
+    const z = n.z + n.e*0.28;
+    const zz = (z - cam.z);
+    const s = cam.fov / zz;
+
+    // parallax: deeper points move less, closer points move more (adds real 3D feel)
+    const px = pointer.seen ? (pointer.px - w*0.5) : 0;
+    const py = pointer.seen ? (pointer.py - h*0.52) : 0;
+    const par = (0.06 + (z+1)*0.10); // near -> more parallax
+    const xPar = px * par;
+    const yPar = py * par;
+
+    const x2 = n.x + n.ox + xPar;
+    const y2 = n.y + n.oy + yPar;
+
+    return {
+      x: w*0.5 + (x2 - w*0.5) * s * cam.scale,
+      y: h*0.52 + (y2 - h*0.52) * s * cam.scale,
+      s,
+      z
+    };
+  }
+  
+// ==========================
+// UFO beam geometry (single source of truth)
+// ==========================
+function ufoParams(){
+  const s = (isMobile() ? 11 : 12) * dpr; // must mirror drawUFO()
+  const r = s*1.65;
+  // Beam length is shared by: (1) visual beam, (2) ground spot, (3) interaction target.
+  const beamH = (isMobile()? 230 : 320) * dpr;
+  const beamW = r*1.25;
+  const beamStartY = r*0.65; // from craft center to beam start
+  return {s,r,beamH,beamW,beamStartY};
+}
+
+function beamTarget(){
+  return { x: w*0.5, y: h*0.52 };
+}
+// ==========================
+  // Behavior: instant local reaction + quiet elsewhere + idle random micro-pulses
+  // ==========================
+  function updateEnergy(t, dt){
+    // pointer velocity (for "spider movement" feedback)
+    pointer.vx = pointer.px - lastPointer.px;
+    pointer.vy = pointer.py - lastPointer.py;
+    lastPointer.px = pointer.px;
+    lastPointer.py = pointer.py;
+
+    const speed = Math.sqrt(pointer.vx*pointer.vx + pointer.vy*pointer.vy) / (30*dpr);
+    const speedK = clamp(speed, 0, 1);
+
+    const tx = w*0.5;
+    const ty = h*0.52;
+
+    let mx = pointer.down ? tx : (pointer.seen ? pointer.px : tx);
+    let my = pointer.down ? ty : (pointer.seen ? pointer.py : ty);
+
+    // local influence radius: only nearby reacts
+    const R = (isMobile() ? 120 : 180) * dpr * (pointer.down ? 1.25 : 1.00);
+    const R2 = R*R;
+
+    // deposit strength: mainly on press (spotlight)
+    const hoverDeposit = 0.04; // tiny hover (keeps life)
+    const pressDeposit = (0.55 + speedK*0.30); // strong on press
+    const deposit = pointer.down ? pressDeposit : hoverDeposit;
+
+    // decay: quiet elsewhere quickly
+    const decay = pointer.down ? 0.90 : 0.82; // per-frame-ish multiplier, adjusted by dt below
+    const decayAdj = Math.pow(decay, dt*60);  // frame-rate independent
+
+    // idle detection
+    const idle = (!pointer.down) && (performance.now() - lastMoveAt > 650) && (speedK < 0.02);
+
+    // random micro pulses when idle (very subtle)
+    if(idle && Math.random() < 0.06){
+      const k = (Math.random()*nodes.length)|0;
+      nodes[k].e = Math.min(1, nodes[k].e + 0.35);
+    }
+
+    for(const n of nodes){
+      // decay energy everywhere
+      n.e *= decayAdj;
+
+      // relax deformation quickly (so quiet areas stay still)
+      n.ox *= 0.78;
+      n.oy *= 0.78;
+
+      // base position is static (cheap)
+      n.x = n.x0;
+      n.y = n.y0;
+      n.z = n.z0;
+
+      // pointer contact
+      const dx = n.x0 - mx;
+      const dy = n.y0 - my;
+      const d2 = dx*dx + dy*dy;
+
+      if(d2 < R2){
+        const d = Math.sqrt(d2) + 1e-6;
+        const q = (1 - d/R);
+
+        // immediate "honey fill" (energy up)
+        n.e = Math.min(1, n.e + q * deposit);
+
+        // deformation: swirl around pointer like web tension (instant)
+        const perpX = -dy / d;
+        const perpY =  dx / d;
+
+        const pull = -q * (8 + 10*speedK) * dpr;
+        const swirl = q * (10 + 14*(pointer.down?1:0.3)) * dpr;
+
+        n.ox += (dx/d) * pull + perpX * swirl;
+        n.oy += (dy/d) * pull + perpY * swirl;
+
+      }
+
+      // Beam-track influence: when pressing, lightly reveal the lattice under the beam path
+      if(pointer.down){
+        const ux = pointer.px, uy = pointer.py;
+        const tx = w*0.5, ty = h*0.52;
+        const vx = tx - ux, vy = ty - uy;
+        const ll = vx*vx + vy*vy + 1e-6;
+
+        // distance from node to beam segment
+        const wx = n.x0 - ux, wy = n.y0 - uy;
+        let tt = (wx*vx + wy*vy) / ll;
+        tt = clamp(tt, 0, 1);
+        const cx = ux + vx*tt;
+        const cy = uy + vy*tt;
+        const ex = n.x0 - cx;
+        const ey = n.y0 - cy;
+        const dseg2 = ex*ex + ey*ey;
+
+        const br = (isMobile()? 68: 86) * dpr; // beam reveal radius
+        if(dseg2 < br*br){
+          const q2 = 1 - Math.sqrt(dseg2) / br;
+          // gentle lift (keeps premium, not loud)
+          n.e = Math.min(1, n.e + q2 * (0.09 + 0.06*speedK));
+          // slight tension sideways to feel like silk under light
+          const sgn = (n.seed > 0.5) ? 1 : -1;
+          n.ox += ex * (-0.0022*q2) * dpr;
+          n.oy += ey * (-0.0022*q2) * dpr;
+          n.ox += sgn * (-ey) * (0.0012*q2) * dpr;
+          n.oy += sgn * ( ex) * (0.0012*q2) * dpr;
+        }
+      }
+    }
+  }
+
+  // Optional tiny diffusion along edges (keeps it connected, but still local)
+  function diffuseEnergy(dt){
+    // very light; one pass
+    const k = 0.06 * dt*60;
+    for(const [a,b] of edges){
+      const ea = nodes[a].e, eb = nodes[b].e;
+      const d = (ea - eb) * k;
+      nodes[a].e = clamp(ea - d, 0, 1);
+      nodes[b].e = clamp(eb + d, 0, 1);
+    }
+  }
+
+  function drawBg(t){
+    ctx.fillStyle = '#05070d';
+    ctx.fillRect(0,0,w,h);
+
+    // subtle center lift (doesn't fight "quiet elsewhere")
+    const gy = h*0.44;
+    const g = ctx.createRadialGradient(w*0.55, gy, 0, w*0.55, gy, Math.max(w,h)*0.95);
+    g.addColorStop(0,'rgba(233,236,241,0.05)');
+    g.addColorStop(0.25,'rgba(233,236,241,0.02)');
+    g.addColorStop(1,'rgba(0,0,0,0)');
+    ctx.fillStyle = g;
+    ctx.fillRect(0,0,w,h);
+  }
+
+  // ==========================
+  // Main loop
+  // ==========================
+  let start = performance.now();
+  let last = start;
+  let STOP = false;
+  let enterShown = false;
+
+  function frame(now){
+    if(STOP) return;
+    const t = now - start;
+    const dt = Math.min(0.05, (now - last) / 1000);
+    last = now;
+
+    updateEnergy(t, dt);
+    diffuseEnergy(dt);
+
+    // --- trail buffer fade (keeps only a short afterglow) ---
+    tctx.globalCompositeOperation = 'source-over';
+    tctx.fillStyle = 'rgba(5,7,13,0.14)'; // higher -> shorter trails
+    tctx.fillRect(0,0,tw,th);
+
+    // stamp a glow where the cursor is active (only when seen & moving/pressing)
+    const nowMs = performance.now();
+    const idleMs = nowMs - lastMoveAt;
+    const beeSpeedK = clamp(Math.sqrt(pointer.vx*pointer.vx + pointer.vy*pointer.vy) / (32*dpr), 0, 1);
+    const active = pointer.down || idleMs < 220 || beeSpeedK > 0.10;
+
+    if(pointer.seen && active){
+      // soft orb
+      const rr = (isMobile()? 70: 90) * dpr * (0.85 + beeSpeedK*0.5 + (pointer.down?0.2:0));
+      const g = tctx.createRadialGradient(pointer.px, pointer.py, 0, pointer.px, pointer.py, rr);
+      const a0 = 0.10 + beeSpeedK*0.10 + (pointer.down?0.08:0);
+      g.addColorStop(0, `rgba(233,236,241,${a0})`);
+      g.addColorStop(0.35, `rgba(233,236,241,${a0*0.35})`);
+      g.addColorStop(1, 'rgba(233,236,241,0)');
+      tctx.globalCompositeOperation = 'screen';
+      tctx.fillStyle = g;
+      tctx.fillRect(0,0,tw,th);
+
+      // directional streak (very subtle)
+      const vx = pointer.vx, vy = pointer.vy;
+      const v = Math.sqrt(vx*vx + vy*vy) + 1e-6;
+      const ux = vx / v, uy = vy / v;
+      const len = (isMobile()? 16: 24) * dpr * (0.6 + beeSpeedK);
+      const sx = pointer.px - ux*len;
+      const sy = pointer.py - uy*len;
+      tctx.strokeStyle = `rgba(233,236,241,${0.06 + beeSpeedK*0.10})`;
+      tctx.lineWidth = (1.2 + beeSpeedK*1.0) * dpr;
+      tctx.beginPath();
+      tctx.moveTo(sx, sy);
+      tctx.lineTo(pointer.px, pointer.py);
+      tctx.stroke();
+
+      tctx.globalCompositeOperation = 'source-over';
+    }
+
+    drawBg(t);
+
+    // composite trail (screen) under everything
+    ctx.globalCompositeOperation = 'screen';
+    ctx.globalAlpha = isMobile()? 0.28 : 0.34;
+    ctx.drawImage(trail, 0, 0);
+    ctx.globalAlpha = 1.0;
+    ctx.globalCompositeOperation = 'source-over';
+
+
+// Tractor beam: UFO always shoots toward the screen center when pressing
+if(pointer.seen && pointer.down){
+  ctx.globalCompositeOperation = 'screen';
+
+  const p = ufoParams();
+  const ux = pointer.px, uy = pointer.py;
+  const tx = w*0.5, ty = h*0.52;
+
+  const vx = tx - ux, vy = ty - uy;
+  const dist = Math.hypot(vx, vy) + 1e-6;
+  const nx = vx / dist, ny = vy / dist;
+  const px = -ny, py = nx;
+
+  // start point from the craft belly (so it feels attached to the UFO)
+  const sx = ux + nx * (p.r * 0.68);
+  const sy = uy + ny * (p.r * 0.68);
+
+  // beam width: narrow at the UFO, wider at the center target
+  const w0 = p.beamW * 0.26;
+  const w1 = p.beamW * 0.84;
+
+  // main veil (soft)
+  const g = ctx.createLinearGradient(sx, sy, tx, ty);
+  g.addColorStop(0, 'rgba(233,236,241,0.14)');
+  g.addColorStop(0.22,'rgba(233,236,241,0.09)');
+  g.addColorStop(0.62,'rgba(233,236,241,0.05)');
+  g.addColorStop(1, 'rgba(233,236,241,0)');
+  ctx.fillStyle = g;
+
+  ctx.beginPath();
+  ctx.moveTo(sx + px*w0, sy + py*w0);
+  ctx.lineTo(sx - px*w0, sy - py*w0);
+  ctx.lineTo(tx - px*w1, ty - py*w1);
+  ctx.lineTo(tx + px*w1, ty + py*w1);
+  ctx.closePath();
+  ctx.fill();
+
+  // inner streaks (adds "premium" structure, still monochrome)
+  ctx.globalAlpha = 0.9;
+  for(let i=0;i<3;i++){
+    const k = (i-1) * 0.26;
+    const s0 = w0*(0.38 - i*0.06);
+    const s1 = w1*(0.26 - i*0.05);
+    const gg = ctx.createLinearGradient(sx, sy, tx, ty);
+    gg.addColorStop(0, `rgba(233,236,241,${0.08 - i*0.015})`);
+    gg.addColorStop(0.5, `rgba(233,236,241,${0.05 - i*0.010})`);
+    gg.addColorStop(1, 'rgba(233,236,241,0)');
+    ctx.fillStyle = gg;
+
+    ctx.beginPath();
+    ctx.moveTo(sx + px*(s0 + k*w0*0.25), sy + py*(s0 + k*w0*0.25));
+    ctx.lineTo(sx - px*(s0 - k*w0*0.25), sy - py*(s0 - k*w0*0.25));
+    ctx.lineTo(tx - px*(s1 - k*w1*0.28), ty - py*(s1 - k*w1*0.28));
+    ctx.lineTo(tx + px*(s1 + k*w1*0.28), ty + py*(s1 + k*w1*0.28));
+    ctx.closePath();
+    ctx.fill();
+  }
+  ctx.globalAlpha = 1.0;
+
+  // target spot (always centered) + subtle hex ring cue
+  const rr = (isMobile()? 185 : 265) * dpr;
+  const spot = ctx.createRadialGradient(tx, ty, 0, tx, ty, rr);
+  spot.addColorStop(0, 'rgba(233,236,241,0.21)');
+  spot.addColorStop(0.25,'rgba(233,236,241,0.11)');
+  spot.addColorStop(0.62,'rgba(233,236,241,0.06)');
+  spot.addColorStop(1, 'rgba(233,236,241,0)');
+  ctx.fillStyle = spot;
+  ctx.fillRect(0,0,w,h);
+
+  // hex-ish ring (very faint)
+  ctx.strokeStyle = 'rgba(233,236,241,0.055)';
+  ctx.lineWidth = 1.2*dpr;
+  ctx.beginPath();
+  for(let i=0;i<6;i++){
+    const a = (i/6)*TAU + Math.PI/6;
+    const xx = tx + Math.cos(a)*rr*0.28;
+    const yy = ty + Math.sin(a)*rr*0.28;
+    if(i===0) ctx.moveTo(xx,yy); else ctx.lineTo(xx,yy);
+  }
+  ctx.closePath();
+  ctx.stroke();
+
+  // particle sparkle along beam
+  spawnBeamParticles(sx,sy,tx,ty);
+  drawBeamParticles(sx,sy,tx,ty);
+
+  ctx.globalCompositeOperation = 'source-over';
+}
+
+
+
+// extra local bloom (only near cursor, keeps rest quiet)
+    const now2 = performance.now();
+    const idle2 = now2 - lastMoveAt;
+    const speedK2 = clamp(Math.sqrt(pointer.vx*pointer.vx + pointer.vy*pointer.vy) / (32*dpr), 0, 1);
+    const active2 = pointer.down || idle2 < 240 || speedK2 > 0.10;
+    if(pointer.seen && active2){
+      const r = (isMobile()? 140: 200) * dpr * (0.9 + speedK2*0.55 + (pointer.down?0.22:0));
+      const g2 = ctx.createRadialGradient(pointer.px, pointer.py, 0, pointer.px, pointer.py, r);
+      const a0 = 0.10 + speedK2*0.14 + (pointer.down?0.10:0);
+      g2.addColorStop(0, `rgba(233,236,241,${a0})`);
+      g2.addColorStop(0.32, `rgba(233,236,241,${a0*0.40})`);
+      g2.addColorStop(1, 'rgba(233,236,241,0)');
+      ctx.globalCompositeOperation = 'screen';
+      ctx.fillStyle = g2;
+      ctx.fillRect(0,0,w,h);
+      ctx.globalCompositeOperation = 'source-over';
+    }
+
+    // pre-project
+    const P = new Array(nodes.length);
+    for(let i=0;i<nodes.length;i++){
+      P[i] = project(nodes[i]);
+    }
+
+    ctx.globalCompositeOperation = 'screen';
+
+    // Draw edges: two-pass (back then front) for stronger depth
+    // sort-like by just drawing twice using z threshold (cheap)
+    function drawEdges(pass){
+      // pass: 0 = back, 1 = front
+      const zCut = 0.0;
+      const blurBase = pass ? (isMobile()? 6: 10) : (isMobile()? 0: 2);
+
+      for(const [a,b] of edges){
+        const na = nodes[a], nb = nodes[b];
+        const ea = na.e, eb = nb.e;
+        const e = (ea + eb) * 0.5;
+
+        // quiet: skip ultra-low energy, keep structure only faintly
+        if(e < (isMobile()? 0.022 : 0.012)){
+          if(isMobile()) continue;
+        }
+
+        const pa = P[a], pb = P[b];
+        const zAvg = (pa.z + pb.z) * 0.5;
+
+        if(pass === 0 && zAvg > zCut) continue;
+        if(pass === 1 && zAvg <= zCut) continue;
+
+        const dx = pa.x - pb.x, dy = pa.y - pb.y;
+        const dist = Math.sqrt(dx*dx + dy*dy);
+        const maxDist = hexSize * (isMobile() ? 2.3 : 3.1);
+        if(dist > maxDist) continue;
+
+        // Depth & energy shape
+        const depthK = clamp((zAvg + 1) * 0.5, 0, 1);
+        const alphaBase = pass ? 0.010 : 0.006;
+        const alpha = clamp(alphaBase + e*(pass?0.34:0.22) * (0.65 + depthK*0.75), 0, pass?0.65:0.40);
+        const lw = (0.55 + e*2.1) * dpr * (pass?1.05:0.85) * (0.75 + depthK*0.65);
+
+        // Bloomy glow when energized, but only for active areas
+        if(e > 0.10 && (pointer.down || (performance.now()-lastMoveAt) < 260)){
+          ctx.shadowColor = 'rgba(233,236,241,0.42)';
+          ctx.shadowBlur = blurBase + e*(pass?16:10)*dpr;
+        } else {
+          ctx.shadowBlur = 0;
+        }
+
+        ctx.strokeStyle = `rgba(233,236,241,${alpha})`;
+        ctx.lineWidth = lw;
+
+        ctx.beginPath();
+        ctx.moveTo(pa.x, pa.y);
+        ctx.lineTo(pb.x, pb.y);
+        ctx.stroke();
+      }
+      ctx.shadowBlur = 0;
+    }
+
+    ctx.globalCompositeOperation = 'screen';
+    drawEdges(0);
+    drawEdges(1);
+
+    // Draw nodes: jewels light up instantly near pointer, fade away elsewhere
+    for(let i=0;i<nodes.length;i += (isMobile()? 2: 1)){
+      const n = nodes[i];
+      const p = P[i];
+      const e = n.e;
+
+      if(e < (isMobile()? 0.02 : 0.01)){
+        // keep a faint presence so structure exists, but very quiet
+        if(!isMobile()){
+          ctx.fillStyle = 'rgba(233,236,241,0.012)';
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, 0.65*dpr, 0, TAU);
+          ctx.fill();
+        }
+        continue;
+      }
+
+      const a = clamp(0.022 + e*0.62, 0, 0.82);
+      const r = (0.75 + e*2.8) * dpr * p.s;
+
+      // halo
+      ctx.fillStyle = `rgba(233,236,241,${a*0.10})`;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, r*(3.6 + e*2.2), 0, TAU);
+      ctx.fill();
+
+      // core
+      ctx.fillStyle = `rgba(233,236,241,${a})`;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, Math.max(0.7*dpr, r), 0, TAU);
+      ctx.fill();
+    }
+
+    ctx.globalCompositeOperation = 'source-over';
+
+
+    // ==========================
+    // Bee cursor (drawn on canvas; system cursor hidden)
+    // ==========================
+    
+    // ==========================
+    // UFO cursor (drawn on canvas; system cursor hidden)
+    // ==========================
+    function drawUFO(x,y, speedK){
+      // x,y in dpr space
+      const ang = Math.atan2(pointer.vy, pointer.vx) || 0;
+      const wobble = Math.sin(performance.now()*0.008) * 0.06;
+      const tilt = (clamp(speedK, 0, 1) * 0.35) + wobble;
+
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.rotate(ang*0.08 + tilt);
+
+      const s = (isMobile() ? 11 : 12) * dpr;    // base size
+      const r = s*1.65;                          // craft radius
+      const domeR = s*0.95;
+
+      ctx.globalCompositeOperation = 'screen';
+
+      // outer glow (subtle, premium)
+      const glow = 0.16 + speedK*0.18 + (pointer.down?0.16:0);
+      ctx.fillStyle = `rgba(233,236,241,${glow*0.20})`;
+      ctx.beginPath();
+      ctx.arc(0, 0, r*2.1, 0, TAU);
+      ctx.fill();
+
+
+      // saucer body
+      ctx.fillStyle = 'rgba(233,236,241,0.55)';
+      ctx.beginPath();
+      ctx.ellipse(0, 0, r*1.45, r*0.62, 0, 0, TAU);
+      ctx.fill();
+
+      // shadow stripes (carves shape, keeps monochrome premium)
+      ctx.fillStyle = 'rgba(5,7,13,0.70)';
+      for(let i=-2;i<=2;i++){
+        const xx = i*s*0.55;
+        ctx.beginPath();
+        ctx.ellipse(xx, 0, s*0.14, r*0.55, 0, 0, TAU);
+        ctx.fill();
+      }
+
+      // rim highlight
+      ctx.strokeStyle = 'rgba(233,236,241,0.30)';
+      ctx.lineWidth = 1*dpr;
+      ctx.beginPath();
+      ctx.ellipse(0, 0, r*1.45, r*0.62, 0, 0, TAU);
+      ctx.stroke();
+
+      // lights around rim (pulse)
+      const pulse = 0.45 + 0.55*Math.sin(performance.now()*0.010);
+      for(let i=0;i<6;i++){
+        const a = (i/6)*TAU + performance.now()*0.0016;
+        const lx = Math.cos(a)*r*1.05;
+        const ly = Math.sin(a)*r*0.25 + r*0.18;
+        const la = 0.08 + pulse*0.16 + (pointer.down?0.10:0);
+        ctx.fillStyle = `rgba(233,236,241,${la})`;
+        ctx.beginPath();
+        ctx.arc(lx, ly, s*0.18, 0, TAU);
+        ctx.fill();
+      }
+
+      // dome
+      ctx.fillStyle = 'rgba(233,236,241,0.22)';
+      ctx.beginPath();
+      ctx.ellipse(0, -r*0.35, domeR*1.05, domeR*0.78, 0, 0, TAU);
+      ctx.fill();
+
+      // dome highlight
+      ctx.fillStyle = 'rgba(233,236,241,0.10)';
+      ctx.beginPath();
+      ctx.ellipse(-domeR*0.18, -r*0.42, domeR*0.60, domeR*0.38, -0.25, 0, TAU);
+      ctx.fill();
+
+      // AKENM logo on the craft (embossed/engraved)
+      ctx.globalCompositeOperation = 'source-over';
+      const fs = Math.max(9*dpr, s*0.78);
+      ctx.font = `${fs}px ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple SD Gothic Neo","Noto Sans KR","Malgun Gothic", sans-serif`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+
+      // engraved shadow (down-right)
+      ctx.fillStyle = 'rgba(5,7,13,0.82)';
+      ctx.fillText('AKENM', 0.9*dpr, r*0.02 + 0.7*dpr);
+
+      // highlight (up-left)
+      ctx.fillStyle = 'rgba(233,236,241,0.22)';
+      ctx.fillText('AKENM', -0.7*dpr, r*0.02 - 0.5*dpr);
+
+      // core mark (subtle, readable)
+      ctx.fillStyle = 'rgba(5,7,13,0.70)';
+      ctx.fillText('AKENM', 0, r*0.02);
+
+      ctx.restore();
+    }
+
+
+
+    // Bee cursor draw (only after we've seen pointer movement; otherwise keep center calm)
+    const ufoSpeedK = clamp(Math.sqrt(pointer.vx*pointer.vx + pointer.vy*pointer.vy) / (32*dpr), 0, 1);
+    if(pointer.seen){
+      drawUFO(pointer.px, pointer.py, ufoSpeedK);
+    }
+    // subtle scanline (very faint)
+    const yscan = (t*0.10) % h;
+    ctx.fillStyle = 'rgba(233,236,241,0.012)';
+    ctx.fillRect(0, yscan, w, 2*dpr);
+
+
+    // Premium finishing: micro-grain + very subtle lens falloff
+    ctx.globalCompositeOperation = 'overlay';
+    ctx.globalAlpha = 0.06;
+    ctx.fillStyle = ctx.createPattern(grain, 'repeat');
+    ctx.translate(0,0); // no-op, keeps pattern stable
+    ctx.fillRect(0,0,w,h);
+    ctx.globalAlpha = 1.0;
+    ctx.globalCompositeOperation = 'source-over';
+    if(!enterShown && t > 4200){
+      enter.classList.add('show');
+      enterShown = true;
+    }
+
+    requestAnimationFrame(frame);
+  }
+
+  // init
+  resize();
+  // initial pointer at center for first impression
+  pointer.px = w*0.5; pointer.py = h*0.52; pointer.seen = false;
+  lastPointer.px = pointer.px; lastPointer.py = pointer.py;
+
+
+  // ==========================
+  // ENTER -> Warp scene transition
+  // ==========================
+  function goWarp(){
+    // prevent repeat
+    if(goWarp._done) return;
+    goWarp._done = true;
+    // index 내 iframe 금지: 즉시 KO 홈으로 이동
+    location.replace('ko/home.html');
+  }
+
+  // Click/tap
+  enter.style.pointerEvents = 'auto';
+  enter.addEventListener('pointerdown', (e)=>{ e.preventDefault(); goWarp(); });
+
+  // Keyboard (Enter/Space)
+  addEventListener('keydown', (e)=>{
     if(e.key === 'Enter' || e.key === ' '){
       e.preventDefault();
-      goHome();
+      goWarp();
     }
   });
 
-  // Auto enter after timeout
-  const timer = setTimeout(goHome, AUTO_ENTER_MS);
+    // Auto enter (6–7s)
+  setTimeout(goWarp, 6500);
 
-  // If video ends earlier than timeout, go home
-  video.addEventListener('ended', ()=>{
-    clearTimeout(timer);
-    goHome();
-  });
-
-  // Mobile autoplay policies: ensure it tries to play; if blocked, user can still click
-  video.addEventListener('error', ()=>{
-    // Video missing or blocked: still allow timed enter
-    console.warn('[AK ENM] intro video failed to load. Check assets/intro.mp4');
-  });
-
-  // In case browser delays autoplay, try play() explicitly
-  (async ()=>{
-    try { await video.play(); } catch(e) { /* ignore */ }
-  })();
+  requestAnimationFrame(frame);
+})();
 </script>
-
 </body>
 </html>
