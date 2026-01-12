@@ -1,62 +1,303 @@
 <!doctype html>
-<html lang="en">
+<html lang="ko">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <meta name="color-scheme" content="dark" />
-  <title>AK ENM — ATELIER</title>
+  <title>ATELIER</title>
   <style>
-    :root{ --bg:#05070d; --fg:#e9ecf1; }
-    html,body{ height:100%; margin:0; background:var(--bg); color:var(--fg); }
-    .wrap{ min-height:100%; display:flex; align-items:center; justify-content:center; padding:48px 18px;
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple SD Gothic Neo","Noto Sans KR","Malgun Gothic", sans-serif;
+    :root{
+      --bg:#05070d;
+      --fg:rgba(233,236,241,.92);
+      --moon: 360px;
+
+      --rotA: 26s;
+      --rotB: 33s;
     }
-    .card{ max-width:880px; width:100%; border:1px solid rgba(233,236,241,.14); border-radius:20px;
-      background:rgba(5,7,13,.35); backdrop-filter: blur(12px);
-      padding:28px 22px;
+
+    html,body{
+      /* allow scrolling for long wall-text */
+      min-height:100%;
+      height:auto;
+      margin:0;
+      background:var(--bg);
+      overflow-x:hidden;
+      overflow-y:auto;
+      font-family: ui-sans-serif, system-ui, -apple-system, "Apple SD Gothic Neo","Noto Sans KR", Arial, sans-serif;
+      color:var(--fg);
     }
-    h1{ margin:0 0 10px; letter-spacing:.14em; text-transform:uppercase; font-size:18px; }
-    p{ margin:0; opacity:.78; line-height:1.6; }
-    a{ color:rgba(233,236,241,.86); }
+
+    .stage{
+      min-height:100vh;
+      height:auto;
+      display:flex;
+      align-items:flex-start;
+      justify-content:center;
+      padding-top:10vh;
+      padding-bottom:12vh;
+      box-sizing:border-box;
+    }
+    .center{
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:18px;
+    }
+
+    .moon-wrap{
+      position:relative;
+      width:var(--moon);
+      height:var(--moon);
+      overflow:visible;
+    }
+
+    .moon-glow{
+      position:absolute;
+      inset:-48%;
+      border-radius:50%;
+      background: radial-gradient(circle,
+        rgba(255,255,255,0) 40%,
+        rgba(255,255,255,.05) 58%,
+        rgba(255,255,255,0) 74%);
+      filter: blur(2px);
+      opacity:.52;
+      pointer-events:none;
+    }
+
+    .moon{
+      position:absolute;
+      inset:0;
+      border-radius:50%;
+      overflow:hidden;
+      background:
+        radial-gradient(circle at 36% 30%,
+          rgba(255,255,255,.06),
+          rgba(255,255,255,.02) 46%,
+          rgba(0,0,0,.62) 72%,
+          rgba(0,0,0,.90) 100%);
+      box-shadow:
+        0 18px 58px rgba(0,0,0,.60),
+        inset 0 0 0 1px rgba(233,236,241,.06);
+      filter: saturate(.95);
+      transform: translateZ(0);
+    }
+
+    .depth-vignette{
+      position:absolute;
+      inset:-14%;
+      border-radius:50%;
+      pointer-events:none;
+      background: radial-gradient(circle,
+        rgba(0,0,0,0) 46%,
+        rgba(0,0,0,.18) 68%,
+        rgba(0,0,0,.60) 92%);
+      mix-blend-mode:multiply;
+      opacity:.55;
+    }
+
+    .lines{
+      position:absolute;
+      inset:0;
+      pointer-events:none;
+      -webkit-mask-image: radial-gradient(circle, rgba(0,0,0,1) 63%, rgba(0,0,0,0) 80%);
+              mask-image: radial-gradient(circle, rgba(0,0,0,1) 63%, rgba(0,0,0,0) 80%);
+      transform: translateZ(0);
+      mix-blend-mode: screen;
+      opacity:.92;
+    }
+
+    .thin{ opacity:.20; }
+    .thin2{ opacity:.13; }
+    .thin3{ opacity:.09; }
+
+    .ringA{ transform-origin:50% 50%; animation: spin var(--rotA) linear infinite; will-change: transform; }
+    .ringB{ transform-origin:50% 50%; animation: spin var(--rotB) linear infinite; will-change: transform; }
+    @keyframes spin{ to{ transform: rotate(360deg); } }
+
+    .snake{
+      stroke-dasharray: 18 250;
+      animation: crawl var(--dur) linear infinite;
+      will-change: stroke-dashoffset;
+      stroke-linecap: round;
+      opacity: .88;
+      filter: blur(.02px);
+    }
+    @keyframes crawl{ to{ stroke-dashoffset: -268; } }
+
+    .back{ opacity:.22; filter: blur(.55px); }
+    .front{ opacity:.86; filter: blur(.02px); }
+
+    .c1{ stroke: rgba(255, 60, 60, .95); }
+    .c2{ stroke: rgba(255, 140, 40, .95); }
+    .c3{ stroke: rgba(255, 220, 70, .92); }
+    .c4{ stroke: rgba( 80, 235, 140, .92); }
+    .c5{ stroke: rgba( 90, 200, 255, .92); }
+    .c6{ stroke: rgba(120, 135, 255, .92); }
+    .c7{ stroke: rgba(205, 120, 255, .92); }
+
+    .w1{ stroke-width: 0.95; }
+    .w2{ stroke-width: 0.90; }
+    .w3{ stroke-width: 0.85; }
+
+    .title{
+      font-size:22px;
+      letter-spacing:.28em;
+      text-transform:uppercase;
+      margin-top:8px;
+    }
+    .meta{
+      font-size:13px;
+      letter-spacing:.18em;
+      color:rgba(233,236,241,.72);
+      margin-top:-8px;
+      text-transform:uppercase;
+    }
+
+    @media (max-width: 680px){
+      :root{ --moon: 280px; }
+      .stage{ padding-top: 11vh; }
+      .title{ font-size:18px; }
+    }
+    @media (prefers-reduced-motion: reduce){
+      .ringA,.ringB,.snake{ animation:none; }
+    }
+
+    
+    /* ===== WALL TEXT (from atelier_final_beam_moon_nav.html, restyled) ===== */
+    .text{
+      width: min(1040px, 92vw);
+      text-align:center;
+      color: rgba(233,236,241,.95);
+      margin-top: 22px;
+      z-index: 5;
+    }
+    .text h1{
+      margin: 0 0 26px;
+      font-size: 12px;
+      letter-spacing: .36em;
+      font-weight: 600;
+      opacity: .86;
+      text-transform: uppercase;
+    }
+    .text p{
+      margin: 0 0 22px;
+      font-size: 17px;
+      line-height: 1.92;
+      letter-spacing: -0.005em;
+      opacity: .95;
+      text-shadow: 0 8px 28px rgba(0,0,0,.65);
+    }
+    .text .meta{
+      margin-top: 22px;
+      font-size: 12px;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      color: rgba(233,236,241,.72);
+      opacity: .72;
+    }
+    @media (max-width: 980px){
+      .text{ width: min(940px, 92vw); }
+      .text p{ font-size: 16px; line-height: 1.88; }
+    }
+
+
+    /* ====== NAV (from home.html) ====== */
     /* Top-right menu (⋯) + overlay list */
     .top-menu{
       position:fixed; right:18px; top:14px; z-index:20;
-      width:44px; height:44px; display:grid; place-items:center;
-      border-radius:999px; border:1px solid rgba(233,236,241,.14);
-      background:rgba(5,7,13,.14); backdrop-filter: blur(10px);
-      color:rgba(233,236,241,.86); letter-spacing:.18em; cursor:pointer;
+      width:44px; height:44px;
+      display:grid; place-items:center;
+      border-radius:999px;
+      border:1px solid rgba(233,236,241,.14);
+      background:rgba(5,7,13,.14);
+      backdrop-filter: blur(10px);
+      color:rgba(233,236,241,.86);
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple SD Gothic Neo","Noto Sans KR","Malgun Gothic", sans-serif;
+      letter-spacing:.18em;
+      cursor:pointer;
+      -webkit-tap-highlight-color: transparent;
     }
     .top-menu:hover{ border-color:rgba(233,236,241,.34); color:rgba(233,236,241,.96); }
-    .menu-overlay{ position:fixed; inset:0; z-index:30; display:none;
-      background:rgba(0,0,0,.55); backdrop-filter: blur(12px);
+    .top-menu:focus{ outline:2px solid rgba(233,236,241,.20); outline-offset:6px; }
+
+    .menu-overlay{
+      position:fixed; inset:0; z-index:30;
+      display:none;
+      background:rgba(0,0,0,.55);
+      backdrop-filter: blur(12px);
     }
     .menu-overlay.open{ display:block; }
-    .menu-panel{ position:absolute; right:18px; top:68px; min-width:240px;
-      padding:14px 14px 10px; border-radius:18px;
-      border:1px solid rgba(233,236,241,.16); background:rgba(5,7,13,.52);
+    .menu-panel{
+      position:absolute; right:18px; top:68px;
+      min-width:240px;
+      padding:14px 14px 10px;
+      border-radius:18px;
+      border:1px solid rgba(233,236,241,.16);
+      background:rgba(5,7,13,.52);
       box-shadow: 0 18px 60px rgba(0,0,0,.45);
     }
     .menu-list{ list-style:none; padding:0; margin:0; }
-    .menu-list a{ display:block; padding:10px 10px; border-radius:12px; text-decoration:none;
-      color:rgba(233,236,241,.86); letter-spacing:.16em; text-transform:uppercase; font-size:12px;
+    .menu-list a{
+      display:block;
+      padding:10px 10px;
+      border-radius:12px;
+      text-decoration:none;
+      color:rgba(233,236,241,.86);
+      letter-spacing:.16em;
+      text-transform:uppercase;
+      font-size:12px;
       border:1px solid transparent;
     }
-    .menu-list a:hover{ color:rgba(233,236,241,.96); border-color:rgba(233,236,241,.18); background:rgba(233,236,241,.06); }
-    .menu-sep{ height:1px; background:rgba(233,236,241,.12); margin:10px 6px; }
-    .lang-row{ display:flex; align-items:center; justify-content:flex-end; gap:10px; padding:6px 6px 2px;
-      font-size:12px; letter-spacing:.18em; color:rgba(233,236,241,.72); text-transform:uppercase;
+    .menu-list a:hover{
+      color:rgba(233,236,241,.96);
+      border-color:rgba(233,236,241,.18);
+      background:rgba(233,236,241,.06);
     }
-    .lang-row a{ color:rgba(233,236,241,.72); text-decoration:none; padding:6px 8px; border-radius:999px;
-      border:1px solid rgba(233,236,241,.14); background:rgba(5,7,13,.20);
+    .menu-sep{
+      height:1px;
+      background:rgba(233,236,241,.12);
+      margin:10px 6px;
     }
-    .lang-row a:hover{ color:rgba(233,236,241,.96); border-color:rgba(233,236,241,.34); }
+    .lang-row{
+      display:flex;
+      align-items:center;
+      justify-content:flex-end;
+      gap:10px;
+      padding:6px 6px 2px;
+      font-size:12px;
+      letter-spacing:.18em;
+      color:rgba(233,236,241,.72);
+      text-transform:uppercase;
+    }
+    .lang-row a{
+      color:rgba(233,236,241,.72);
+      text-decoration:none;
+      padding:6px 8px;
+      border-radius:999px;
+      border:1px solid rgba(233,236,241,.14);
+      background:rgba(5,7,13,.20);
+    }
+    .lang-row a:hover{
+      color:rgba(233,236,241,.96);
+      border-color:rgba(233,236,241,.34);
+    }
+    @media (max-width:560px){
+      .top-menu{ right:12px; top:10px; }
+      .menu-panel{ right:12px; top:62px; min-width:220px; }
+    }
+
+  
   </style>
 </head>
 <body>
+
+  <!-- NAV: home.html과 동일 -->
   <button id="topMenu" class="top-menu" aria-label="Menu" title="Menu" type="button">⋯</button>
+
   <div id="menuOverlay" class="menu-overlay" aria-hidden="true">
     <div class="menu-panel" role="dialog" aria-label="Site menu">
       <ul class="menu-list">
+        <li><a data-nav href="home.html">HOME</a></li>
         <li><a data-nav href="about.html">ABOUT</a></li>
         <li><a data-nav href="music.html">MUSIC</a></li>
         <li><a data-nav href="film-visual.html">FILM / VISUAL</a></li>
@@ -73,25 +314,152 @@
     </div>
   </div>
 
-  <div class="wrap">
-    <div class="card">
-      <h1>ATELIER</h1>
-      <p>This is a placeholder page to lock the site structure. We will insert finalized bilingual content next.</p>
-    </div>
-  </div>
+  <main class="stage">
+    <section class="center">
+      <div class="moon-wrap" aria-hidden="true">
+        <div class="moon-glow"></div>
 
-<script>
-(() => {
+        <div class="moon">
+          <svg class="lines" viewBox="0 0 100 100" width="100%" height="100%" aria-hidden="true">
+            <g class="ringA thin">
+              <ellipse cx="50" cy="50" rx="46" ry="12" fill="none" stroke="rgba(233,236,241,.95)" stroke-width="0.62" transform="rotate(18 50 50)"/>
+              <ellipse cx="50" cy="50" rx="44" ry="16" fill="none" stroke="rgba(233,236,241,.82)" stroke-width="0.60" transform="rotate(24 50 50)"/>
+              <ellipse cx="50" cy="50" rx="41" ry="20" fill="none" stroke="rgba(233,236,241,.76)" stroke-width="0.58" transform="rotate(30 50 50)"/>
+              <ellipse cx="50" cy="50" rx="37" ry="24" fill="none" stroke="rgba(233,236,241,.68)" stroke-width="0.56" transform="rotate(36 50 50)"/>
+              <ellipse cx="50" cy="50" rx="33" ry="28" fill="none" stroke="rgba(233,236,241,.60)" stroke-width="0.54" transform="rotate(42 50 50)"/>
+              <ellipse cx="50" cy="50" rx="28" ry="32" fill="none" stroke="rgba(233,236,241,.54)" stroke-width="0.52" transform="rotate(48 50 50)"/>
+            </g>
+
+            <g class="ringB thin2">
+              <ellipse cx="50" cy="50" rx="40" ry="38" fill="none" stroke="rgba(233,236,241,.70)" stroke-width="0.58" transform="rotate(-12 50 50)"/>
+              <ellipse cx="50" cy="50" rx="36" ry="42" fill="none" stroke="rgba(233,236,241,.60)" stroke-width="0.56" transform="rotate(-18 50 50)"/>
+              <ellipse cx="50" cy="50" rx="32" ry="45" fill="none" stroke="rgba(233,236,241,.52)" stroke-width="0.54" transform="rotate(-24 50 50)"/>
+              <ellipse cx="50" cy="50" rx="27" ry="47" fill="none" stroke="rgba(233,236,241,.46)" stroke-width="0.52" transform="rotate(-30 50 50)"/>
+            </g>
+
+            <g class="ringA thin3">
+              <ellipse cx="50" cy="50" rx="48" ry="30" fill="none" stroke="rgba(233,236,241,.50)" stroke-width="0.52" transform="rotate(72 50 50)"/>
+              <ellipse cx="50" cy="50" rx="28" ry="48" fill="none" stroke="rgba(233,236,241,.44)" stroke-width="0.50" transform="rotate(78 50 50)"/>
+            </g>
+
+            <!-- 7 moving lines -->
+            <g class="ringA back"><ellipse class="snake c1 w1" style="--dur:9.2s"  cx="50" cy="50" rx="45" ry="18" fill="none" transform="rotate(22 50 50)"/></g>
+            <g class="ringA front"><ellipse class="snake c1 w1" style="--dur:9.2s" cx="50" cy="50" rx="45" ry="18" fill="none" transform="rotate(22 50 50)"/></g>
+
+            <g class="ringB back"><ellipse class="snake c2 w2" style="--dur:10.6s" cx="50" cy="50" rx="38" ry="28" fill="none" transform="rotate(58 50 50)"/></g>
+            <g class="ringB front"><ellipse class="snake c2 w2" style="--dur:10.6s" cx="50" cy="50" rx="38" ry="28" fill="none" transform="rotate(58 50 50)"/></g>
+
+            <g class="ringA back"><ellipse class="snake c3 w2" style="--dur:12.2s" cx="50" cy="50" rx="30" ry="41" fill="none" transform="rotate(-18 50 50)"/></g>
+            <g class="ringA front"><ellipse class="snake c3 w2" style="--dur:12.2s" cx="50" cy="50" rx="30" ry="41" fill="none" transform="rotate(-18 50 50)"/></g>
+
+            <g class="ringB back"><ellipse class="snake c4 w3" style="--dur:11.0s" cx="50" cy="50" rx="22" ry="46" fill="none" transform="rotate(84 50 50)"/></g>
+            <g class="ringB front"><ellipse class="snake c4 w3" style="--dur:11.0s" cx="50" cy="50" rx="22" ry="46" fill="none" transform="rotate(84 50 50)"/></g>
+
+            <g class="ringA back"><ellipse class="snake c5 w1" style="--dur:9.8s" cx="50" cy="50" rx="46" ry="10" fill="none" transform="rotate(8 50 50)"/></g>
+            <g class="ringA front"><ellipse class="snake c5 w1" style="--dur:9.8s" cx="50" cy="50" rx="46" ry="10" fill="none" transform="rotate(8 50 50)"/></g>
+
+            <g class="ringB back"><ellipse class="snake c6 w2" style="--dur:13.0s" cx="50" cy="50" rx="40" ry="36" fill="none" transform="rotate(-34 50 50)"/></g>
+            <g class="ringB front"><ellipse class="snake c6 w2" style="--dur:13.0s" cx="50" cy="50" rx="40" ry="36" fill="none" transform="rotate(-34 50 50)"/></g>
+
+            <g class="ringA back"><ellipse class="snake c7 w3" style="--dur:14.2s" cx="50" cy="50" rx="26" ry="26" fill="none" transform="rotate(0 50 50)"/></g>
+            <g class="ringA front"><ellipse class="snake c7 w3" style="--dur:14.2s" cx="50" cy="50" rx="26" ry="26" fill="none" transform="rotate(0 50 50)"/></g>
+          </svg>
+
+          <div class="depth-vignette"></div>
+        </div>
+      </div>
+
+      <!-- TEXT (작품의 벽면 텍스트) -->
+      <section class="text" aria-label="Atelier text">
+
+<h1>ATELIER</h1>
+
+<p>
+This space holds<br>
+the time of ongoing work<br>
+and thoughts not yet fully arranged.
+</p>
+
+<p>
+On quiet days, it remains a studio.<br>
+On days when people gather,<br>
+it becomes a small exhibition space.<br>
+Work and exhibition, conversation and encounter<br>
+flow here as a single continuum.
+</p>
+
+<p>
+Works may hang on the wall,<br>
+rest upon a desk,<br>
+or linger without a name.<br>
+Here, the way a process remains<br>
+matters more than its conclusion.
+</p>
+
+<p>
+The atelier is<br>
+a place where individual work continues,<br>
+and a space that opens only when needed.<br>
+It is always prepared,<br>
+yet the moment of opening is decided by the work itself.
+</p>
+
+<p>
+An exhibition<br>
+passes like a scene,<br>
+and that scene may extend into dialogue,<br>
+music, or a small gathering.
+</p>
+
+<p>
+Rather than proving something,<br>
+this is a place where people and work<br>
+spend time together.
+</p>
+
+<div class="meta">ARA KOREA Atelier</div>
+
+</section>
+</section>
+  </main>
+
+  <script>
+  (() => {
+    // Top-right menu (⋯) overlay
+  // ==========================
   const topMenuBtn = document.getElementById('topMenu');
   const menuOverlay = document.getElementById('menuOverlay');
 
-  function openMenu(){ menuOverlay.classList.add('open'); menuOverlay.setAttribute('aria-hidden','false'); }
-  function closeMenu(){ menuOverlay.classList.remove('open'); menuOverlay.setAttribute('aria-hidden','true'); }
+  function openMenu(){
+    menuOverlay.classList.add('open');
+    menuOverlay.setAttribute('aria-hidden','false');
+  }
+  function closeMenu(){
+    menuOverlay.classList.remove('open');
+    menuOverlay.setAttribute('aria-hidden','true');
+  }
+  topMenuBtn.addEventListener('click', (e)=>{
+    e.stopPropagation();
+    if(menuOverlay.classList.contains('open')) closeMenu();
+    else openMenu();
+  });
 
-  topMenuBtn.addEventListener('click', (e)=>{ e.stopPropagation(); menuOverlay.classList.contains('open') ? closeMenu() : openMenu(); });
-  menuOverlay.addEventListener('click', (e)=>{ if(e.target === menuOverlay) closeMenu(); });
-  addEventListener('keydown', (e)=>{ if(e.key === 'Escape') closeMenu(); });
+  // close on backdrop click
+  menuOverlay.addEventListener('click', (e)=>{
+    // only if clicking outside the panel
+    if(e.target === menuOverlay) closeMenu();
+  });
 
+  addEventListener('keydown', (e)=>{
+    if(e.key === 'Escape') closeMenu();
+  });
+
+  // keep menu links from triggering canvas interactions
+  for(const a of menuOverlay.querySelectorAll('a[data-nav]')){
+    a.addEventListener('pointerdown', (e)=>{ e.stopPropagation(); });
+  }
+
+  // Language switching: swap /ko/ <-> /en/ if present; fallback to sibling folders.
   const langKO = document.getElementById('langKO');
   const langEN = document.getElementById('langEN');
 
@@ -114,7 +482,9 @@
 }
   langKO.href = siblingLangHref('ko');
   langEN.href = siblingLangHref('en');
+
+
 })();
-</script>
+  </script>
 </body>
 </html>
