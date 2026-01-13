@@ -385,7 +385,11 @@ main.container{ position:relative; z-index:2; }
     <section class="about-panel artist-panel">
       <div>
         <!-- NOTE: assets의 실제 파일명으로 변경하세요 -->
-        <img class="artist-photo" src="../assets/ahn-seonghee-color.png" alt="안성희">
+        <img class="artist-photo" id="ahnPhoto"
+  src="../assets/ahn-seonghee-color.png"
+  alt="안성희"
+  loading="lazy" decoding="async"
+  data-fallbacks="../assets/ahn-seonghee-color.png|/arakorea/assets/ahn-seonghee-color.png|/assets/ahn-seonghee-color.png|assets/ahn-seonghee-color.png">
       </div>
       <div>
         <h2 class="artist-name">Sunghee Ahn</h2>
@@ -467,6 +471,32 @@ for(let i=0;i<45;i++){
   s.style.setProperty('--y4',(Math.random()*80-40)+'vh');
   space.appendChild(s);
 }
+</script>
+
+
+<script>
+(() => {
+  const img = document.getElementById('ahnPhoto');
+  if (!img) return;
+
+  const list = (img.dataset.fallbacks || '').split('|').map(s => s.trim()).filter(Boolean);
+  let i = 0;
+
+  function tryNext(){
+    if (i >= list.length) return;
+    img.src = list[i++];
+  }
+
+  img.addEventListener('error', () => {
+    tryNext();
+  });
+
+  // In case the first src fails silently in some caches, ensure we at least try the next on load timeout
+  setTimeout(() => {
+    // if not loaded (naturalWidth 0) then try fallbacks
+    if (!img.complete || img.naturalWidth === 0) tryNext();
+  }, 800);
+})();
 </script>
 
 </body>
