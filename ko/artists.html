@@ -1,62 +1,306 @@
 <!doctype html>
 <html lang="ko">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="color-scheme" content="dark" />
-  <title>AK ENM — ARTISTS</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AK ENM — Artists</title>
+  <meta name="color-scheme" content="dark">
   <style>
-    :root{ --bg:#05070d; --fg:#e9ecf1; }
-    html,body{ height:100%; margin:0; background:var(--bg); color:var(--fg); }
-    .wrap{ min-height:100%; display:flex; align-items:center; justify-content:center; padding:48px 18px;
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple SD Gothic Neo","Noto Sans KR","Malgun Gothic", sans-serif;
+
+    :root{ --bg:#04050a; --fg:#e9ecf1; --accent: 60,120,255; --accent2: 255,80,210; }
+    html,body{ height:100%; margin:0; background:var(--bg); overflow-x:hidden; overflow-y:auto; }
+
+    body{
+      background:
+        radial-gradient(1200px 800px at 22% 18%, rgba(var(--accent),.14), rgba(0,0,0,0) 62%),
+        radial-gradient(900px 650px at 78% 62%, rgba(var(--accent2),.09), rgba(0,0,0,0) 60%),
+        linear-gradient(180deg, #060711 0%, #000 55%, #05060d 100%);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
     }
-    .card{ max-width:880px; width:100%; border:1px solid rgba(233,236,241,.14); border-radius:20px;
-      background:rgba(5,7,13,.35); backdrop-filter: blur(12px);
-      padding:28px 22px;
+
+    canvas{
+      position:fixed;
+      inset:0;
+      width:100vw;
+      height:100vh;
+      z-index:0;
+      display:block;
     }
-    h1{ margin:0 0 10px; letter-spacing:.14em; text-transform:uppercase; font-size:18px; }
-    p{ margin:0; opacity:.78; line-height:1.6; }
-    a{ color:rgba(233,236,241,.86); }
-    /* Top-right menu (⋯) + overlay list */
+
+    main{
+      position: relative;
+      z-index: 2;
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 12vh 6vw;
+      color: var(--fg);
+    }
+
+    .about-panel{
+      background: rgba(8,10,16,.42);
+      border: 1px solid rgba(255,255,255,.14);
+      box-shadow: 0 40px 140px rgba(0,0,0,.7);
+      backdrop-filter: blur(14px);
+      padding: 56px 64px;
+      border-radius: 18px;
+    }
+
+    .about-panel h1{
+      margin:0 0 28px;
+      font-size: 13px;
+      letter-spacing: .32em;
+      font-weight: 600;
+      opacity:.85;
+    }
+
+    .about-panel p{
+      margin:0 0 30px;
+      font-size: 17px;
+      line-height: 1.9;
+      letter-spacing: -0.005em;
+      opacity:.94;
+    }
+
+    .grain{
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      z-index:1;
+      opacity:.06;
+      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='.32'/%3E%3C/svg%3E");
+      background-size: 220px 220px;
+      mix-blend-mode: overlay;
+    }
+
+    .vignette{
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      background:
+        radial-gradient(ellipse at center, rgba(0,0,0,0) 35%, rgba(0,0,0,.62) 100%);
+      mix-blend-mode:multiply;
+    }
+  
+    /* ====== NAV (top-right ⋯ menu) ====== */
     .top-menu{
       position:fixed; right:18px; top:14px; z-index:20;
-      width:44px; height:44px; display:grid; place-items:center;
-      border-radius:999px; border:1px solid rgba(233,236,241,.14);
-      background:rgba(5,7,13,.14); backdrop-filter: blur(10px);
-      color:rgba(233,236,241,.86); letter-spacing:.18em; cursor:pointer;
+      width:44px; height:44px;
+      display:grid; place-items:center;
+      border-radius:999px;
+      border:1px solid rgba(233,236,241,.14);
+      background:rgba(5,7,13,.14);
+      backdrop-filter: blur(10px);
+      color:rgba(233,236,241,.86);
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple SD Gothic Neo","Noto Sans KR","Malgun Gothic", sans-serif;
+      letter-spacing:.18em;
+      cursor:pointer;
+      -webkit-tap-highlight-color: transparent;
     }
     .top-menu:hover{ border-color:rgba(233,236,241,.34); color:rgba(233,236,241,.96); }
-    .menu-overlay{ position:fixed; inset:0; z-index:30; display:none;
-      background:rgba(0,0,0,.55); backdrop-filter: blur(12px);
+    .top-menu:focus{ outline:2px solid rgba(233,236,241,.20); outline-offset:6px; }
+
+    .menu-overlay{
+      position:fixed; inset:0; z-index:30;
+      display:none;
+      background:rgba(0,0,0,.55);
+      backdrop-filter: blur(12px);
     }
     .menu-overlay.open{ display:block; }
-    .menu-panel{ position:absolute; right:18px; top:68px; min-width:240px;
-      padding:14px 14px 10px; border-radius:18px;
-      border:1px solid rgba(233,236,241,.16); background:rgba(5,7,13,.52);
+    .menu-panel{
+      position:absolute; right:18px; top:68px;
+      min-width:240px;
+      padding:14px 14px 10px;
+      border-radius:18px;
+      border:1px solid rgba(233,236,241,.16);
+      background:rgba(5,7,13,.52);
       box-shadow: 0 18px 60px rgba(0,0,0,.45);
     }
     .menu-list{ list-style:none; padding:0; margin:0; }
-    .menu-list a{ display:block; padding:10px 10px; border-radius:12px; text-decoration:none;
-      color:rgba(233,236,241,.86); letter-spacing:.16em; text-transform:uppercase; font-size:12px;
+    .menu-list a{
+      display:block;
+      padding:10px 10px;
+      border-radius:12px;
+      text-decoration:none;
+      color:rgba(233,236,241,.86);
+      letter-spacing:.16em;
+      text-transform:uppercase;
+      font-size:12px;
       border:1px solid transparent;
     }
-    .menu-list a:hover{ color:rgba(233,236,241,.96); border-color:rgba(233,236,241,.18); background:rgba(233,236,241,.06); }
-    .menu-sep{ height:1px; background:rgba(233,236,241,.12); margin:10px 6px; }
-    .lang-row{ display:flex; align-items:center; justify-content:flex-end; gap:10px; padding:6px 6px 2px;
-      font-size:12px; letter-spacing:.18em; color:rgba(233,236,241,.72); text-transform:uppercase;
+    .menu-list a:hover{
+      color:rgba(233,236,241,.96);
+      border-color:rgba(233,236,241,.18);
+      background:rgba(233,236,241,.06);
     }
-    .lang-row a{ color:rgba(233,236,241,.72); text-decoration:none; padding:6px 8px; border-radius:999px;
-      border:1px solid rgba(233,236,241,.14); background:rgba(5,7,13,.20);
+    .menu-sep{
+      height:1px;
+      background:rgba(233,236,241,.12);
+      margin:10px 6px;
     }
-    .lang-row a:hover{ color:rgba(233,236,241,.96); border-color:rgba(233,236,241,.34); }
+    .lang-row{
+      display:flex;
+      align-items:center;
+      justify-content:flex-end;
+      gap:10px;
+      padding:6px 6px 2px;
+      font-size:12px;
+      letter-spacing:.18em;
+      color:rgba(233,236,241,.72);
+      text-transform:uppercase;
+    }
+    .lang-row a{
+      color:rgba(233,236,241,.72);
+      text-decoration:none;
+      padding:6px 8px;
+      border-radius:999px;
+      border:1px solid rgba(233,236,241,.14);
+      background:rgba(5,7,13,.20);
+    }
+    .lang-row a:hover{
+      color:rgba(233,236,241,.96);
+      border-color:rgba(233,236,241,.34);
+    }
+    @media (max-width:560px){
+      .top-menu{ right:12px; top:10px; }
+      .menu-panel{ right:12px; top:62px; min-width:220px; }
+    }
+
+  
+
+/* Ensure readable text on dark background */
+body{ color:#e9ecf1; }
+
+/* Star background */
+.space{
+  position:fixed; inset:0; z-index:0; overflow:hidden;
+  background:
+    radial-gradient(1200px 800px at 30% 30%, rgba(70,90,150,.14), transparent 60%),
+    radial-gradient(900px 600px at 70% 70%, rgba(150,100,70,.10), transparent 65%),
+    var(--bg, #04050a);
+}
+.space::after{
+  content:"";
+  position:absolute; inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)' opacity='.05'/%3E%3C/svg%3E");
+  opacity:.22;
+  pointer-events:none;
+}
+.star{
+  position:absolute;
+  width:2px; height:2px;
+  background:rgba(220,230,255,.9);
+  border-radius:50%;
+  animation:wander linear infinite;
+}
+@keyframes wander{
+  0%{ transform:translate(0,0); opacity:0; }
+  10%{ opacity:.8; }
+  25%{ transform:translate(var(--x1), var(--y1)); }
+  50%{ transform:translate(var(--x2), var(--y2)); opacity:.9; }
+  75%{ transform:translate(var(--x3), var(--y3)); }
+  100%{ transform:translate(var(--x4), var(--y4)); opacity:0; }
+}
+
+/* Content layering */
+main.container{ position:relative; z-index:2; }
+
+.page-title{
+  margin:0 0 44px;
+  font-size:16px;
+  letter-spacing:.42em;
+  font-weight:500;
+  opacity:.95;
+}
+.section-label{
+  margin:70px 0 18px;
+  font-size:12px;
+  letter-spacing:.34em;
+  opacity:.62;
+}
+.grid-1{ display:grid; gap:18px; }
+
+.artist-panel{
+  display:grid;
+  grid-template-columns:150px 1fr;
+  gap:26px;
+  align-items:start;
+}
+.artist-photo{
+  width:140px;
+  opacity:.9;
+  filter:grayscale(100%);
+  border-radius:14px;
+}
+.artist-name{
+  margin:0 0 6px;
+  font-size:18px;
+  letter-spacing:.18em;
+  font-weight:500;
+}
+.artist-role{
+  margin:0 0 16px;
+  font-size:12px;
+  opacity:.68;
+}
+.artist-bio{
+  margin:0;
+  max-width:58ch;
+  font-size:13px;
+  line-height:1.7;
+  opacity:.86;
+}
+.links-row{
+  margin-top:14px;
+  display:flex;
+  flex-wrap:wrap;
+  gap:14px 18px;
+  font-size:12px;
+}
+.links-row a{ text-decoration:none; opacity:.72; }
+.links-row a:hover{ opacity:1; }
+
+/* Associated: 2x2 boxes on desktop for unity */
+.assoc-grid{
+  display:grid;
+  grid-template-columns:repeat(2, minmax(0, 1fr));
+  gap:14px;
+}
+.assoc-card h3{
+  margin:0 0 6px;
+  font-size:13px;
+  letter-spacing:.18em;
+  font-weight:500;
+}
+.assoc-card p{
+  margin:0 0 10px;
+  font-size:12px;
+  opacity:.64;
+}
+.assoc-card a{ text-decoration:none; opacity:.72; font-size:12px; }
+.assoc-card a:hover{ opacity:1; }
+
+/* keep nav above */
+.top-menu, .menu-overlay{ z-index:50 !important; }
+
+@media (max-width:760px){
+  .artist-panel{ grid-template-columns:1fr; }
+  .assoc-grid{ grid-template-columns:1fr; }
+}
+
   </style>
 </head>
 <body>
+
+<div class="space" aria-hidden="true"></div>
+
+
+<!-- NAV -->
   <button id="topMenu" class="top-menu" aria-label="Menu" title="Menu" type="button">⋯</button>
+
   <div id="menuOverlay" class="menu-overlay" aria-hidden="true">
     <div class="menu-panel" role="dialog" aria-label="Site menu">
       <ul class="menu-list">
+        <li><a data-nav href="home.html">HOME</a></li>
         <li><a data-nav href="about.html">ABOUT</a></li>
         <li><a data-nav href="music.html">MUSIC</a></li>
         <li><a data-nav href="film-visual.html">FILM / VISUAL</a></li>
@@ -73,48 +317,161 @@
     </div>
   </div>
 
-  <div class="wrap">
-    <div class="card">
-      <h1>ARTISTS</h1>
-      <p>이 페이지는 구조를 고정하기 위한 임시 페이지입니다. KO/EN 병기 텍스트를 다음 단계에서 삽입하겠습니다.</p>
-    </div>
+<script>
+  (() => {
+    // ==========================
+    // Top-right menu (⋯) overlay
+    // ==========================
+    const topMenuBtn = document.getElementById('topMenu');
+    const menuOverlay = document.getElementById('menuOverlay');
+
+    function openMenu(){
+      menuOverlay.classList.add('open');
+      menuOverlay.setAttribute('aria-hidden','false');
+    }
+    function closeMenu(){
+      menuOverlay.classList.remove('open');
+      menuOverlay.setAttribute('aria-hidden','true');
+    }
+    topMenuBtn.addEventListener('click', (e)=>{
+      e.stopPropagation();
+      menuOverlay.classList.contains('open') ? closeMenu() : openMenu();
+    });
+
+    // close on backdrop click
+    menuOverlay.addEventListener('click', (e)=>{
+      if(e.target === menuOverlay) closeMenu();
+    });
+
+    addEventListener('keydown', (e)=>{
+      if(e.key === 'Escape') closeMenu();
+    });
+
+    // keep menu links from triggering any underlying interactions
+    for(const a of menuOverlay.querySelectorAll('a[data-nav]')){
+      a.addEventListener('pointerdown', (e)=>{ e.stopPropagation(); });
+    }
+
+    // Language switching: swap /ko/ <-> /en/ if present; fallback to sibling folders.
+    const langKO = document.getElementById('langKO');
+    const langEN = document.getElementById('langEN');
+
+    function siblingLangHref(target){
+      const url = new URL(location.href);
+      const path = url.pathname;
+      const suffix = url.search + url.hash;
+
+      if(path.includes('/ko/')){
+        return (target === 'en' ? path.replace('/ko/','/en/') : path) + suffix;
+      }
+      if(path.includes('/en/')){
+        return (target === 'ko' ? path.replace('/en/','/ko/') : path) + suffix;
+      }
+
+      // Fallback for local previews without /ko/ or /en/ in the path
+      const parts = path.split('/').filter(Boolean);
+      const file = parts.length ? parts[parts.length-1] : 'home.html';
+      return (target === 'en' ? '../en/' : '../ko/') + file + suffix;
+    }
+    langKO.href = siblingLangHref('ko');
+    langEN.href = siblingLangHref('en');
+  })();
+  </script>
+
+<main class="container">
+  <h1 class="page-title">ARTISTS</h1>
+
+  <div class="grid-1">
+    <section class="about-panel artist-panel">
+      <div>
+        <!-- NOTE: assets의 실제 파일명으로 변경하세요 -->
+        <img class="artist-photo" src="../assets/ahn-seonghee-bw.png" alt="안성희">
+      </div>
+      <div>
+        <h2 class="artist-name">안성희</h2>
+        <div class="artist-role">Composer · Professor</div>
+        <p class="artist-bio">
+          안성희는 현대음악 작곡가로서 동시대가 마주한 질문을
+          소리와 구조를 통해 사유하는 작업을 이어오고 있다.
+          음악과 시각 매체를 결합한 복합적 형식을 통해
+          관객과의 감각적 소통을 탐구한다.
+        </p>
+        <div class="links-row">
+          <a href="https://search.naver.com/search.naver?where=nexearch&query=%EC%95%88%EC%84%B1%ED%9D%AC%20%EC%95%A8%EB%B2%94" target="_blank" rel="noopener">Selected Works ↗</a>
+          <a href="https://www.youtube.com/@anna197903/videos" target="_blank" rel="noopener">Performances ↗</a>
+          <a href="https://search.naver.com/search.naver?where=nexearch&query=%EC%95%88%EC%84%B1%ED%9D%AC%20%EB%8F%84%EC%84%9C" target="_blank" rel="noopener">Publications ↗</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="about-panel artist-panel">
+      <div></div>
+      <div>
+        <h2 class="artist-name">Angel Hong</h2>
+        <div class="artist-role">Writer · Visual Artist</div>
+        <p class="artist-bio">
+          텍스트와 이미지를 중심으로 한 작업을 기반으로 출판과 비주얼 프로젝트를 진행한다.
+          서사와 구조, 기록의 관계를 탐구하는 작업을 이어가고 있다.
+        </p>
+        <div class="links-row">
+          <a href="https://search.naver.com/search.naver?where=nexearch&query=%ED%99%8D%EC%9E%A5%ED%98%81%20%EB%8F%84%EC%84%9C" target="_blank" rel="noopener">Books ↗</a>
+          <a href="https://www.youtube.com/watch?v=UXj2ZhWDRZw" target="_blank" rel="noopener">Visual Works ↗</a>
+          <a href="https://www.youtube.com/@akenm79" target="_blank" rel="noopener">Selected Projects ↗</a>
+        </div>
+      </div>
+    </section>
   </div>
 
+  <div class="section-label">ASSOCIATED ARTISTS</div>
+
+  <section class="assoc-grid">
+    <div class="about-panel assoc-card">
+      <h3>Maestro Fresh Wes</h3>
+      <p>Canadian Hip-Hop Pioneer</p>
+      <a href="https://www.youtube.com/watch?v=dwNzAA-G5a8&t=3s" target="_blank" rel="noopener">Watch Video ↗</a>
+    </div>
+
+    <div class="about-panel assoc-card">
+      <h3>Director X</h3>
+      <p>Music Video & Film Director</p>
+      <a href="https://www.youtube.com/watch?v=dg194QhkGE0" target="_blank" rel="noopener">Watch Video ↗</a>
+    </div>
+
+    <div class="about-panel assoc-card">
+      <h3>Tory Lanez</h3>
+      <p>Rapper · Singer · Songwriter</p>
+      <a href="https://www.youtube.com/watch?v=Uy6KpYZeERI" target="_blank" rel="noopener">Watch Video ↗</a>
+    </div>
+
+    <div class="about-panel assoc-card">
+      <h3>Laioung</h3>
+      <p>Italian Rap Artist</p>
+      <a href="https://www.youtube.com/watch?v=PyuveYARv3Y" target="_blank" rel="noopener">Watch Video ↗</a>
+    </div>
+  </section>
+</main>
+
 <script>
-(() => {
-  const topMenuBtn = document.getElementById('topMenu');
-  const menuOverlay = document.getElementById('menuOverlay');
-
-  function openMenu(){ menuOverlay.classList.add('open'); menuOverlay.setAttribute('aria-hidden','false'); }
-  function closeMenu(){ menuOverlay.classList.remove('open'); menuOverlay.setAttribute('aria-hidden','true'); }
-
-  topMenuBtn.addEventListener('click', (e)=>{ e.stopPropagation(); menuOverlay.classList.contains('open') ? closeMenu() : openMenu(); });
-  menuOverlay.addEventListener('click', (e)=>{ if(e.target === menuOverlay) closeMenu(); });
-  addEventListener('keydown', (e)=>{ if(e.key === 'Escape') closeMenu(); });
-
-  const langKO = document.getElementById('langKO');
-  const langEN = document.getElementById('langEN');
-
-  function siblingLangHref(target){
-  const url = new URL(location.href);
-  const path = url.pathname;
-  const suffix = url.search + url.hash;
-
-  if(path.includes('/ko/')){
-    return (target === 'en' ? path.replace('/ko/','/en/') : path) + suffix;
-  }
-  if(path.includes('/en/')){
-    return (target === 'ko' ? path.replace('/en/','/ko/') : path) + suffix;
-  }
-
-  // Fallback for local previews without /ko/ or /en/ in the path
-  const parts = path.split('/').filter(Boolean);
-  const file = parts.length ? parts[parts.length-1] : 'home.html';
-  return (target === 'en' ? '../en/' : '../ko/') + file + suffix;
+// moving stars
+const space = document.querySelector('.space');
+for(let i=0;i<45;i++){
+  const s=document.createElement('div');
+  s.className='star';
+  s.style.top=Math.random()*100+'vh';
+  s.style.left=Math.random()*100+'vw';
+  s.style.animationDuration=(30+Math.random()*50)+'s';
+  s.style.animationDelay=(-Math.random()*40)+'s';
+  s.style.setProperty('--x1',(Math.random()*40-20)+'vw');
+  s.style.setProperty('--y1',(Math.random()*40-20)+'vh');
+  s.style.setProperty('--x2',(Math.random()*60-30)+'vw');
+  s.style.setProperty('--y2',(Math.random()*60-30)+'vh');
+  s.style.setProperty('--x3',(Math.random()*40-20)+'vw');
+  s.style.setProperty('--y3',(Math.random()*40-20)+'vh');
+  s.style.setProperty('--x4',(Math.random()*80-40)+'vw');
+  s.style.setProperty('--y4',(Math.random()*80-40)+'vh');
+  space.appendChild(s);
 }
-  langKO.href = siblingLangHref('ko');
-  langEN.href = siblingLangHref('en');
-})();
 </script>
+
 </body>
 </html>
