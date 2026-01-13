@@ -87,6 +87,40 @@
       border:1px solid rgba(233,236,241,.18);
       background:rgba(233,236,241,.06); white-space:nowrap;
     }
+  
+    /* ===== MOBILE ONLY (EN) — Desktop untouched ===== */
+    @media (max-width: 768px){
+
+      /* Make the top publish panel horizontal like the bottom plaque */
+      .text-block{
+        left: 20px !important;
+        right: 20px !important;
+        width: auto !important;
+        max-width: none !important;
+
+        top: calc(env(safe-area-inset-top) + 72px) !important;
+        transform: none !important;
+
+        box-sizing: border-box;
+      }
+
+      /* Avoid awkward word breaks in English */
+      .text-block p{
+        word-break: normal;
+        overflow-wrap: break-word;
+      }
+
+      /* Tight landscape adjustment */
+      @media (max-height: 520px){
+        .text-block{
+          top: calc(env(safe-area-inset-top) + 56px) !important;
+          left: 16px !important;
+          right: 16px !important;
+          padding: 18px 20px;
+        }
+      }
+    }
+
   </style>
 </head>
 <body>
