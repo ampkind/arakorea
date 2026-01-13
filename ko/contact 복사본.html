@@ -1,0 +1,370 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="dark" />
+  <title>AK ENM — CONTACT</title>
+  <style>
+    :root{
+      --bg:#05070d;
+      --fg:#e9ecf1;
+      --muted: rgba(233,236,241,.72);
+      --line: rgba(233,236,241,.14);
+      --panel: rgba(5,7,13,.35);
+      --panel2: rgba(5,7,13,.52);
+      --ok:#51cf66;
+      --err:#ff6b6b;
+    }
+    html,body{ height:100%; margin:0; background:var(--bg); color:var(--fg); }
+
+    .wrap{
+      min-height:100%;
+      display:flex;
+      align-items:flex-start;
+      justify-content:center;
+      padding:84px 18px 64px;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial,
+                   "Apple SD Gothic Neo","Noto Sans KR","Malgun Gothic", sans-serif;
+    }
+
+    .card{
+      width:100%;
+      max-width:1100px;
+      border:1px solid var(--line);
+      border-radius:20px;
+      background:var(--panel);
+      backdrop-filter: blur(12px);
+      padding:30px 26px;
+      box-shadow: 0 18px 60px rgba(0,0,0,.45);
+    }
+
+    .kicker{
+      font-size:12px;
+      letter-spacing:.18em;
+      text-transform:uppercase;
+      opacity:.72;
+      margin-bottom:10px;
+    }
+    h1{
+      margin:0 0 16px;
+      letter-spacing:.14em;
+      text-transform:uppercase;
+      font-size:18px;
+    }
+    p{ margin:0; line-height:1.65; }
+    .muted{ color: var(--muted); }
+    a{ color:rgba(233,236,241,.90); }
+    a:hover{ color:rgba(233,236,241,.98); }
+
+    /* Top-right menu (⋯) + overlay list */
+    .top-menu{
+      position:fixed; right:18px; top:14px; z-index:20;
+      width:44px; height:44px; display:grid; place-items:center;
+      border-radius:999px; border:1px solid var(--line);
+      background:rgba(5,7,13,.14); backdrop-filter: blur(10px);
+      color:rgba(233,236,241,.86); letter-spacing:.18em; cursor:pointer;
+    }
+    .top-menu:hover{ border-color:rgba(233,236,241,.34); color:rgba(233,236,241,.96); }
+    .menu-overlay{ position:fixed; inset:0; z-index:30; display:none;
+      background:rgba(0,0,0,.55); backdrop-filter: blur(12px);
+    }
+    .menu-overlay.open{ display:block; }
+    .menu-panel{ position:absolute; right:18px; top:68px; min-width:240px;
+      padding:14px 14px 10px; border-radius:18px;
+      border:1px solid rgba(233,236,241,.16); background:var(--panel2);
+      box-shadow: 0 18px 60px rgba(0,0,0,.45);
+    }
+    .menu-list{ list-style:none; padding:0; margin:0; }
+    .menu-list a{ display:block; padding:10px 10px; border-radius:12px; text-decoration:none;
+      color:rgba(233,236,241,.86); letter-spacing:.16em; text-transform:uppercase; font-size:12px;
+      border:1px solid transparent;
+    }
+    .menu-list a:hover{ color:rgba(233,236,241,.96); border-color:rgba(233,236,241,.18); background:rgba(233,236,241,.06); }
+    .menu-sep{ height:1px; background:rgba(233,236,241,.12); margin:10px 6px; }
+    .lang-row{ display:flex; align-items:center; justify-content:flex-end; gap:10px; padding:6px 6px 2px;
+      font-size:12px; letter-spacing:.18em; color:rgba(233,236,241,.72); text-transform:uppercase;
+    }
+    .lang-row a{ color:rgba(233,236,241,.72); text-decoration:none; padding:6px 8px; border-radius:999px;
+      border:1px solid var(--line); background:rgba(5,7,13,.20);
+    }
+    .lang-row a:hover{ color:rgba(233,236,241,.96); border-color:rgba(233,236,241,.34); }
+
+    /* FORM */
+    .box{
+      border:1px solid var(--line);
+      border-radius:16px;
+      padding:18px;
+      background: rgba(5,7,13,.22);
+    }
+    form{ display:grid; gap:14px; margin-top:18px; }
+
+    .formGrid{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:16px;
+    }
+    @media (max-width: 760px){
+      .formGrid{ grid-template-columns: 1fr; }
+      .wrap{ padding-top: 84px; }
+      .card{ padding:26px 18px; }
+    }
+    .field{ display:flex; flex-direction:column; gap:8px; }
+    .field.full{ grid-column:1 / -1; }
+
+    label{
+      font-size:12px;
+      letter-spacing:.16em;
+      text-transform:none;
+      opacity:.78;
+    }
+    input, select, textarea{
+      width:100%;
+      padding:13px 14px;
+      border-radius:12px;
+      border:1px solid var(--line);
+      background: rgba(5,7,13,.18);
+      color: var(--fg);
+      font: inherit;
+      outline:none;
+      box-sizing:border-box;
+    }
+    textarea{ min-height: 170px; resize: vertical; }
+    input:focus, select:focus, textarea:focus{
+      border-color: rgba(233,236,241,.34);
+      box-shadow: 0 0 0 4px rgba(233,236,241,.06);
+    }
+    select{ appearance:auto; }
+
+    .consent{
+      display:flex;
+      gap:10px;
+      align-items:flex-start;
+      padding:12px 12px;
+      border:1px dashed rgba(233,236,241,.22);
+      border-radius:14px;
+      background: rgba(5,7,13,.14);
+    }
+    .consent input{ margin-top:3px; }
+    .actions{
+      display:flex;
+      align-items:center;
+      justify-content:flex-end;
+      gap:12px;
+      flex-wrap:wrap;
+      margin-top:2px;
+    }
+    .btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      padding:12px 16px;
+      border-radius:999px;
+      border:1px solid rgba(233,236,241,.28);
+      background: rgba(233,236,241,.08);
+      color: var(--fg);
+      letter-spacing:.12em;
+      text-transform:none;
+      font-size:12px;
+      cursor:pointer;
+    }
+    .btn:hover{ background: rgba(233,236,241,.12); border-color: rgba(233,236,241,.38); }
+
+    .status{ font-size:12px; min-height:18px; color: var(--muted); }
+    .status.ok{ color: var(--ok); }
+    .status.err{ color: var(--err); }
+    .hp{ display:none !important; }
+
+    .divider{
+      height:1px;
+      background: rgba(233,236,241,.12);
+      margin:18px 0;
+    }
+  </style>
+</head>
+
+<body>
+  <button id="topMenu" class="top-menu" aria-label="Menu" title="Menu" type="button">⋯</button>
+  <div id="menuOverlay" class="menu-overlay" aria-hidden="true">
+    <div class="menu-panel" role="dialog" aria-label="Site menu">
+      <ul class="menu-list">
+        <li><a data-nav href="about.html">ABOUT</a></li>
+        <li><a data-nav href="music.html">MUSIC</a></li>
+        <li><a data-nav href="film-visual.html">FILM / VISUAL</a></li>
+        <li><a data-nav href="publish.html">PUBLISH</a></li>
+        <li><a data-nav href="artists.html">ARTISTS</a></li>
+        <li><a data-nav href="atelier.html">ATELIER</a></li>
+        <li><a data-nav href="contact.html">CONTACT</a></li>
+      </ul>
+      <div class="menu-sep"></div>
+      <div class="lang-row" aria-label="Language">
+        <a id="langKO" href="#" aria-label="Korean">KO</a>
+        <a id="langEN" href="#" aria-label="English">EN</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <div class="card">
+      <div class="kicker">AK ENM</div>
+      <h1>CONTACT</h1>
+
+      <div class="box" aria-label="Contact form">
+        <p class="muted">
+          아래 양식을 통해 공식 문의를 접수합니다.
+        </p>
+
+        <!-- TODO: action 값을 실제 endpoint로 교체하세요 (예: Formspree / 자체 API) -->
+        <form id="contactForm" method="POST" action="https://formspree.io/f/YOUR_FORM_ID" novalidate>
+          <input type="hidden" name="_subject" value="[AK ENM] New inquiry">
+          <input type="hidden" name="form_type" value="AKENM_CONTACT">
+          <input class="hp" type="text" name="_gotcha" tabindex="-1" autocomplete="off">
+
+          <div class="formGrid">
+            <div class="field">
+              <label for="name">이름 *</label>
+              <input id="name" name="name" autocomplete="name" required placeholder="이름 / 단체명" />
+            </div>
+
+            <div class="field">
+              <label for="email">이메일 *</label>
+              <input id="email" name="email" type="email" autocomplete="email" required placeholder="name@example.com" />
+            </div>
+
+            <div class="field">
+              <label for="phone">연락처</label>
+              <input id="phone" name="phone" autocomplete="tel" placeholder="선택" />
+            </div>
+
+            <div class="field">
+              <label for="collab_type">협업 형태 *</label>
+              <select id="collab_type" name="collab_type" required>
+                <option value="" selected disabled>선택</option>
+                <option>음악 / 공연</option>
+                <option>필름 / 시각</option>
+                <option>출판</option>
+                <option>아뜰리에 / 공간</option>
+                <option>기관 협력</option>
+                <option>프레스</option>
+                <option>기타</option>
+              </select>
+            </div>
+
+            <div class="field full">
+              <label for="project_outline">프로젝트 개요 *</label>
+              <textarea id="project_outline" name="project_outline" required placeholder="프로젝트 개요를 간단히 적어주세요."></textarea>
+            </div>
+
+            <div class="field">
+              <label for="timeline">예상 일정 *</label>
+              <input id="timeline" name="timeline" required placeholder="예: 2026.04–2026.06" />
+            </div>
+
+            <div class="field">
+              <label for="reference">참고 자료 (링크)</label>
+              <input id="reference" name="reference" placeholder="포트폴리오/자료 링크 (선택)" />
+            </div>
+
+            <div class="field full">
+              <label for="message">추가 내용 *</label>
+              <textarea id="message" name="message" required placeholder="추가로 전달할 내용이 있다면 적어주세요."></textarea>
+            </div>
+          </div>
+
+          <div class="actions">
+            <button class="btn" type="submit">보내기</button>
+          </div>
+
+          <p id="formStatus" class="status" role="status" aria-live="polite"></p>
+        </form>
+
+</div>
+    </div>
+  </div>
+
+<script>
+(() => {
+  const topMenuBtn = document.getElementById('topMenu');
+  const menuOverlay = document.getElementById('menuOverlay');
+
+  function openMenu(){ menuOverlay.classList.add('open'); menuOverlay.setAttribute('aria-hidden','false'); }
+  function closeMenu(){ menuOverlay.classList.remove('open'); menuOverlay.setAttribute('aria-hidden','true'); }
+
+  topMenuBtn.addEventListener('click', (e)=>{ e.stopPropagation(); menuOverlay.classList.contains('open') ? closeMenu() : openMenu(); });
+  menuOverlay.addEventListener('click', (e)=>{ if(e.target === menuOverlay) closeMenu(); });
+  addEventListener('keydown', (e)=>{ if(e.key === 'Escape') closeMenu(); });
+
+  // 언어 전환 링크는 유지하되, 현재 페이지 콘텐츠는 한글로만 운영(요청사항)
+  const langKO = document.getElementById('langKO');
+  const langEN = document.getElementById('langEN');
+
+  function siblingLangHref(target){
+    const url = new URL(location.href);
+    const path = url.pathname;
+    const suffix = url.search + url.hash;
+
+    if(path.includes('/ko/')){
+      return (target === 'en' ? path.replace('/ko/','/en/') : path) + suffix;
+    }
+    if(path.includes('/en/')){
+      return (target === 'ko' ? path.replace('/en/','/ko/') : path) + suffix;
+    }
+
+    // Fallback for local previews without /ko/ or /en/ in the path
+    const parts = path.split('/').filter(Boolean);
+    const file = parts.length ? parts[parts.length-1] : 'home.html';
+    return (target === 'en' ? '../en/' : '../ko/') + file + suffix;
+  }
+  langKO.href = siblingLangHref('ko');
+  langEN.href = siblingLangHref('en');
+
+  // Form UX (Formspree 호환 / 자체 endpoint에도 무해)
+  const form = document.getElementById('contactForm');
+  const statusEl = document.getElementById('formStatus');
+
+  function setStatus(msg, type){
+    statusEl.textContent = msg || '';
+    statusEl.className = 'status' + (type ? (' ' + type) : '');
+  }
+
+  form.addEventListener('submit', async (e) => {
+    // Honeypot
+    const hp = form.querySelector('input[name="_gotcha"]');
+    if (hp && hp.value.trim() !== '') {
+      e.preventDefault();
+      setStatus('전송이 차단되었습니다.', 'err');
+      return;
+    }
+
+    if (!form.checkValidity()) {
+      e.preventDefault();
+      setStatus('필수 항목을 확인해 주세요.', 'err');
+      return;
+    }
+
+    if (!form.getAttribute('action')) return;
+
+    e.preventDefault();
+    setStatus('전송 중입니다…');
+
+    try{
+      const res = await fetch(form.action, {
+        method: form.method || 'POST',
+        body: new FormData(form),
+        headers: { 'Accept': 'application/json' }
+      });
+
+      if (res.ok){
+        form.reset();
+        setStatus('접수되었습니다. 확인 후 회신드립니다.', 'ok');
+      } else {
+        setStatus('전송에 실패했습니다. 잠시 후 다시 시도해 주세요.', 'err');
+      }
+    } catch(err){
+      setStatus('네트워크 오류로 전송에 실패했습니다.', 'err');
+    }
+  });
+})();
+</script>
+</body>
+</html>
