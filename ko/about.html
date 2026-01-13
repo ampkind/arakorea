@@ -169,7 +169,20 @@
       .menu-panel{ right:12px; top:62px; min-width:220px; }
     }
 
-  </style>
+  
+    /* ====== MOBILE TYPOGRAPHY (line-breaking only) ====== */
+    @media (max-width:560px){
+      .about-panel p{
+        word-break: keep-all;
+        overflow-wrap: anywhere;
+        line-break: strict;
+        hyphens: none;
+      }
+      /* 기존 <br> 강제 줄바꿈은 모바일에서만 해제하여 문장 리듬을 자연스럽게 유지 */
+      .about-panel p br{ display:none; }
+    }
+
+</style>
 </head>
 
 <body>
