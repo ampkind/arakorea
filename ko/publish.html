@@ -94,18 +94,28 @@
     /* ===== MOBILE ONLY (Desktop untouched) ===== */
     @media (max-width: 768px){
       /* Keep the top text panel fully visible on mobile (portrait/landscape) */
-      .text-block{
-        left:50% !important;
-        top: calc(env(safe-area-inset-top) + 16px) !important;
-        transform: translateX(-50%) !important; /* avoid top/left cropping */
-        max-width: min(92vw, 520px) !important;
+            .text-block{
+        /* Make it horizontal like the bottom card */
+        left: 20px !important;
+        right: 20px !important;
+        width: auto !important;
+        max-width: none !important;
+
+        /* Keep it fully visible under the top navigation + notch */
+        top: calc(env(safe-area-inset-top) + 72px) !important;
+
+        /* Remove centering transform used before */
+        transform: none !important;
+
         box-sizing: border-box;
       }
 
       /* If the viewport height is small (landscape), reduce padding slightly */
       @media (max-height: 520px){
         .text-block{
-          top: calc(env(safe-area-inset-top) + 10px) !important;
+          top: calc(env(safe-area-inset-top) + 56px) !important;
+          left: 16px !important;
+          right: 16px !important;
           padding: 18px 20px;
         }
       }
