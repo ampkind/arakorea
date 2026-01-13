@@ -90,6 +90,30 @@
       border:1px solid rgba(233,236,241,.18);
       background:rgba(233,236,241,.06); white-space:nowrap;
     }
+  
+    /* ===== MOBILE ONLY (Desktop untouched) ===== */
+    @media (max-width: 768px){
+      /* Keep the top text panel fully visible on mobile (portrait/landscape) */
+      .text-block{
+        left:50% !important;
+        top: calc(env(safe-area-inset-top) + 16px) !important;
+        transform: translateX(-50%) !important; /* avoid top/left cropping */
+        max-width: min(92vw, 520px) !important;
+        box-sizing: border-box;
+      }
+
+      /* If the viewport height is small (landscape), reduce padding slightly */
+      @media (max-height: 520px){
+        .text-block{
+          top: calc(env(safe-area-inset-top) + 10px) !important;
+          padding: 18px 20px;
+        }
+      }
+
+      /* Background framing on mobile */
+      #bg{ object-position: 50% 50%; }
+    }
+
   </style>
 </head>
 <body>
