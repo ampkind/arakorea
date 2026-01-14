@@ -180,6 +180,55 @@
       background: rgba(233,236,241,.12);
       margin:18px 0;
     }
+  
+    /* Group link (subtle footer) */
+    .group-link{
+      margin-top:18px;
+      padding-top:18px;
+      border-top:1px solid rgba(233,236,241,.12);
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      flex-wrap:wrap;
+    }
+    .group-link .label{
+      font-size:11px;
+      letter-spacing:.22em;
+      text-transform:uppercase;
+      opacity:.68;
+    }
+    .group-link a{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:8px 12px;
+      border-radius:999px;
+      border:1px solid rgba(233,236,241,.18);
+      background: rgba(5,7,13,.12);
+      text-decoration:none;
+      color:rgba(233,236,241,.82);
+      letter-spacing:.14em;
+      font-size:11px;
+      text-transform:uppercase;
+    }
+    .group-link a:hover{
+      color:rgba(233,236,241,.96);
+      border-color:rgba(233,236,241,.36);
+      background: rgba(233,236,241,.06);
+    }
+    .group-link .hint{
+      font-size:12px;
+      color: rgba(233,236,241,.56);
+      letter-spacing:.02em;
+      text-transform:none;
+    }
+    @media (max-width: 760px){
+      .group-link{
+        justify-content:flex-start;
+      }
+    }
+
   </style>
 </head>
 
