@@ -59,6 +59,13 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:image" content="https://akenm.com/og.jpg">
 
+
+<script>
+  function enterSite() {
+    window.location.href = '/ko/home.html';
+  }
+</script>
+
 </head>
 <body>
   <canvas id="c"></canvas>
@@ -950,8 +957,7 @@ if(pointer.seen && pointer.down){
         shot.remove();
         // optional: keep URL clean-ish
         try{
-          history.replaceState(null, '', 'home');
-          document.title = 'AK ENM — Home';
+document.title = 'AK ENM — Home';
         }catch(_e){}
       }, 1200);
     };
