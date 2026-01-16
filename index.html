@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="color-scheme" content="dark" />
-  <title>AKENM — Indra Honey (Premium)</title>
+  <title>AK ENM — Index</title>
   <style>
     :root{ --bg:#05070d; --fg:#e9ecf1; }
     html,body{ height:100%; margin:0; background:var(--bg); overflow:hidden; cursor:none; }
@@ -44,6 +44,21 @@
       mix-blend-mode:multiply;
     }
   </style>
+
+  <!-- Open Graph / KakaoTalk -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="AK ENM">
+  <meta property="og:title" content="AK ENM">
+  <meta property="og:description" content="AK ENM 공식 사이트">
+  <meta property="og:url" content="https://akenm.com/">
+  <meta property="og:image" content="https://akenm.com/og.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://akenm.com/og.jpg">
+
 </head>
 <body>
   <canvas id="c"></canvas>
@@ -149,7 +164,7 @@
   // ==========================
   let w,h,dpr;
   function resize(){
-    dpr = Math.min(1.25, window.devicePixelRatio || 1);
+    dpr = Math.min(2, window.devicePixelRatio || 1);
     w = canvas.width = Math.floor(innerWidth * dpr);
     h = canvas.height = Math.floor(innerHeight * dpr);
     canvas.style.width = innerWidth + 'px';
@@ -453,14 +468,10 @@ function beamTarget(){
   let last = start;
   let STOP = false;
   let enterShown = false;
-  let frameCount = 0;
-  const P = [];
-  let lastEdgesDrawAt = 0;
 
   function frame(now){
     if(STOP) return;
     const t = now - start;
-    frameCount++;
     const dt = Math.min(0.05, (now - last) / 1000);
     last = now;
 
@@ -627,7 +638,7 @@ if(pointer.seen && pointer.down){
     }
 
     // pre-project
-    if(P.length !== nodes.length) P.length = nodes.length;
+    const P = new Array(nodes.length);
     for(let i=0;i<nodes.length;i++){
       P[i] = project(nodes[i]);
     }
@@ -840,17 +851,14 @@ if(pointer.seen && pointer.down){
     ctx.fillRect(0, yscan, w, 2*dpr);
 
 
-    // Premium finishing: micro-grain (every other frame for performance)
-    if((frameCount & 1) === 0){
-        ctx.globalCompositeOperation = 'overlay';
-        ctx.globalAlpha = 0.06;
-        ctx.fillStyle = ctx.createPattern(grain, 'repeat');
-        ctx.translate(0,0); // no-op, keeps pattern stable
-        ctx.fillRect(0,0,w,h);
-        ctx.globalAlpha = 1.0;
-        ctx.globalCompositeOperation = 'source-over';
-    }
-
+    // Premium finishing: micro-grain + very subtle lens falloff
+    ctx.globalCompositeOperation = 'overlay';
+    ctx.globalAlpha = 0.06;
+    ctx.fillStyle = ctx.createPattern(grain, 'repeat');
+    ctx.translate(0,0); // no-op, keeps pattern stable
+    ctx.fillRect(0,0,w,h);
+    ctx.globalAlpha = 1.0;
+    ctx.globalCompositeOperation = 'source-over';
     if(!enterShown && t > 4200){
       enter.classList.add('show');
       enterShown = true;
@@ -886,7 +894,7 @@ if(pointer.seen && pointer.down){
 
     // build home iframe behind the snapshot
     const iframe = document.createElement('iframe');
-    iframe.src = 'ko/home.html';
+    iframe.src = 'home.html';
     iframe.setAttribute('title','home');
     iframe.setAttribute('aria-hidden','false');
     iframe.style.position = 'fixed';
@@ -932,17 +940,6 @@ if(pointer.seen && pointer.down){
       // stop drawing in index after we have our snapshot on top
       STOP = true;
 
-      // Hard fallback: if the embedded home can't load (missing file/path), redirect normally.
-      setTimeout(()=>{
-        try{
-          // If we're still on index (iframe didn't show), go directly.
-          if(!document.querySelector('iframe') || getComputedStyle(document.querySelector('iframe')).opacity !== '1'){
-            location.href = 'ko/home.html';
-          }
-        }catch(_e){ location.href = 'ko/home.html'; }
-      }, 1400);
-
-
       requestAnimationFrame(()=>{
         iframe.style.opacity = '1';
         shot.style.opacity = '0';
@@ -953,8 +950,8 @@ if(pointer.seen && pointer.down){
         shot.remove();
         // optional: keep URL clean-ish
         try{
-          history.replaceState(null, '', 'ko/home.html');
-          document.title = 'Home';
+          history.replaceState(null, '', 'home');
+          document.title = 'AK ENM — Home';
         }catch(_e){}
       }, 1200);
     };
