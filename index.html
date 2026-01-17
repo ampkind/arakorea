@@ -950,6 +950,9 @@ if(pointer.seen && pointer.down){
       requestAnimationFrame(()=>{
         iframe.style.opacity = '1';
         shot.style.opacity = '0';
+        try{ history.replaceState(null, '', 'ko/home.html'); }catch(_e){}
+        try{ document.title = 'AK ENM — Home'; }catch(_e){}
+
       });
 
       // cleanup overlay after fade
