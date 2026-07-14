@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>AK ENM — Sung Hie Ahn Publications</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+*{box-sizing:border-box}body{margin:0;background:#060711;color:#e9ecf1;font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Noto Sans KR",sans-serif}
+.top-menu{position:fixed;right:18px;top:14px;z-index:20;width:44px;height:44px;display:grid;place-items:center;border-radius:999px;border:1px solid rgba(233,236,241,.14);background:rgba(5,7,13,.14);backdrop-filter:blur(10px);color:#e9ecf1;cursor:pointer}
+.menu-overlay{position:fixed;inset:0;z-index:30;display:none;background:rgba(0,0,0,.55);backdrop-filter:blur(12px)}.menu-overlay.open{display:block}
+.menu-panel{position:absolute;right:18px;top:68px;min-width:240px;padding:14px;border-radius:18px;border:1px solid rgba(233,236,241,.16);background:rgba(5,7,13,.72)}
+.menu-list{list-style:none;padding:0;margin:0}.menu-list a{display:block;padding:10px;color:#e9ecf1;text-decoration:none;font-size:12px;letter-spacing:.16em}
+.container{max-width:1120px;margin:0 auto;padding:76px 24px 80px}.back{display:inline-block;margin-bottom:30px;color:#e9ecf1;text-decoration:none;font-size:12px;letter-spacing:.16em;opacity:.78}
+.eyebrow{font-size:12px;letter-spacing:.36em;opacity:.58;margin-bottom:14px}h1{font-size:34px;letter-spacing:.08em;margin:0 0 14px}
+.intro{max-width:720px;font-size:14px;line-height:1.8;color:rgba(233,236,241,.72);margin:0 0 38px}
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px}.card{background:rgba(10,12,20,.5);border:1px solid rgba(255,255,255,.12);border-radius:20px;overflow:hidden}
+.cover{display:block;width:100%;padding:0;border:0;background:transparent;aspect-ratio:4/5;overflow:hidden;cursor:zoom-in}.cover img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .35s ease}.cover:hover img{transform:scale(1.025)}
+.info{padding:18px}.info h2{font-size:16px;line-height:1.45;margin:0 0 8px}.meta{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:rgba(233,236,241,.55)}
+.lb{position:fixed;inset:0;display:none;align-items:center;justify-content:center;padding:22px;background:rgba(0,0,0,.9);z-index:60}.lb.open{display:flex}.lb img{max-width:94vw;max-height:88vh;border-radius:18px}
+@media(max-width:900px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:620px){.container{padding:72px 18px 56px}h1{font-size:27px}.grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<button id="topMenu" class="top-menu" type="button">⋯</button>
+<div id="menuOverlay" class="menu-overlay"><div class="menu-panel"><ul class="menu-list">
+<li><a href="about.html">ABOUT</a></li><li><a href="music.html">MUSIC</a></li><li><a href="film-visual.html">FILM / VISUAL</a></li><li><a href="publish.html">PUBLISH</a></li><li><a href="artists.html">ARTISTS</a></li><li><a href="atelier.html">ATELIER</a></li><li><a href="contact.html">CONTACT</a></li>
+</ul></div></div>
+<main class="container"><a class="back" href="artists.html">← ARTISTS</a><div class="eyebrow">SUNG HIE AHN</div><h1>Publications</h1>
+<p class="intro">안성희의 저서, 음악이론 교재, 연구 안내서, 가곡집 및 현대음악 작품집을 한눈에 볼 수 있도록 구성한 출판 아카이브입니다.</p>
+<div class="grid"><article class="card"><button class="cover js-cover" type="button"><img src="../assets/publications/publication-01.png" alt="The Black Flower Never Bloom"></button><div class="info"><h2>The Black Flower Never Bloom</h2><div class="meta">Score · 2026</div></div></article>
+<article class="card"><button class="cover js-cover" type="button"><img src="../assets/publications/publication-02.png" alt="클래식 음악으로 오늘도 행복하세요"></button><div class="info"><h2>클래식 음악으로 오늘도 행복하세요</h2><div class="meta">Book · 2026</div></div></article>
+<article class="card"><button class="cover js-cover" type="button"><img src="../assets/publications/publication-03.png" alt="노을"></button><div class="info"><h2>노을</h2><div class="meta">Art Song Collection · 2026</div></div></article>
+<article class="card"><button class="cover js-cover" type="button"><img src="../assets/publications/publication-04.png" alt="AI 환경에서의 Chicago Style 논문 완전 정복"></button><div class="info"><h2>AI 환경에서의 Chicago Style 논문 완전 정복</h2><div class="meta">Research Guide · 2026</div></div></article>
+<article class="card"><button class="cover js-cover" type="button"><img src="../assets/publications/publication-05.png" alt="La Danza del Clarinetto"></button><div class="info"><h2>La Danza del Clarinetto</h2><div class="meta">Score · 2025</div></div></article>
+<article class="card"><button class="cover js-cover" type="button"><img src="../assets/publications/publication-06.png" alt="SIMULACRA SIMULATION"></button><div class="info"><h2>SIMULACRA SIMULATION</h2><div class="meta">Score · 2025</div></div></article>
+<article class="card"><button class="cover js-cover" type="button"><img src="../assets/publications/publication-07.png" alt="가곡모음집 2권"></button><div class="info"><h2>가곡모음집 2권</h2><div class="meta">Art Song Collection · 2023</div></div></article>
+<article class="card"><button class="cover js-cover" type="button"><img src="../assets/publications/publication-08.png" alt="태 — for Cajon and Drum"></button><div class="info"><h2>태 — for Cajon and Drum</h2><div class="meta">Score · 2023</div></div></article>
+<article class="card"><button class="cover js-cover" type="button"><img src="../assets/publications/publication-09.png" alt="핵심 음악이론"></button><div class="info"><h2>핵심 음악이론</h2><div class="meta">Music Theory · 2021</div></div></article>
+<article class="card"><button class="cover js-cover" type="button"><img src="../assets/publications/publication-10.png" alt="핵심 음악이론 연습문제 풀이집"></button><div class="info"><h2>핵심 음악이론 연습문제 풀이집</h2><div class="meta">Workbook · 2021</div></div></article>
+<article class="card"><button class="cover js-cover" type="button"><img src="../assets/publications/publication-11.png" alt="천공의 피아노 — For 8 Hands"></button><div class="info"><h2>천공의 피아노 — For 8 Hands</h2><div class="meta">Score · 2021</div></div></article>
+<article class="card"><button class="cover js-cover" type="button"><img src="../assets/publications/publication-12.png" alt="현대음악 작품집"></button><div class="info"><h2>현대음악 작품집</h2><div class="meta">Score Collection · 2021</div></div></article>
+<article class="card"><button class="cover js-cover" type="button"><img src="../assets/publications/publication-13.png" alt="‘하늘빛 그리움’ 가곡 모음집"></button><div class="info"><h2>‘하늘빛 그리움’ 가곡 모음집</h2><div class="meta">Art Song Collection · 2020</div></div></article>
+<article class="card"><button class="cover js-cover" type="button"><img src="../assets/publications/publication-14.png" alt="논문 완전 정복 — Chicago Style"></button><div class="info"><h2>논문 완전 정복 — Chicago Style</h2><div class="meta">Research Guide · 2019</div></div></article></div></main>
+<div class="lb" id="lb"><img id="lbImg" alt="Publication cover preview"></div>
+<script>
+const m=document.getElementById('topMenu'),o=document.getElementById('menuOverlay');m.onclick=()=>o.classList.toggle('open');o.onclick=e=>{if(e.target===o)o.classList.remove('open')};
+const lb=document.getElementById('lb'),li=document.getElementById('lbImg');document.querySelectorAll('.js-cover img').forEach(x=>x.parentElement.onclick=()=>{li.src=x.src;lb.classList.add('open')});lb.onclick=()=>lb.classList.remove('open');
+</script></body></html>
