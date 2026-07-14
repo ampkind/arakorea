@@ -5,19 +5,47 @@
 <title>AK ENM — Sung Hie Ahn Publications</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
-*{box-sizing:border-box}body{margin:0;background:#060711;color:#e9ecf1;font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Noto Sans KR",sans-serif}
+*{box-sizing:border-box}
+body{margin:0;background:#060711;color:#e9ecf1;font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Noto Sans KR",sans-serif}
 .top-menu{position:fixed;right:18px;top:14px;z-index:20;width:44px;height:44px;display:grid;place-items:center;border-radius:999px;border:1px solid rgba(233,236,241,.14);background:rgba(5,7,13,.14);backdrop-filter:blur(10px);color:#e9ecf1;cursor:pointer}
-.menu-overlay{position:fixed;inset:0;z-index:30;display:none;background:rgba(0,0,0,.55);backdrop-filter:blur(12px)}.menu-overlay.open{display:block}
+.menu-overlay{position:fixed;inset:0;z-index:30;display:none;background:rgba(0,0,0,.55);backdrop-filter:blur(12px)}
+.menu-overlay.open{display:block}
 .menu-panel{position:absolute;right:18px;top:68px;min-width:240px;padding:14px;border-radius:18px;border:1px solid rgba(233,236,241,.16);background:rgba(5,7,13,.72)}
-.menu-list{list-style:none;padding:0;margin:0}.menu-list a{display:block;padding:10px;color:#e9ecf1;text-decoration:none;font-size:12px;letter-spacing:.16em}
-.container{max-width:1120px;margin:0 auto;padding:76px 24px 80px}.back{display:inline-block;margin-bottom:30px;color:#e9ecf1;text-decoration:none;font-size:12px;letter-spacing:.16em;opacity:.78}
-.eyebrow{font-size:12px;letter-spacing:.36em;opacity:.58;margin-bottom:14px}h1{font-size:34px;letter-spacing:.08em;margin:0 0 14px}
+.menu-list{list-style:none;padding:0;margin:0}
+.menu-list a{display:block;padding:10px;color:#e9ecf1;text-decoration:none;font-size:12px;letter-spacing:.16em;border-radius:10px}
+.menu-list a:hover{background:rgba(255,255,255,.06)}
+.container{max-width:1120px;margin:0 auto;padding:76px 24px 80px}
+.back{display:inline-block;margin-bottom:30px;color:#e9ecf1;text-decoration:none;font-size:12px;letter-spacing:.16em;opacity:.78}
+.eyebrow{font-size:12px;letter-spacing:.36em;opacity:.58;margin-bottom:14px}
+h1{font-size:34px;letter-spacing:.08em;margin:0 0 14px}
 .intro{max-width:720px;font-size:14px;line-height:1.8;color:rgba(233,236,241,.72);margin:0 0 38px}
-.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px}.card{background:rgba(10,12,20,.5);border:1px solid rgba(255,255,255,.12);border-radius:20px;overflow:hidden}
-.cover{display:block;width:100%;padding:0;border:0;background:transparent;aspect-ratio:4/5;overflow:hidden;cursor:zoom-in}.cover img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .35s ease}.cover:hover img{transform:scale(1.025)}
-.info{padding:18px}.info h2{font-size:16px;line-height:1.45;margin:0 0 8px}.meta{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:rgba(233,236,241,.55)}
-.lb{position:fixed;inset:0;display:none;align-items:center;justify-content:center;padding:22px;background:rgba(0,0,0,.9);z-index:60}.lb.open{display:flex}.lb img{max-width:94vw;max-height:88vh;border-radius:18px}
-@media(max-width:900px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:620px){.container{padding:72px 18px 56px}h1{font-size:27px}.grid{grid-template-columns:1fr}}
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px}
+.card{background:rgba(10,12,20,.5);border:1px solid rgba(255,255,255,.12);border-radius:20px;overflow:hidden}
+.cover{display:block;width:100%;padding:0;border:0;background:transparent;aspect-ratio:4/5;overflow:hidden;cursor:pointer}
+.cover img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .35s ease}
+.cover:hover img{transform:scale(1.025)}
+.info{padding:18px}
+.info h2{font-size:16px;line-height:1.45;margin:0 0 8px}
+.meta{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:rgba(233,236,241,.55)}
+
+.modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;padding:24px;background:rgba(0,0,0,.88);backdrop-filter:blur(8px);z-index:60}
+.modal.open{display:flex}
+.modal-card{width:min(980px,96vw);max-height:92vh;overflow:auto;display:grid;grid-template-columns:minmax(320px,1.05fr) minmax(300px,.95fr);background:#0b0d16;border:1px solid rgba(255,255,255,.14);border-radius:24px;box-shadow:0 30px 100px rgba(0,0,0,.7)}
+.modal-image{background:#ececec;display:flex;align-items:center;justify-content:center;min-height:620px;border-radius:24px 0 0 24px;overflow:hidden}
+.modal-image img{width:100%;height:100%;object-fit:cover;display:block}
+.modal-content{padding:38px;display:flex;flex-direction:column;justify-content:center}
+.modal-kicker{font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:rgba(233,236,241,.5);margin-bottom:12px}
+.modal-title{font-size:28px;line-height:1.25;margin:0 0 18px}
+.modal-desc{font-size:14px;line-height:1.8;color:rgba(233,236,241,.72);margin:0 0 24px}
+.detail-grid{display:grid;grid-template-columns:88px 1fr;gap:10px 14px;padding:18px 0;border-top:1px solid rgba(255,255,255,.1);border-bottom:1px solid rgba(255,255,255,.1);font-size:13px}
+.detail-label{color:rgba(233,236,241,.48)}
+.detail-value{color:rgba(233,236,241,.9)}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:24px}
+.purchase{display:inline-flex;align-items:center;justify-content:center;min-height:46px;padding:0 18px;border-radius:999px;background:#e9ecf1;color:#060711;text-decoration:none;font-size:12px;font-weight:750;letter-spacing:.08em}
+.purchase:hover{transform:translateY(-1px)}
+.close{display:inline-flex;align-items:center;justify-content:center;min-height:46px;padding:0 18px;border-radius:999px;border:1px solid rgba(255,255,255,.18);background:transparent;color:#e9ecf1;font-size:12px;cursor:pointer}
+@media(max-width:900px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.modal-card{grid-template-columns:1fr;max-width:680px}.modal-image{min-height:0;aspect-ratio:4/5;border-radius:24px 24px 0 0}}
+@media(max-width:620px){.container{padding:72px 18px 56px}h1{font-size:27px}.grid{grid-template-columns:1fr}.modal{padding:10px}.modal-content{padding:24px}.modal-title{font-size:23px}}
 </style>
 </head>
 <body>
@@ -25,24 +53,248 @@
 <div id="menuOverlay" class="menu-overlay"><div class="menu-panel"><ul class="menu-list">
 <li><a href="about.html">ABOUT</a></li><li><a href="music.html">MUSIC</a></li><li><a href="film-visual.html">FILM / VISUAL</a></li><li><a href="publish.html">PUBLISH</a></li><li><a href="artists.html">ARTISTS</a></li><li><a href="atelier.html">ATELIER</a></li><li><a href="contact.html">CONTACT</a></li>
 </ul></div></div>
-<main class="container"><a class="back" href="artists.html">← ARTISTS</a><div class="eyebrow">SUNG HIE AHN</div><h1>Publications</h1>
+
+<main class="container">
+<a class="back" href="artists.html">← ARTISTS</a>
+<div class="eyebrow">SUNG HIE AHN</div>
+<h1>Publications</h1>
 <p class="intro">안성희의 저서, 음악이론 교재, 연구 안내서, 가곡집 및 현대음악 작품집을 한눈에 볼 수 있도록 구성한 출판 아카이브입니다.</p>
-<div class="grid"><article class="card"><button class="cover js-cover" type="button"><img src="../assets/publications/publication-01.png" alt="The Black Flower Never Bloom"></button><div class="info"><h2>The Black Flower Never Bloom</h2><div class="meta">Score · 2026</div></div></article>
-<article class="card"><button class="cover js-cover" type="button"><img src="../assets/publications/publication-02.png" alt="클래식 음악으로 오늘도 행복하세요"></button><div class="info"><h2>클래식 음악으로 오늘도 행복하세요</h2><div class="meta">Book · 2026</div></div></article>
-<article class="card"><button class="cover js-cover" type="button"><img src="../assets/publications/publication-03.png" alt="노을"></button><div class="info"><h2>노을</h2><div class="meta">Art Song Collection · 2026</div></div></article>
-<article class="card"><button class="cover js-cover" type="button"><img src="../assets/publications/publication-04.png" alt="AI 환경에서의 Chicago Style 논문 완전 정복"></button><div class="info"><h2>AI 환경에서의 Chicago Style 논문 완전 정복</h2><div class="meta">Research Guide · 2026</div></div></article>
-<article class="card"><button class="cover js-cover" type="button"><img src="../assets/publications/publication-05.png" alt="La Danza del Clarinetto"></button><div class="info"><h2>La Danza del Clarinetto</h2><div class="meta">Score · 2025</div></div></article>
-<article class="card"><button class="cover js-cover" type="button"><img src="../assets/publications/publication-06.png" alt="SIMULACRA SIMULATION"></button><div class="info"><h2>SIMULACRA SIMULATION</h2><div class="meta">Score · 2025</div></div></article>
-<article class="card"><button class="cover js-cover" type="button"><img src="../assets/publications/publication-07.png" alt="가곡모음집 2권"></button><div class="info"><h2>가곡모음집 2권</h2><div class="meta">Art Song Collection · 2023</div></div></article>
-<article class="card"><button class="cover js-cover" type="button"><img src="../assets/publications/publication-08.png" alt="태 — for Cajon and Drum"></button><div class="info"><h2>태 — for Cajon and Drum</h2><div class="meta">Score · 2023</div></div></article>
-<article class="card"><button class="cover js-cover" type="button"><img src="../assets/publications/publication-09.png" alt="핵심 음악이론"></button><div class="info"><h2>핵심 음악이론</h2><div class="meta">Music Theory · 2021</div></div></article>
-<article class="card"><button class="cover js-cover" type="button"><img src="../assets/publications/publication-10.png" alt="핵심 음악이론 연습문제 풀이집"></button><div class="info"><h2>핵심 음악이론 연습문제 풀이집</h2><div class="meta">Workbook · 2021</div></div></article>
-<article class="card"><button class="cover js-cover" type="button"><img src="../assets/publications/publication-11.png" alt="천공의 피아노 — For 8 Hands"></button><div class="info"><h2>천공의 피아노 — For 8 Hands</h2><div class="meta">Score · 2021</div></div></article>
-<article class="card"><button class="cover js-cover" type="button"><img src="../assets/publications/publication-12.png" alt="현대음악 작품집"></button><div class="info"><h2>현대음악 작품집</h2><div class="meta">Score Collection · 2021</div></div></article>
-<article class="card"><button class="cover js-cover" type="button"><img src="../assets/publications/publication-13.png" alt="‘하늘빛 그리움’ 가곡 모음집"></button><div class="info"><h2>‘하늘빛 그리움’ 가곡 모음집</h2><div class="meta">Art Song Collection · 2020</div></div></article>
-<article class="card"><button class="cover js-cover" type="button"><img src="../assets/publications/publication-14.png" alt="논문 완전 정복 — Chicago Style"></button><div class="info"><h2>논문 완전 정복 — Chicago Style</h2><div class="meta">Research Guide · 2019</div></div></article></div></main>
-<div class="lb" id="lb"><img id="lbImg" alt="Publication cover preview"></div>
+<div class="grid">
+
+    <article class="card">
+      <button class="cover js-cover" type="button"
+        data-index="0"
+        aria-label="The Black Flower Never Bloom 상세 보기">
+        <img src="../assets/publications/publication-01.png" alt="The Black Flower Never Bloom">
+      </button>
+      <div class="info">
+        <h2>The Black Flower Never Bloom</h2>
+        <div class="meta">Score · 2026</div>
+      </div>
+    </article>
+    <article class="card">
+      <button class="cover js-cover" type="button"
+        data-index="1"
+        aria-label="클래식 음악으로 오늘도 행복하세요 상세 보기">
+        <img src="../assets/publications/publication-02.png" alt="클래식 음악으로 오늘도 행복하세요">
+      </button>
+      <div class="info">
+        <h2>클래식 음악으로 오늘도 행복하세요</h2>
+        <div class="meta">Book · 2026</div>
+      </div>
+    </article>
+    <article class="card">
+      <button class="cover js-cover" type="button"
+        data-index="2"
+        aria-label="노을 상세 보기">
+        <img src="../assets/publications/publication-03.png" alt="노을">
+      </button>
+      <div class="info">
+        <h2>노을</h2>
+        <div class="meta">Art Song Collection · 2026</div>
+      </div>
+    </article>
+    <article class="card">
+      <button class="cover js-cover" type="button"
+        data-index="3"
+        aria-label="AI 환경에서의 Chicago Style 논문 완전 정복 상세 보기">
+        <img src="../assets/publications/publication-04.png" alt="AI 환경에서의 Chicago Style 논문 완전 정복">
+      </button>
+      <div class="info">
+        <h2>AI 환경에서의 Chicago Style 논문 완전 정복</h2>
+        <div class="meta">Research Guide · 2026</div>
+      </div>
+    </article>
+    <article class="card">
+      <button class="cover js-cover" type="button"
+        data-index="4"
+        aria-label="La Danza del Clarinetto 상세 보기">
+        <img src="../assets/publications/publication-05.png" alt="La Danza del Clarinetto">
+      </button>
+      <div class="info">
+        <h2>La Danza del Clarinetto</h2>
+        <div class="meta">Score · 2025</div>
+      </div>
+    </article>
+    <article class="card">
+      <button class="cover js-cover" type="button"
+        data-index="5"
+        aria-label="SIMULACRA SIMULATION 상세 보기">
+        <img src="../assets/publications/publication-06.png" alt="SIMULACRA SIMULATION">
+      </button>
+      <div class="info">
+        <h2>SIMULACRA SIMULATION</h2>
+        <div class="meta">Score · 2025</div>
+      </div>
+    </article>
+    <article class="card">
+      <button class="cover js-cover" type="button"
+        data-index="6"
+        aria-label="가곡모음집 2권 상세 보기">
+        <img src="../assets/publications/publication-07.png" alt="가곡모음집 2권">
+      </button>
+      <div class="info">
+        <h2>가곡모음집 2권</h2>
+        <div class="meta">Art Song Collection · 2023</div>
+      </div>
+    </article>
+    <article class="card">
+      <button class="cover js-cover" type="button"
+        data-index="7"
+        aria-label="태 — for Cajon and Drum 상세 보기">
+        <img src="../assets/publications/publication-08.png" alt="태 — for Cajon and Drum">
+      </button>
+      <div class="info">
+        <h2>태 — for Cajon and Drum</h2>
+        <div class="meta">Score · 2023</div>
+      </div>
+    </article>
+    <article class="card">
+      <button class="cover js-cover" type="button"
+        data-index="8"
+        aria-label="핵심 음악이론 상세 보기">
+        <img src="../assets/publications/publication-09.png" alt="핵심 음악이론">
+      </button>
+      <div class="info">
+        <h2>핵심 음악이론</h2>
+        <div class="meta">Music Theory · 2021</div>
+      </div>
+    </article>
+    <article class="card">
+      <button class="cover js-cover" type="button"
+        data-index="9"
+        aria-label="핵심 음악이론 연습문제 풀이집 상세 보기">
+        <img src="../assets/publications/publication-10.png" alt="핵심 음악이론 연습문제 풀이집">
+      </button>
+      <div class="info">
+        <h2>핵심 음악이론 연습문제 풀이집</h2>
+        <div class="meta">Workbook · 2021</div>
+      </div>
+    </article>
+    <article class="card">
+      <button class="cover js-cover" type="button"
+        data-index="10"
+        aria-label="천공의 피아노 — For 8 Hands 상세 보기">
+        <img src="../assets/publications/publication-11.png" alt="천공의 피아노 — For 8 Hands">
+      </button>
+      <div class="info">
+        <h2>천공의 피아노 — For 8 Hands</h2>
+        <div class="meta">Score · 2021</div>
+      </div>
+    </article>
+    <article class="card">
+      <button class="cover js-cover" type="button"
+        data-index="11"
+        aria-label="현대음악 작품집 상세 보기">
+        <img src="../assets/publications/publication-12.png" alt="현대음악 작품집">
+      </button>
+      <div class="info">
+        <h2>현대음악 작품집</h2>
+        <div class="meta">Score Collection · 2021</div>
+      </div>
+    </article>
+    <article class="card">
+      <button class="cover js-cover" type="button"
+        data-index="12"
+        aria-label="‘하늘빛 그리움’ 가곡 모음집 상세 보기">
+        <img src="../assets/publications/publication-13.png" alt="‘하늘빛 그리움’ 가곡 모음집">
+      </button>
+      <div class="info">
+        <h2>‘하늘빛 그리움’ 가곡 모음집</h2>
+        <div class="meta">Art Song Collection · 2020</div>
+      </div>
+    </article>
+    <article class="card">
+      <button class="cover js-cover" type="button"
+        data-index="13"
+        aria-label="논문 완전 정복 — Chicago Style 상세 보기">
+        <img src="../assets/publications/publication-14.png" alt="논문 완전 정복 — Chicago Style">
+      </button>
+      <div class="info">
+        <h2>논문 완전 정복 — Chicago Style</h2>
+        <div class="meta">Research Guide · 2019</div>
+      </div>
+    </article>
+</div>
+</main>
+
+<div class="modal" id="modal" aria-hidden="true">
+  <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal-image"><img id="modalImg" alt=""></div>
+    <div class="modal-content">
+      <div class="modal-kicker" id="modalKicker"></div>
+      <h2 class="modal-title" id="modalTitle"></h2>
+      <p class="modal-desc" id="modalDesc"></p>
+      <div class="detail-grid">
+        <div class="detail-label">Year</div><div class="detail-value" id="modalYear"></div>
+        <div class="detail-label">Category</div><div class="detail-value" id="modalType"></div>
+        <div class="detail-label">ISBN</div><div class="detail-value" id="modalIsbn"></div>
+      </div>
+      <div class="actions">
+        <a class="purchase" id="purchaseLink" target="_blank" rel="noopener">구매 페이지로 이동 ↗</a>
+        <button class="close" id="closeModal" type="button">닫기</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script>
-const m=document.getElementById('topMenu'),o=document.getElementById('menuOverlay');m.onclick=()=>o.classList.toggle('open');o.onclick=e=>{if(e.target===o)o.classList.remove('open')};
-const lb=document.getElementById('lb'),li=document.getElementById('lbImg');document.querySelectorAll('.js-cover img').forEach(x=>x.parentElement.onclick=()=>{li.src=x.src;lb.classList.add('open')});lb.onclick=()=>lb.classList.remove('open');
-</script></body></html>
+const publications = [
+{title:'The Black Flower Never Bloom',type:'Score',year:'2026',isbn:'979-11-93553-07-7',image:'../assets/publications/publication-01.png',store:'Kyobo',url:'https://ebook-product.kyobobook.co.kr/dig/epd/ebook/E000012876974',desc:'평화와 기억의 이미지를 음악적 서사로 풀어낸 안성희의 작품집.'},
+{title:'클래식 음악으로 오늘도 행복하세요',type:'Book',year:'2026',isbn:'979-11-93553-10-7',image:'../assets/publications/publication-02.png',store:'Kyobo',url:'https://ebook-product.kyobobook.co.kr/dig/epd/ebook/E000012497577',desc:'클래식 음악을 일상 가까이에서 이해하고 즐길 수 있도록 구성한 음악 교양서.'},
+{title:'노을',type:'Art Song Collection',year:'2026',isbn:'979-11-93553-12-1',image:'../assets/publications/publication-03.png',store:'Kyobo',url:'https://ebook-product.kyobobook.co.kr/dig/epd/ebook/480D260730020?LINK=NVE',desc:'이외수의 시와 안성희의 음악이 만난 춘천시립합창단 위촉 가곡 작품.'},
+{title:'AI 환경에서의 Chicago Style 논문 완전 정복',type:'Research Guide',year:'2026',isbn:'979-11-93553-11-4',image:'../assets/publications/publication-04.png',store:'Ridibooks',url:'https://ridibooks.com/books/754047522',desc:'AI 시대의 연구 환경을 반영해 Chicago Style 논문 작성법을 체계적으로 정리한 안내서.'},
+{title:'La Danza del Clarinetto',type:'Score',year:'2025',isbn:'9791193553039',image:'../assets/publications/publication-05.png',store:'Kyobo',url:'https://ebook-product.kyobobook.co.kr/dig/epd/ebook/E000012025727',desc:'클라리넷과 피아노를 위한 리듬 중심의 현대음악 작품.'},
+{title:'SIMULACRA SIMULATION',type:'Score',year:'2025',isbn:'979-11-93553-02-2',image:'../assets/publications/publication-06.png',store:'Kyobo',url:'https://ebook-product.kyobobook.co.kr/dig/epd/ebook/E000011325482',desc:'다중 타악기를 위한 현대음악 작품으로, 반복과 변형의 구조를 탐구한다.'},
+{title:'가곡모음집 2권',type:'Art Song Collection',year:'2023',isbn:'979-11-93553-01-5',image:'../assets/publications/publication-07.png',store:'Kyobo',url:'https://ebook-product.kyobobook.co.kr/dig/epd/ebook/E000005623711',desc:'한국 시와 음악의 정서를 담은 안성희 가곡 작품 모음집.'},
+{title:'태 — for Cajon and Drum',type:'Score',year:'2023',isbn:'979-11-93553-00-8',image:'../assets/publications/publication-08.png',store:'Kyobo',url:'https://ebook-product.kyobobook.co.kr/dig/epd/ebook/E000005456275',desc:'카혼과 드럼을 위한 타악 작품으로, 생명과 울림의 에너지를 무대화한다.'},
+{title:'핵심 음악이론',type:'Music Theory',year:'2021',isbn:'979-11-964855-3-5',image:'../assets/publications/publication-09.png',store:'Kyobo',url:'https://ebook-product.kyobobook.co.kr/dig/epd/ebook/E000002999576',desc:'음악이론의 핵심 개념을 단계적으로 정리한 학습 교재.'},
+{title:'핵심 음악이론 연습문제 풀이집',type:'Workbook',year:'2021',isbn:'979-11-964855-6-6',image:'../assets/publications/publication-10.png',store:'Kyobo',url:'https://ebook-product.kyobobook.co.kr/dig/epd/ebook/E000003045590',desc:'핵심 음악이론의 이해를 돕는 연습문제와 풀이를 수록한 보조 교재.'},
+{title:'천공의 피아노 — For 8 Hands',type:'Score',year:'2021',isbn:'979-11-964855-5-9',image:'../assets/publications/publication-11.png',store:'Kyobo',url:'https://ebook-product.kyobobook.co.kr/dig/epd/ebook/E000002999578',desc:'네 명의 연주자가 한 대의 피아노를 연주하는 8 Hands 작품.'},
+{title:'현대음악 작품집',type:'Score Collection',year:'2021',isbn:'979-11-964855-4-2',image:'../assets/publications/publication-12.png',store:'Kyobo',url:'https://ebook-product.kyobobook.co.kr/dig/epd/ebook/E000002999577',desc:'안성희의 현대음악 작품을 선별해 수록한 작품집.'},
+{title:'‘하늘빛 그리움’ 가곡 모음집',type:'Art Song Collection',year:'2020',isbn:'979-11-964855-2-8',image:'../assets/publications/publication-13.png',store:'Kyobo',url:'https://ebook-product.kyobobook.co.kr/dig/epd/ebook/E000002999575',desc:'한국적 서정과 현대적 음악어법을 담은 가곡 모음집.'},
+{title:'논문 완전 정복 — Chicago Style',type:'Research Guide',year:'2019',isbn:'979-11-964855-1-1',image:'../assets/publications/publication-14.png',store:'Aladin',url:'https://aladin.kr/p/CMlF9',desc:'예술·문학·인문학 연구자를 위한 Chicago Style 논문 작성 안내서.'}
+];
+const menuBtn=document.getElementById('topMenu');
+const menuOverlay=document.getElementById('menuOverlay');
+menuBtn.onclick=()=>menuOverlay.classList.toggle('open');
+menuOverlay.onclick=e=>{if(e.target===menuOverlay)menuOverlay.classList.remove('open')};
+
+const modal=document.getElementById('modal');
+const modalImg=document.getElementById('modalImg');
+const modalKicker=document.getElementById('modalKicker');
+const modalTitle=document.getElementById('modalTitle');
+const modalDesc=document.getElementById('modalDesc');
+const modalYear=document.getElementById('modalYear');
+const modalType=document.getElementById('modalType');
+const modalIsbn=document.getElementById('modalIsbn');
+const purchaseLink=document.getElementById('purchaseLink');
+
+function openPublication(index){
+  const p=publications[index];
+  modalImg.src=p.image;
+  modalImg.alt=p.title;
+  modalKicker.textContent=p.store;
+  modalTitle.textContent=p.title;
+  modalDesc.textContent=p.desc;
+  modalYear.textContent=p.year;
+  modalType.textContent=p.type;
+  modalIsbn.textContent=p.isbn;
+  purchaseLink.href=p.url;
+  purchaseLink.textContent=`${p.store}에서 보기 ↗`;
+  modal.classList.add('open');
+  modal.setAttribute('aria-hidden','false');
+  document.body.style.overflow='hidden';
+}
+function closePublication(){
+  modal.classList.remove('open');
+  modal.setAttribute('aria-hidden','true');
+  document.body.style.overflow='';
+}
+document.querySelectorAll('.js-cover').forEach(btn=>btn.addEventListener('click',()=>openPublication(Number(btn.dataset.index))));
+document.getElementById('closeModal').onclick=closePublication;
+modal.addEventListener('click',e=>{if(e.target===modal)closePublication()});
+addEventListener('keydown',e=>{if(e.key==='Escape')closePublication()});
+</script>
+</body>
+</html>
