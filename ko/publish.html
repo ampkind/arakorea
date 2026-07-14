@@ -1,192 +1,281 @@
 <!doctype html>
 <html lang="ko">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="color-scheme" content="dark" />
-  <title>AK ENM — PUBLISH</title>
-  <style>
-    :root{ --bg:#05070d; --fg:#e9ecf1; }
-    html,body{ height:100%; margin:0; background:var(--bg); color:var(--fg); }
-    body{ overflow:hidden; }
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="dark">
+<title>AK ENM — PUBLISH</title>
+<style>
+:root{--bg:#05070d;--fg:#e9ecf1;--muted:rgba(233,236,241,.66);--line:rgba(233,236,241,.14);}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:
+radial-gradient(circle at 50% -10%,rgba(70,95,120,.22),transparent 42%),
+linear-gradient(180deg,#070912 0%,#03050a 100%);
+color:var(--fg);font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Noto Sans KR",sans-serif;overflow-x:hidden}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;background:linear-gradient(90deg,rgba(255,255,255,.012) 1px,transparent 1px),linear-gradient(rgba(255,255,255,.01) 1px,transparent 1px);background-size:64px 64px;mask-image:linear-gradient(to bottom,black,transparent 72%)}
+.top-menu{position:fixed;right:18px;top:14px;z-index:50;width:44px;height:44px;display:grid;place-items:center;border-radius:999px;border:1px solid var(--line);background:rgba(5,7,13,.38);backdrop-filter:blur(12px);color:var(--fg);cursor:pointer}
+.menu-overlay{position:fixed;inset:0;z-index:60;display:none;background:rgba(0,0,0,.55);backdrop-filter:blur(12px)}
+.menu-overlay.open{display:block}
+.menu-panel{position:absolute;right:18px;top:68px;min-width:240px;padding:14px;border-radius:18px;border:1px solid rgba(233,236,241,.16);background:rgba(5,7,13,.78)}
+.menu-list{list-style:none;padding:0;margin:0}
+.menu-list a{display:block;padding:10px;border-radius:12px;text-decoration:none;color:rgba(233,236,241,.86);letter-spacing:.16em;font-size:12px}
+.menu-list a:hover{background:rgba(233,236,241,.06)}
+.menu-sep{height:1px;background:rgba(233,236,241,.12);margin:10px 6px}
+.lang-row{display:flex;justify-content:flex-end;gap:10px;padding:6px}
+.lang-row a{color:rgba(233,236,241,.72);text-decoration:none;padding:6px 8px;border:1px solid rgba(233,236,241,.14);border-radius:999px;font-size:12px}
 
-    /* background */
-    #bg{
-      position:fixed; inset:0; width:100%; height:100%;
-      object-fit:cover; z-index:0;
-    }
+.hero{min-height:88vh;display:grid;grid-template-columns:minmax(0,1fr) minmax(360px,.9fr);gap:64px;align-items:center;max-width:1240px;margin:0 auto;padding:110px 34px 70px}
+.hero-copy .kicker{font-size:11px;letter-spacing:.38em;color:var(--muted);margin:0 0 14px}
+.hero-copy h1{font-size:clamp(42px,7vw,92px);line-height:.94;letter-spacing:-.035em;margin:0 0 24px}
+.hero-copy p{max-width:620px;font-size:15px;line-height:1.85;color:var(--muted);margin:0 0 28px}
+.hero-actions{display:flex;gap:12px;flex-wrap:wrap}
+.hero-actions a{display:inline-flex;align-items:center;justify-content:center;min-height:46px;padding:0 18px;border-radius:999px;text-decoration:none;font-size:12px;letter-spacing:.12em}
+.primary{background:#e9ecf1;color:#060711} .secondary{border:1px solid var(--line);color:#e9ecf1;background:rgba(255,255,255,.03)}
+.featured-stage{position:relative;min-height:620px;display:flex;align-items:center;justify-content:center}
+.featured-stage:before{content:"FEATURED";position:absolute;top:24px;right:0;font-size:11px;letter-spacing:.32em;color:rgba(233,236,241,.45)}
+.featured-book{position:relative;display:block;width:min(320px,75vw);filter:drop-shadow(0 34px 44px rgba(0,0,0,.55));transition:transform .4s ease}
+.featured-book:hover{transform:translateY(-12px) rotateY(-4deg)}
+.featured-book img{display:block;width:100%;border-radius:4px}
+.featured-caption{position:absolute;left:0;right:0;bottom:18px;text-align:center;font-size:12px;letter-spacing:.15em;color:rgba(233,236,241,.8)}
 
-    /* Top-right menu */
-    .top-menu{
-      position:fixed; right:18px; top:14px; z-index:20;
-      width:44px; height:44px; display:grid; place-items:center;
-      border-radius:999px; border:1px solid rgba(233,236,241,.14);
-      background:rgba(5,7,13,.14); backdrop-filter: blur(10px);
-      color:rgba(233,236,241,.86); letter-spacing:.18em; cursor:pointer;
-    }
-    .top-menu:hover{ border-color:rgba(233,236,241,.34); color:rgba(233,236,241,.96); }
+.archive{max-width:1320px;margin:0 auto;padding:20px 24px 110px}
+.archive-title{display:flex;align-items:end;justify-content:space-between;gap:20px;margin-bottom:34px}
+.archive-title h2{font-size:clamp(28px,4vw,54px);margin:0;letter-spacing:-.02em}
+.archive-title p{margin:0;color:var(--muted);font-size:13px}
+.shelf-section{margin:0 0 58px}
+.shelf-head{display:flex;justify-content:space-between;align-items:center;margin:0 2px 14px}
+.shelf-head h2{margin:0;font-size:13px;letter-spacing:.22em;font-weight:600}
+.shelf-head span{font-size:10px;letter-spacing:.2em;color:rgba(233,236,241,.38)}
+.shelf-track{display:flex;align-items:flex-end;gap:18px;overflow-x:auto;overscroll-behavior-inline:contain;scroll-snap-type:x proximity;padding:20px 12px 26px;scrollbar-width:none}
+.shelf-track::-webkit-scrollbar{display:none}
+.book{position:relative;flex:0 0 clamp(150px,15vw,220px);scroll-snap-align:start;text-decoration:none;color:inherit;transform-origin:50% 100%;transition:transform .35s ease,filter .35s ease}
+.book img{display:block;width:100%;aspect-ratio:4/5;object-fit:cover;border-radius:5px;box-shadow:0 20px 34px rgba(0,0,0,.5)}
+.book:before{content:"";position:absolute;inset:0;border-radius:5px;box-shadow:inset 12px 0 18px rgba(0,0,0,.13);pointer-events:none}
+.book-glow{position:absolute;left:10%;right:10%;bottom:-10px;height:24px;background:rgba(170,210,255,.15);filter:blur(18px);opacity:0;transition:opacity .35s ease}
+.book-meta{display:block;opacity:0;transform:translateY(8px);transition:.3s ease;padding-top:12px}
+.book-meta strong{display:block;font-size:12px;line-height:1.45}
+.book-meta small{display:block;margin-top:5px;font-size:10px;letter-spacing:.1em;color:rgba(233,236,241,.52)}
+.book:hover{transform:translateY(-18px) rotateY(-5deg);z-index:5}
+.book:hover .book-meta,.book:focus-visible .book-meta{opacity:1;transform:none}
+.book:hover .book-glow{opacity:1}
+.shelf-board{height:16px;border-radius:3px;background:linear-gradient(180deg,#303743,#121720);box-shadow:0 14px 25px rgba(0,0,0,.6),inset 0 1px 0 rgba(255,255,255,.14);position:relative}
+.shelf-board:after{content:"";position:absolute;left:2%;right:2%;bottom:-18px;height:18px;background:linear-gradient(90deg,transparent,rgba(0,0,0,.65),transparent);filter:blur(10px)}
 
-    .menu-overlay{ position:fixed; inset:0; z-index:30; display:none;
-      background:rgba(0,0,0,.55); backdrop-filter: blur(12px);
-    }
-    .menu-overlay.open{ display:block; }
-
-    .menu-panel{ position:absolute; right:18px; top:68px; min-width:240px;
-      padding:14px 14px 10px; border-radius:18px;
-      border:1px solid rgba(233,236,241,.16); background:rgba(5,7,13,.52);
-      box-shadow: 0 18px 60px rgba(0,0,0,.45);
-    }
-    .menu-list{ list-style:none; padding:0; margin:0; }
-    .menu-list a{ display:block; padding:10px 10px; border-radius:12px; text-decoration:none;
-      color:rgba(233,236,241,.86); letter-spacing:.16em; text-transform:uppercase; font-size:12px;
-      border:1px solid transparent;
-    }
-    .menu-list a:hover{ color:rgba(233,236,241,.96); border-color:rgba(233,236,241,.18); background:rgba(233,236,241,.06); }
-    .menu-sep{ height:1px; background:rgba(233,236,241,.12); margin:10px 6px; }
-    .lang-row{ display:flex; align-items:center; justify-content:flex-end; gap:10px; padding:6px 6px 2px;
-      font-size:12px; letter-spacing:.18em; color:rgba(233,236,241,.72); text-transform:uppercase;
-    }
-    .lang-row a{ color:rgba(233,236,241,.72); text-decoration:none; padding:6px 8px; border-radius:999px;
-      border:1px solid rgba(233,236,241,.14); background:rgba(5,7,13,.20);
-    }
-    .lang-row a:hover{ color:rgba(233,236,241,.96); border-color:rgba(233,236,241,.34); }
-
-    /* publish text block */
-    .text-block{
-      position:absolute; top:20%; left:22%;
-      transform:translate(-50%,-50%);
-      max-width:520px;
-      background:rgba(5,7,13,.45); backdrop-filter: blur(10px);
-      border:1px solid rgba(233,236,241,.14);
-      border-radius:18px; padding:22px 26px;
-      z-index:10;
-    }
-    .text-block .kicker{ font-size:11px; letter-spacing:.36em; opacity:.78; margin:0 0 10px; }
-    .text-block h1{ margin:0 0 10px; letter-spacing:.16em; }
-    .text-block p{ margin:0; line-height:1.7; opacity:.88; }
-
-    /* frame + plaque */
-    .frameLink{
-      position:absolute; left:50%; top:54%;
-      transform:translate(-50%,-50%);
-      width:clamp(320px,30vw,560px);
-      aspect-ratio:3/4; z-index:8;
-    }
-    .plaque{
-      position:absolute; left:50%;
-      top: calc(54% + (clamp(320px,30vw,560px)*4/3)/2 + 24px);
-      transform:translateX(-50%);
-      width:clamp(340px,32vw,600px);
-      display:flex; justify-content:space-between; gap:12px;
-      background:rgba(5,7,13,.55); backdrop-filter: blur(10px);
-      border:1px solid rgba(233,236,241,.14);
-      border-radius:14px; padding:12px 14px;
-      z-index:9; text-decoration:none; color:inherit;
-    }
-    .plaque .t{ font-size:12px; letter-spacing:.22em; margin:0; }
-    .plaque .m{ font-size:12px; opacity:.72; margin:6px 0 0; line-height:1.35; }
-    .plaque .cta{
-      font-size:12px; padding:6px 10px; border-radius:999px;
-      border:1px solid rgba(233,236,241,.18);
-      background:rgba(233,236,241,.06); white-space:nowrap;
-    }
-  
-    /* ===== MOBILE ONLY (Desktop untouched) ===== */
-    @media (max-width: 768px){
-      /* Keep the top text panel fully visible on mobile (portrait/landscape) */
-            .text-block{
-        /* Make it horizontal like the bottom card */
-        left: 20px !important;
-        right: 20px !important;
-        width: auto !important;
-        max-width: none !important;
-
-        /* Keep it fully visible under the top navigation + notch */
-        top: calc(env(safe-area-inset-top) + 72px) !important;
-
-        /* Remove centering transform used before */
-        transform: none !important;
-
-        box-sizing: border-box;
-      }
-
-      /* If the viewport height is small (landscape), reduce padding slightly */
-      @media (max-height: 520px){
-        .text-block{
-          top: calc(env(safe-area-inset-top) + 56px) !important;
-          left: 16px !important;
-          right: 16px !important;
-          padding: 18px 20px;
-        }
-      }
-
-      /* Background framing on mobile */
-      #bg{ object-position: 50% 50%; }
-    }
-
-  </style>
+@media(max-width:900px){
+ .hero{grid-template-columns:1fr;gap:30px;min-height:auto;padding-top:100px}
+ .featured-stage{min-height:auto;padding:20px 0 70px}
+ .featured-stage:before{right:20px}
+ .featured-book{width:min(300px,72vw)}
+}
+@media(max-width:620px){
+ .hero{padding:88px 20px 46px}
+ .hero-copy h1{font-size:48px}
+ .hero-copy p{font-size:14px}
+ .archive{padding:0 16px 70px}
+ .archive-title{align-items:start;flex-direction:column}
+ .shelf-track{gap:14px;padding-left:4px}
+ .book{flex-basis:160px}
+ .book-meta{opacity:1;transform:none}
+ .shelf-head span{display:none}
+}
+</style>
 </head>
 <body>
-
-  <!-- background -->
-  <img id="bg" src="../assets/publish-museum-wall-ultrawide.png" alt="" />
-
-  <!-- navigation -->
-  <button id="topMenu" class="top-menu" aria-label="Menu" type="button">⋯</button>
-  <div id="menuOverlay" class="menu-overlay" aria-hidden="true">
-    <div class="menu-panel" role="dialog" aria-label="Site menu">
-      <ul class="menu-list">
-        <li><a href="about.html">ABOUT</a></li>
-        <li><a href="music.html">MUSIC</a></li>
-        <li><a href="film-visual.html">FILM / VISUAL</a></li>
-        <li><a href="publish.html">PUBLISH</a></li>
-        <li><a href="artists.html">ARTISTS</a></li>
-        <li><a href="atelier.html">ATELIER</a></li>
-        <li><a href="contact.html">CONTACT</a></li>
-      </ul>
-      <div class="menu-sep"></div>
-      <div class="lang-row">
-        <a id="langKO" href="#">KO</a>
-        <a id="langEN" href="#">EN</a>
-      </div>
-    </div>
+<button id="topMenu" class="top-menu" aria-label="Menu" type="button">⋯</button>
+<div id="menuOverlay" class="menu-overlay" aria-hidden="true">
+  <div class="menu-panel">
+    <ul class="menu-list">
+      <li><a href="about.html">ABOUT</a></li>
+      <li><a href="music.html">MUSIC</a></li>
+      <li><a href="film-visual.html">FILM / VISUAL</a></li>
+      <li><a href="publish.html">PUBLISH</a></li>
+      <li><a href="artists.html">ARTISTS</a></li>
+      <li><a href="atelier.html">ATELIER</a></li>
+      <li><a href="contact.html">CONTACT</a></li>
+    </ul>
+    <div class="menu-sep"></div>
+    <div class="lang-row"><a id="langKO" href="#">KO</a><a id="langEN" href="#">EN</a></div>
   </div>
+</div>
 
-  <!-- publish content -->
-  <div class="text-block">
-    <p class="kicker">AK ENM</p>
+<section class="hero">
+  <div class="hero-copy">
+    <p class="kicker">AK ENM · DIGITAL BOOKROOM</p>
     <h1>PUBLISH</h1>
-    <p>
-      AK ENM은 출판을 결과의 기록이 아닌,<br/>
-      전시 가능한 완성의 형태로 다룹니다.<br/>
-      한 권의 책은 프로젝트의 끝이 아니라, 다음 제작을 위한 기준점입니다.
-    </p>
+    <p>AK ENM은 책과 악보, 연구서와 문화 IP를 하나의 창작 아카이브로 구축합니다. 한 권의 출판물은 기록에 머물지 않고, 다음 프로젝트를 여는 출발점이 됩니다.</p>
+    <div class="hero-actions">
+      <a class="primary" href="#archive">ENTER BOOKROOM</a>
+      <a class="secondary" href="publications-sung-hie-ahn.html">VIEW PUBLICATIONS ↗</a>
+    </div>
   </div>
+  <div class="featured-stage">
+    <a class="featured-book" href="https://www.amazon.in/War-Babel-Angel-Hong-ebook/dp/B07QKSV8R8" target="_blank" rel="noopener">
+      <img src="../assets/bookroom/war-of-babel.png" alt="WAR OF BABEL">
+    </a>
+    <div class="featured-caption">WAR OF BABEL · Angel Hong</div>
+  </div>
+</section>
 
-  <a class="frameLink" href="https://www.amazon.in/War-Babel-Angel-Hong-ebook/dp/B07QKSV8R8" target="_blank" rel="noopener"></a>
-
-  <a class="plaque" href="https://www.amazon.in/War-Babel-Angel-Hong-ebook/dp/B07QKSV8R8" target="_blank" rel="noopener">
-    <div>
-      <p class="t">WAR OF BABEL</p>
-      <p class="m">Book · 2019<br/>클릭하면 링크로 이동합니다.</p>
-    </div>
-    <div style="text-align:right;">
-      <p class="cta">VIEW BOOK ↗</p>
-      <p class="m" style="margin-top:10px;">Angel Hong</p>
-    </div>
-  </a>
+<main class="archive" id="archive">
+  <div class="archive-title">
+    <h2>Publication Archive</h2>
+    <p>책을 선택하면 상세 출판 페이지 또는 판매처로 이동합니다.</p>
+  </div>
+  
+    <section class="shelf-section">
+      <div class="shelf-head">
+        <h2>LATEST / 2026</h2>
+        <span>DRAG / SWIPE</span>
+      </div>
+      <div class="shelf-track">
+        
+    <a class="book" href="publications-sung-hie-ahn.html" target="_self" aria-label="The Black Flower Never Bloom">
+      <span class="book-glow"></span>
+      <img src="../assets/bookroom/publication-01.png" alt="The Black Flower Never Bloom">
+      <span class="book-meta">
+        <strong>The Black Flower Never Bloom</strong>
+        <small>Sung Hie Ahn · 2026</small>
+      </span>
+    </a>
+    <a class="book" href="publications-sung-hie-ahn.html" target="_self" aria-label="클래식 음악으로 오늘도 행복하세요">
+      <span class="book-glow"></span>
+      <img src="../assets/bookroom/publication-02.png" alt="클래식 음악으로 오늘도 행복하세요">
+      <span class="book-meta">
+        <strong>클래식 음악으로 오늘도 행복하세요</strong>
+        <small>Sung Hie Ahn · 2026</small>
+      </span>
+    </a>
+    <a class="book" href="publications-sung-hie-ahn.html" target="_self" aria-label="노을">
+      <span class="book-glow"></span>
+      <img src="../assets/bookroom/publication-03.png" alt="노을">
+      <span class="book-meta">
+        <strong>노을</strong>
+        <small>Sung Hie Ahn · 2026</small>
+      </span>
+    </a>
+    <a class="book" href="publications-sung-hie-ahn.html" target="_self" aria-label="AI 환경에서의 Chicago Style 논문 완전 정복">
+      <span class="book-glow"></span>
+      <img src="../assets/bookroom/publication-04.png" alt="AI 환경에서의 Chicago Style 논문 완전 정복">
+      <span class="book-meta">
+        <strong>AI 환경에서의 Chicago Style 논문 완전 정복</strong>
+        <small>Sung Hie Ahn · 2026</small>
+      </span>
+    </a>
+      </div>
+      <div class="shelf-board"></div>
+    </section>
+    <section class="shelf-section">
+      <div class="shelf-head">
+        <h2>SCORES & ART SONGS</h2>
+        <span>DRAG / SWIPE</span>
+      </div>
+      <div class="shelf-track">
+        
+    <a class="book" href="publications-sung-hie-ahn.html" target="_self" aria-label="La Danza del Clarinetto">
+      <span class="book-glow"></span>
+      <img src="../assets/bookroom/publication-05.png" alt="La Danza del Clarinetto">
+      <span class="book-meta">
+        <strong>La Danza del Clarinetto</strong>
+        <small>Sung Hie Ahn · 2025</small>
+      </span>
+    </a>
+    <a class="book" href="publications-sung-hie-ahn.html" target="_self" aria-label="SIMULACRA SIMULATION">
+      <span class="book-glow"></span>
+      <img src="../assets/bookroom/publication-06.png" alt="SIMULACRA SIMULATION">
+      <span class="book-meta">
+        <strong>SIMULACRA SIMULATION</strong>
+        <small>Sung Hie Ahn · 2025</small>
+      </span>
+    </a>
+    <a class="book" href="publications-sung-hie-ahn.html" target="_self" aria-label="가곡모음집 2권">
+      <span class="book-glow"></span>
+      <img src="../assets/bookroom/publication-07.png" alt="가곡모음집 2권">
+      <span class="book-meta">
+        <strong>가곡모음집 2권</strong>
+        <small>Sung Hie Ahn · 2023</small>
+      </span>
+    </a>
+    <a class="book" href="publications-sung-hie-ahn.html" target="_self" aria-label="태 — for Cajon and Drum">
+      <span class="book-glow"></span>
+      <img src="../assets/bookroom/publication-08.png" alt="태 — for Cajon and Drum">
+      <span class="book-meta">
+        <strong>태 — for Cajon and Drum</strong>
+        <small>Sung Hie Ahn · 2023</small>
+      </span>
+    </a>
+    <a class="book" href="publications-sung-hie-ahn.html" target="_self" aria-label="천공의 피아노 — For 8 Hands">
+      <span class="book-glow"></span>
+      <img src="../assets/bookroom/publication-11.png" alt="천공의 피아노 — For 8 Hands">
+      <span class="book-meta">
+        <strong>천공의 피아노 — For 8 Hands</strong>
+        <small>Sung Hie Ahn · 2021</small>
+      </span>
+    </a>
+    <a class="book" href="publications-sung-hie-ahn.html" target="_self" aria-label="현대음악 작품집">
+      <span class="book-glow"></span>
+      <img src="../assets/bookroom/publication-12.png" alt="현대음악 작품집">
+      <span class="book-meta">
+        <strong>현대음악 작품집</strong>
+        <small>Sung Hie Ahn · 2021</small>
+      </span>
+    </a>
+    <a class="book" href="publications-sung-hie-ahn.html" target="_self" aria-label="‘하늘빛 그리움’ 가곡 모음집">
+      <span class="book-glow"></span>
+      <img src="../assets/bookroom/publication-13.png" alt="‘하늘빛 그리움’ 가곡 모음집">
+      <span class="book-meta">
+        <strong>‘하늘빛 그리움’ 가곡 모음집</strong>
+        <small>Sung Hie Ahn · 2020</small>
+      </span>
+    </a>
+      </div>
+      <div class="shelf-board"></div>
+    </section>
+    <section class="shelf-section">
+      <div class="shelf-head">
+        <h2>BOOKS & RESEARCH</h2>
+        <span>DRAG / SWIPE</span>
+      </div>
+      <div class="shelf-track">
+        
+    <a class="book" href="publications-sung-hie-ahn.html" target="_self" aria-label="핵심 음악이론">
+      <span class="book-glow"></span>
+      <img src="../assets/bookroom/publication-09.png" alt="핵심 음악이론">
+      <span class="book-meta">
+        <strong>핵심 음악이론</strong>
+        <small>Sung Hie Ahn · 2021</small>
+      </span>
+    </a>
+    <a class="book" href="publications-sung-hie-ahn.html" target="_self" aria-label="핵심 음악이론 연습문제 풀이집">
+      <span class="book-glow"></span>
+      <img src="../assets/bookroom/publication-10.png" alt="핵심 음악이론 연습문제 풀이집">
+      <span class="book-meta">
+        <strong>핵심 음악이론 연습문제 풀이집</strong>
+        <small>Sung Hie Ahn · 2021</small>
+      </span>
+    </a>
+    <a class="book" href="publications-sung-hie-ahn.html" target="_self" aria-label="논문 완전 정복 — Chicago Style">
+      <span class="book-glow"></span>
+      <img src="../assets/bookroom/publication-14.png" alt="논문 완전 정복 — Chicago Style">
+      <span class="book-meta">
+        <strong>논문 완전 정복 — Chicago Style</strong>
+        <small>Sung Hie Ahn · 2019</small>
+      </span>
+    </a>
+      </div>
+      <div class="shelf-board"></div>
+    </section>
+</main>
 
 <script>
 (() => {
   const topMenuBtn = document.getElementById('topMenu');
   const menuOverlay = document.getElementById('menuOverlay');
-
-  function openMenu(){ menuOverlay.classList.add('open'); menuOverlay.setAttribute('aria-hidden','false'); }
-  function closeMenu(){ menuOverlay.classList.remove('open'); menuOverlay.setAttribute('aria-hidden','true'); }
-
-  topMenuBtn.addEventListener('click', (e)=>{ e.stopPropagation(); menuOverlay.classList.contains('open') ? closeMenu() : openMenu(); });
-  menuOverlay.addEventListener('click', (e)=>{ if(e.target === menuOverlay) closeMenu(); });
-  addEventListener('keydown', (e)=>{ if(e.key === 'Escape') closeMenu(); });
+  const openMenu = () => { menuOverlay.classList.add('open'); menuOverlay.setAttribute('aria-hidden','false'); };
+  const closeMenu = () => { menuOverlay.classList.remove('open'); menuOverlay.setAttribute('aria-hidden','true'); };
+  topMenuBtn.addEventListener('click', e => { e.stopPropagation(); menuOverlay.classList.contains('open') ? closeMenu() : openMenu(); });
+  menuOverlay.addEventListener('click', e => { if(e.target === menuOverlay) closeMenu(); });
+  addEventListener('keydown', e => { if(e.key === 'Escape') closeMenu(); });
 
   function siblingLangHref(target){
     const url = new URL(location.href);
