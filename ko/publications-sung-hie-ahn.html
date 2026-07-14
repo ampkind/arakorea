@@ -13,7 +13,7 @@ body{margin:0;background:#060711;color:#e9ecf1;font-family:Inter,system-ui,-appl
 .menu-panel{position:absolute;right:18px;top:68px;min-width:240px;padding:14px;border-radius:18px;border:1px solid rgba(233,236,241,.16);background:rgba(5,7,13,.72)}
 .menu-list{list-style:none;padding:0;margin:0}
 .menu-list a{display:block;padding:10px;color:#e9ecf1;text-decoration:none;font-size:12px;letter-spacing:.16em;border-radius:10px}
-.menu-list a:hover{background:rgba(255,255,255,.06)}
+.menu-list a:hover{background:rgba(255,255,255,.06)}.menu-sep{height:1px;background:rgba(233,236,241,.12);margin:10px 6px}.lang-row{display:flex;justify-content:flex-end;gap:10px;padding:6px 6px 2px;font-size:12px;letter-spacing:.18em}.lang-row a{color:rgba(233,236,241,.72);text-decoration:none;padding:6px 8px;border-radius:999px;border:1px solid rgba(233,236,241,.14)}.lang-row a.active{color:#fff;border-color:rgba(233,236,241,.34)}
 .container{max-width:1120px;margin:0 auto;padding:76px 24px 80px}
 .back{display:inline-block;margin-bottom:30px;color:#e9ecf1;text-decoration:none;font-size:12px;letter-spacing:.16em;opacity:.78}
 .eyebrow{font-size:12px;letter-spacing:.36em;opacity:.58;margin-bottom:14px}
@@ -52,7 +52,7 @@ h1{font-size:34px;letter-spacing:.08em;margin:0 0 14px}
 <button id="topMenu" class="top-menu" type="button">⋯</button>
 <div id="menuOverlay" class="menu-overlay"><div class="menu-panel"><ul class="menu-list">
 <li><a href="about.html">ABOUT</a></li><li><a href="music.html">MUSIC</a></li><li><a href="film-visual.html">FILM / VISUAL</a></li><li><a href="publish.html">PUBLISH</a></li><li><a href="artists.html">ARTISTS</a></li><li><a href="atelier.html">ATELIER</a></li><li><a href="contact.html">CONTACT</a></li>
-</ul></div></div>
+</ul><div class="menu-sep"></div><div class="lang-row"><a class="active" href="publications-sung-hie-ahn.html">KO</a><a href="../en/publications-sung-hie-ahn.html">EN</a></div></div></div>
 
 <main class="container">
 <a class="back" href="artists.html">← ARTISTS</a>
@@ -243,7 +243,7 @@ const publications = [
 {title:'The Black Flower Never Bloom',type:'Score',year:'2026',isbn:'979-11-93553-07-7',image:'../assets/publications/publication-01.png',store:'Kyobo',url:'https://ebook-product.kyobobook.co.kr/dig/epd/ebook/E000012876974',desc:'평화와 기억의 이미지를 음악적 서사로 풀어낸 안성희의 작품집.'},
 {title:'클래식 음악으로 오늘도 행복하세요',type:'Book',year:'2026',isbn:'979-11-93553-10-7',image:'../assets/publications/publication-02.png',store:'Kyobo',url:'https://ebook-product.kyobobook.co.kr/dig/epd/ebook/E000012497577',desc:'클래식 음악을 일상 가까이에서 이해하고 즐길 수 있도록 구성한 음악 교양서.'},
 {title:'노을',type:'Art Song Collection',year:'2026',isbn:'979-11-93553-12-1',image:'../assets/publications/publication-03.png',store:'Kyobo',url:'https://ebook-product.kyobobook.co.kr/dig/epd/ebook/480D260730020?LINK=NVE',desc:'이외수의 시와 안성희의 음악이 만난 춘천시립합창단 위촉 가곡 작품.'},
-{title:'AI 환경에서의 Chicago Style 논문 완전 정복',type:'Research Guide',year:'2026',isbn:'979-11-93553-11-4',image:'../assets/publications/publication-04.png',store:'Ridibooks',url:'https://ridibooks.com/books/754047522',desc:'AI 시대의 연구 환경을 반영해 Chicago Style 논문 작성법을 체계적으로 정리한 안내서.'},
+{title:'AI 환경에서의 Chicago Style 논문 완전 정복',type:'Research Guide',year:'2026',isbn:'979-11-93553-11-4',image:'../assets/publications/publication-04.png',store:'Ridibooks',url:'https://ridibooks.com/books/754026934?srsltid=AfmBOorjLeQJnx8AiA_pqEK2ATl1QghPXCRJjCEI6l3zwMlf4SC4vy-k',desc:'AI 시대의 연구 환경을 반영해 Chicago Style 논문 작성법을 체계적으로 정리한 안내서.'},
 {title:'La Danza del Clarinetto',type:'Score',year:'2025',isbn:'9791193553039',image:'../assets/publications/publication-05.png',store:'Kyobo',url:'https://ebook-product.kyobobook.co.kr/dig/epd/ebook/E000012025727',desc:'클라리넷과 피아노를 위한 리듬 중심의 현대음악 작품.'},
 {title:'SIMULACRA SIMULATION',type:'Score',year:'2025',isbn:'979-11-93553-02-2',image:'../assets/publications/publication-06.png',store:'Kyobo',url:'https://ebook-product.kyobobook.co.kr/dig/epd/ebook/E000011325482',desc:'다중 타악기를 위한 현대음악 작품으로, 반복과 변형의 구조를 탐구한다.'},
 {title:'가곡모음집 2권',type:'Art Song Collection',year:'2023',isbn:'979-11-93553-01-5',image:'../assets/publications/publication-07.png',store:'Kyobo',url:'https://ebook-product.kyobobook.co.kr/dig/epd/ebook/E000005623711',desc:'한국 시와 음악의 정서를 담은 안성희 가곡 작품 모음집.'},
