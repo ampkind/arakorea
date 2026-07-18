@@ -1,9 +1,10 @@
-<!doctype html>
+<!DOCTYPE html>
+
 <html lang="ko">
 <head>
-<meta charset="utf-8">
+<meta charset="utf-8"/>
 <title>AK ENM — Sung Hie Ahn Publications</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
 <style>
 *{box-sizing:border-box}
 body{margin:0;background:#060711;color:#e9ecf1;font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Noto Sans KR",sans-serif}
@@ -46,214 +47,204 @@ h1{font-size:34px;letter-spacing:.08em;margin:0 0 14px}
 .close{display:inline-flex;align-items:center;justify-content:center;min-height:46px;padding:0 18px;border-radius:999px;border:1px solid rgba(255,255,255,.18);background:transparent;color:#e9ecf1;font-size:12px;cursor:pointer}
 @media(max-width:900px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.modal-card{grid-template-columns:1fr;max-width:680px}.modal-image{min-height:0;aspect-ratio:4/5;border-radius:24px 24px 0 0}}
 @media(max-width:620px){.container{padding:72px 18px 56px}h1{font-size:27px}.grid{grid-template-columns:1fr}.modal{padding:10px}.modal-content{padding:24px}.modal-title{font-size:23px}}
+
+.category-section{
+  margin-top:54px;
+}
+.category-section:first-of-type{
+  margin-top:26px;
+}
+.category-header{
+  display:flex;
+  align-items:end;
+  justify-content:space-between;
+  gap:18px;
+  padding-bottom:13px;
+  margin-bottom:22px;
+  border-bottom:1px solid rgba(255,255,255,.1);
+}
+.category-header h2{
+  margin:0;
+  font-size:13px;
+  font-weight:600;
+  letter-spacing:.2em;
+}
+.category-header p{
+  margin:0;
+  font-size:12px;
+  color:rgba(233,236,241,.5);
+}
+@media(max-width:620px){
+  .category-section{margin-top:44px}
+  .category-header{
+    display:block;
+    margin-bottom:18px;
+  }
+  .category-header p{
+    margin-top:7px;
+  }
+}
 </style>
 </head>
 <body>
-<button id="topMenu" class="top-menu" type="button">⋯</button>
-<div id="menuOverlay" class="menu-overlay"><div class="menu-panel"><ul class="menu-list">
+<button class="top-menu" id="topMenu" type="button">⋯</button>
+<div class="menu-overlay" id="menuOverlay"><div class="menu-panel"><ul class="menu-list">
 <li><a href="about.html">ABOUT</a></li><li><a href="music.html">MUSIC</a></li><li><a href="film-visual.html">FILM / VISUAL</a></li><li><a href="publish.html">PUBLISH</a></li><li><a href="artists.html">ARTISTS</a></li><li><a href="atelier.html">ATELIER</a></li><li><a href="contact.html">CONTACT</a></li>
 </ul><div class="menu-sep"></div><div class="lang-row"><a class="active" href="publications-sung-hie-ahn.html">KO</a><a href="../en/publications-sung-hie-ahn.html">EN</a></div></div></div>
-
 <main class="container">
 <a class="back" href="artists.html">← ARTISTS</a>
 <div class="eyebrow">SUNG HIE AHN</div>
 <h1>Publications</h1>
 <p class="intro">안성희의 저서, 음악이론 교재, 연구 안내서, 가곡집 및 현대음악 작품집을 한눈에 볼 수 있도록 구성한 출판 아카이브입니다.</p>
-<div class="grid">
 
-    <article class="card">
-      <button class="cover js-cover" type="button"
-        data-index="0"
-        aria-label="The Black Flower Never Bloom 상세 보기">
-        <img src="../assets/publications/publication-01.png" alt="The Black Flower Never Bloom">
-      </button>
-      <div class="info">
-        <h2>The Black Flower Never Bloom</h2>
-        <div class="meta">Score · 2026</div>
-      </div>
-    </article>
-    <article class="card">
-      <button class="cover js-cover" type="button"
-        data-index="1"
-        aria-label="클래식 음악으로 오늘도 행복하세요 상세 보기">
-        <img src="../assets/publications/publication-02.png" alt="클래식 음악으로 오늘도 행복하세요">
-      </button>
-      <div class="info">
-        <h2>클래식 음악으로 오늘도 행복하세요</h2>
-        <div class="meta">Book · 2026</div>
-      </div>
-    </article>
-    <article class="card">
-      <button class="cover js-cover" type="button"
-        data-index="2"
-        aria-label="노을 상세 보기">
-        <img src="../assets/publications/publication-03.png" alt="노을">
-      </button>
-      <div class="info">
-        <h2>노을</h2>
-        <div class="meta">Art Song Collection · 2026</div>
-      </div>
-    </article>
-    <article class="card">
-      <button class="cover js-cover" type="button"
-        data-index="3"
-        aria-label="AI 환경에서의 Chicago Style 논문 완전 정복 상세 보기">
-        <img src="../assets/publications/publication-04.png" alt="AI 환경에서의 Chicago Style 논문 완전 정복">
-      </button>
-      <div class="info">
-        <h2>AI 환경에서의 Chicago Style 논문 완전 정복</h2>
-        <div class="meta">Research Guide · 2026</div>
-      </div>
-    </article>
-    <article class="card">
-      <button class="cover js-cover" type="button"
-        data-index="4"
-        aria-label="La Danza del Clarinetto 상세 보기">
-        <img src="../assets/publications/publication-05.png" alt="La Danza del Clarinetto">
-      </button>
-      <div class="info">
-        <h2>La Danza del Clarinetto</h2>
-        <div class="meta">Score · 2025</div>
-      </div>
-    </article>
-    <article class="card">
-      <button class="cover js-cover" type="button"
-        data-index="5"
-        aria-label="SIMULACRA SIMULATION 상세 보기">
-        <img src="../assets/publications/publication-06.png" alt="SIMULACRA SIMULATION">
-      </button>
-      <div class="info">
-        <h2>SIMULACRA SIMULATION</h2>
-        <div class="meta">Score · 2025</div>
-      </div>
-    </article>
-    <article class="card">
-      <button class="cover js-cover" type="button"
-        data-index="6"
-        aria-label="가곡모음집 2권 상세 보기">
-        <img src="../assets/publications/publication-07.png" alt="가곡모음집 2권">
-      </button>
-      <div class="info">
-        <h2>가곡모음집 2권</h2>
-        <div class="meta">Art Song Collection · 2023</div>
-      </div>
-    </article>
-    <article class="card">
-      <button class="cover js-cover" type="button"
-        data-index="7"
-        aria-label="태 — for Cajon and Drum 상세 보기">
-        <img src="../assets/publications/publication-08.png" alt="태 — for Cajon and Drum">
-      </button>
-      <div class="info">
-        <h2>태 — for Cajon and Drum</h2>
-        <div class="meta">Score · 2023</div>
-      </div>
-    </article>
-    <article class="card">
-      <button class="cover js-cover" type="button"
-        data-index="8"
-        aria-label="핵심 음악이론 상세 보기">
-        <img src="../assets/publications/publication-09.png" alt="핵심 음악이론">
-      </button>
-      <div class="info">
-        <h2>핵심 음악이론</h2>
-        <div class="meta">Music Theory · 2021</div>
-      </div>
-    </article>
-    <article class="card">
-      <button class="cover js-cover" type="button"
-        data-index="9"
-        aria-label="핵심 음악이론 연습문제 풀이집 상세 보기">
-        <img src="../assets/publications/publication-10.png" alt="핵심 음악이론 연습문제 풀이집">
-      </button>
-      <div class="info">
-        <h2>핵심 음악이론 연습문제 풀이집</h2>
-        <div class="meta">Workbook · 2021</div>
-      </div>
-    </article>
-    <article class="card">
-      <button class="cover js-cover" type="button"
-        data-index="10"
-        aria-label="천공의 피아노 — For 8 Hands 상세 보기">
-        <img src="../assets/publications/publication-11.png" alt="천공의 피아노 — For 8 Hands">
-      </button>
-      <div class="info">
-        <h2>천공의 피아노 — For 8 Hands</h2>
-        <div class="meta">Score · 2021</div>
-      </div>
-    </article>
-    <article class="card">
-      <button class="cover js-cover" type="button"
-        data-index="11"
-        aria-label="현대음악 작품집 상세 보기">
-        <img src="../assets/publications/publication-12.png" alt="현대음악 작품집">
-      </button>
-      <div class="info">
-        <h2>현대음악 작품집</h2>
-        <div class="meta">Score Collection · 2021</div>
-      </div>
-    </article>
-    <article class="card">
-      <button class="cover js-cover" type="button"
-        data-index="12"
-        aria-label="‘하늘빛 그리움’ 가곡 모음집 상세 보기">
-        <img src="../assets/publications/publication-13.png" alt="‘하늘빛 그리움’ 가곡 모음집">
-      </button>
-      <div class="info">
-        <h2>‘하늘빛 그리움’ 가곡 모음집</h2>
-        <div class="meta">Art Song Collection · 2020</div>
-      </div>
-    </article>
-    <article class="card">
-      <button class="cover js-cover" type="button"
-        data-index="13"
-        aria-label="논문 완전 정복 — Chicago Style 상세 보기">
-        <img src="../assets/publications/publication-14.png" alt="논문 완전 정복 — Chicago Style">
-      </button>
-      <div class="info">
-        <h2>논문 완전 정복 — Chicago Style</h2>
-        <div class="meta">Research Guide · 2019</div>
-      </div>
-    </article>
+<section class="category-section"><div class="category-header"><h2>BOOKS &amp; RESEARCH</h2><p>도서 · 연구 안내서</p></div><div class="grid"><article class="card">
+<button aria-label="클래식 음악으로 오늘도 행복하세요 상세 보기" class="cover js-cover" data-index="0" type="button">
+<img alt="클래식 음악으로 오늘도 행복하세요" src="../assets/publications/publication-02.png"/>
+</button>
+<div class="info">
+<h2>클래식 음악으로 오늘도 행복하세요</h2>
+<div class="meta">Book · 2026</div>
 </div>
-</main>
-
-<div class="modal" id="modal" aria-hidden="true">
-  <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
-    <div class="modal-image"><img id="modalImg" alt=""></div>
-    <div class="modal-content">
-      <div class="modal-kicker" id="modalKicker"></div>
-      <h2 class="modal-title" id="modalTitle"></h2>
-      <p class="modal-desc" id="modalDesc"></p>
-      <div class="detail-grid">
-        <div class="detail-label">Year</div><div class="detail-value" id="modalYear"></div>
-        <div class="detail-label">Category</div><div class="detail-value" id="modalType"></div>
-        <div class="detail-label">ISBN</div><div class="detail-value" id="modalIsbn"></div>
-      </div>
-      <div class="actions">
-        <a class="purchase" id="purchaseLink" target="_blank" rel="noopener">구매 페이지로 이동 ↗</a>
-        <button class="close" id="closeModal" type="button">닫기</button>
-      </div>
-    </div>
-  </div>
+</article><article class="card">
+<button aria-label="AI 환경에서의 Chicago Style 논문 완전 정복 상세 보기" class="cover js-cover" data-index="1" type="button">
+<img alt="AI 환경에서의 Chicago Style 논문 완전 정복" src="../assets/publications/publication-04.png"/>
+</button>
+<div class="info">
+<h2>AI 환경에서의 Chicago Style 논문 완전 정복</h2>
+<div class="meta">Research Guide · 2026</div>
 </div>
-
+</article><article class="card">
+<button aria-label="논문 완전 정복 — Chicago Style 상세 보기" class="cover js-cover" data-index="2" type="button">
+<img alt="논문 완전 정복 — Chicago Style" src="../assets/publications/publication-14.png"/>
+</button>
+<div class="info">
+<h2>논문 완전 정복 — Chicago Style</h2>
+<div class="meta">Research Guide · 2019</div>
+</div>
+</article></div></section><section class="category-section"><div class="category-header"><h2>MUSIC THEORY</h2><p>음악이론 · 학습 교재</p></div><div class="grid"><article class="card">
+<button aria-label="핵심 음악이론 상세 보기" class="cover js-cover" data-index="3" type="button">
+<img alt="핵심 음악이론" src="../assets/publications/publication-09.png"/>
+</button>
+<div class="info">
+<h2>핵심 음악이론</h2>
+<div class="meta">Music Theory · 2021</div>
+</div>
+</article><article class="card">
+<button aria-label="핵심 음악이론 연습문제 풀이집 상세 보기" class="cover js-cover" data-index="4" type="button">
+<img alt="핵심 음악이론 연습문제 풀이집" src="../assets/publications/publication-10.png"/>
+</button>
+<div class="info">
+<h2>핵심 음악이론 연습문제 풀이집</h2>
+<div class="meta">Workbook · 2021</div>
+</div>
+</article></div></section><section class="category-section"><div class="category-header"><h2>SCORES &amp; CONTEMPORARY WORKS</h2><p>악보 · 현대음악 작품집</p></div><div class="grid"><article class="card">
+<button aria-label="The Black Flower Never Bloom 상세 보기" class="cover js-cover" data-index="5" type="button">
+<img alt="The Black Flower Never Bloom" src="../assets/publications/publication-01.png"/>
+</button>
+<div class="info">
+<h2>The Black Flower Never Bloom</h2>
+<div class="meta">Score · 2026</div>
+</div>
+</article><article class="card">
+<button aria-label="La Danza del Clarinetto 상세 보기" class="cover js-cover" data-index="6" type="button">
+<img alt="La Danza del Clarinetto" src="../assets/publications/publication-05.png"/>
+</button>
+<div class="info">
+<h2>La Danza del Clarinetto</h2>
+<div class="meta">Score · 2025</div>
+</div>
+</article><article class="card">
+<button aria-label="SIMULACRA SIMULATION 상세 보기" class="cover js-cover" data-index="7" type="button">
+<img alt="SIMULACRA SIMULATION" src="../assets/publications/publication-06.png"/>
+</button>
+<div class="info">
+<h2>SIMULACRA SIMULATION</h2>
+<div class="meta">Score · 2025</div>
+</div>
+</article><article class="card">
+<button aria-label="태 — for Cajon and Drum 상세 보기" class="cover js-cover" data-index="8" type="button">
+<img alt="태 — for Cajon and Drum" src="../assets/publications/publication-08.png"/>
+</button>
+<div class="info">
+<h2>태 — for Cajon and Drum</h2>
+<div class="meta">Score · 2023</div>
+</div>
+</article><article class="card">
+<button aria-label="천공의 피아노 — For 8 Hands 상세 보기" class="cover js-cover" data-index="9" type="button">
+<img alt="천공의 피아노 — For 8 Hands" src="../assets/publications/publication-11.png"/>
+</button>
+<div class="info">
+<h2>천공의 피아노 — For 8 Hands</h2>
+<div class="meta">Score · 2021</div>
+</div>
+</article><article class="card">
+<button aria-label="현대음악 작품집 상세 보기" class="cover js-cover" data-index="10" type="button">
+<img alt="현대음악 작품집" src="../assets/publications/publication-12.png"/>
+</button>
+<div class="info">
+<h2>현대음악 작품집</h2>
+<div class="meta">Score Collection · 2021</div>
+</div>
+</article></div></section><section class="category-section"><div class="category-header"><h2>ART SONG COLLECTIONS</h2><p>가곡집</p></div><div class="grid"><article class="card">
+<button aria-label="노을 상세 보기" class="cover js-cover" data-index="11" type="button">
+<img alt="노을" src="../assets/publications/publication-03.png"/>
+</button>
+<div class="info">
+<h2>노을</h2>
+<div class="meta">Art Song Collection · 2026</div>
+</div>
+</article><article class="card">
+<button aria-label="가곡모음집 2권 상세 보기" class="cover js-cover" data-index="12" type="button">
+<img alt="가곡모음집 2권" src="../assets/publications/publication-07.png"/>
+</button>
+<div class="info">
+<h2>가곡모음집 2권</h2>
+<div class="meta">Art Song Collection · 2023</div>
+</div>
+</article><article class="card">
+<button aria-label="‘하늘빛 그리움’ 가곡 모음집 상세 보기" class="cover js-cover" data-index="13" type="button">
+<img alt="‘하늘빛 그리움’ 가곡 모음집" src="../assets/publications/publication-13.png"/>
+</button>
+<div class="info">
+<h2>‘하늘빛 그리움’ 가곡 모음집</h2>
+<div class="meta">Art Song Collection · 2020</div>
+</div>
+</article></div></section></main>
+<div aria-hidden="true" class="modal" id="modal">
+<div aria-labelledby="modalTitle" aria-modal="true" class="modal-card" role="dialog">
+<div class="modal-image"><img alt="" id="modalImg"/></div>
+<div class="modal-content">
+<div class="modal-kicker" id="modalKicker"></div>
+<h2 class="modal-title" id="modalTitle"></h2>
+<p class="modal-desc" id="modalDesc"></p>
+<div class="detail-grid">
+<div class="detail-label">Year</div><div class="detail-value" id="modalYear"></div>
+<div class="detail-label">Category</div><div class="detail-value" id="modalType"></div>
+<div class="detail-label">ISBN</div><div class="detail-value" id="modalIsbn"></div>
+</div>
+<div class="actions">
+<a class="purchase" id="purchaseLink" rel="noopener" target="_blank">구매 페이지로 이동 ↗</a>
+<button class="close" id="closeModal" type="button">닫기</button>
+</div>
+</div>
+</div>
+</div>
 <script>
 const publications = [
-{title:'The Black Flower Never Bloom',type:'Score',year:'2026',isbn:'979-11-93553-07-7',image:'../assets/publications/publication-01.png',store:'Kyobo',url:'https://ebook-product.kyobobook.co.kr/dig/epd/ebook/E000012876974',desc:'평화와 기억의 이미지를 음악적 서사로 풀어낸 안성희의 작품집.'},
 {title:'클래식 음악으로 오늘도 행복하세요',type:'Book',year:'2026',isbn:'979-11-93553-10-7',image:'../assets/publications/publication-02.png',store:'Kyobo',url:'https://ebook-product.kyobobook.co.kr/dig/epd/ebook/E000012497577',desc:'클래식 음악을 일상 가까이에서 이해하고 즐길 수 있도록 구성한 음악 교양서.'},
-{title:'노을',type:'Art Song Collection',year:'2026',isbn:'979-11-93553-12-1',image:'../assets/publications/publication-03.png',store:'Kyobo',url:'https://ebook-product.kyobobook.co.kr/dig/epd/ebook/480D260730020?LINK=NVE',desc:'이외수의 시와 안성희의 음악이 만난 춘천시립합창단 위촉 가곡 작품.'},
-{title:'AI 환경에서의 Chicago Style 논문 완전 정복',type:'Research Guide',year:'2026',isbn:'979-11-93553-11-4',image:'../assets/publications/publication-04.png',store:'Ridibooks',url:'https://ridibooks.com/books/754026934?srsltid=AfmBOorjLeQJnx8AiA_pqEK2ATl1QghPXCRJjCEI6l3zwMlf4SC4vy-k',desc:'AI 시대의 연구 환경을 반영해 Chicago Style 논문 작성법을 체계적으로 정리한 안내서.'},
-{title:'La Danza del Clarinetto',type:'Score',year:'2025',isbn:'9791193553039',image:'../assets/publications/publication-05.png',store:'Kyobo',url:'https://ebook-product.kyobobook.co.kr/dig/epd/ebook/E000012025727',desc:'클라리넷과 피아노를 위한 리듬 중심의 현대음악 작품.'},
-{title:'SIMULACRA SIMULATION',type:'Score',year:'2025',isbn:'979-11-93553-02-2',image:'../assets/publications/publication-06.png',store:'Kyobo',url:'https://ebook-product.kyobobook.co.kr/dig/epd/ebook/E000011325482',desc:'다중 타악기를 위한 현대음악 작품으로, 반복과 변형의 구조를 탐구한다.'},
-{title:'가곡모음집 2권',type:'Art Song Collection',year:'2023',isbn:'979-11-93553-01-5',image:'../assets/publications/publication-07.png',store:'Kyobo',url:'https://ebook-product.kyobobook.co.kr/dig/epd/ebook/E000005623711',desc:'한국 시와 음악의 정서를 담은 안성희 가곡 작품 모음집.'},
-{title:'태 — for Cajon and Drum',type:'Score',year:'2023',isbn:'979-11-93553-00-8',image:'../assets/publications/publication-08.png',store:'Kyobo',url:'https://ebook-product.kyobobook.co.kr/dig/epd/ebook/E000005456275',desc:'카혼과 드럼을 위한 타악 작품으로, 생명과 울림의 에너지를 무대화한다.'},
+{title:'AI 환경에서의 Chicago Style 논문 완전 정복',type:'Research Guide',year:'2026',isbn:'979-11-93553-11-4',image:'../assets/publications/publication-04.png',store:'YES24',url:'https://www.yes24.com/product/goods/176923597',desc:'AI 시대의 연구 환경을 반영해 Chicago Style 논문 작성법을 체계적으로 정리한 안내서.'},
+{title:'논문 완전 정복 — Chicago Style',type:'Research Guide',year:'2019',isbn:'979-11-964855-1-1',image:'../assets/publications/publication-14.png',store:'Aladin',url:'https://aladin.kr/p/CMlF9',desc:'예술·문학·인문학 연구자를 위한 Chicago Style 논문 작성 안내서.'},
 {title:'핵심 음악이론',type:'Music Theory',year:'2021',isbn:'979-11-964855-3-5',image:'../assets/publications/publication-09.png',store:'Kyobo',url:'https://ebook-product.kyobobook.co.kr/dig/epd/ebook/E000002999576',desc:'음악이론의 핵심 개념을 단계적으로 정리한 학습 교재.'},
 {title:'핵심 음악이론 연습문제 풀이집',type:'Workbook',year:'2021',isbn:'979-11-964855-6-6',image:'../assets/publications/publication-10.png',store:'Kyobo',url:'https://ebook-product.kyobobook.co.kr/dig/epd/ebook/E000003045590',desc:'핵심 음악이론의 이해를 돕는 연습문제와 풀이를 수록한 보조 교재.'},
+{title:'The Black Flower Never Bloom',type:'Score',year:'2026',isbn:'979-11-93553-07-7',image:'../assets/publications/publication-01.png',store:'Kyobo',url:'https://ebook-product.kyobobook.co.kr/dig/epd/ebook/E000012876974',desc:'평화와 기억의 이미지를 음악적 서사로 풀어낸 안성희의 작품집.'},
+{title:'La Danza del Clarinetto',type:'Score',year:'2025',isbn:'9791193553039',image:'../assets/publications/publication-05.png',store:'Kyobo',url:'https://ebook-product.kyobobook.co.kr/dig/epd/ebook/E000012025727',desc:'클라리넷과 피아노를 위한 리듬 중심의 현대음악 작품.'},
+{title:'SIMULACRA SIMULATION',type:'Score',year:'2025',isbn:'979-11-93553-02-2',image:'../assets/publications/publication-06.png',store:'Kyobo',url:'https://ebook-product.kyobobook.co.kr/dig/epd/ebook/E000011325482',desc:'다중 타악기를 위한 현대음악 작품으로, 반복과 변형의 구조를 탐구한다.'},
+{title:'태 — for Cajon and Drum',type:'Score',year:'2023',isbn:'979-11-93553-00-8',image:'../assets/publications/publication-08.png',store:'Kyobo',url:'https://ebook-product.kyobobook.co.kr/dig/epd/ebook/E000005456275',desc:'카혼과 드럼을 위한 타악 작품으로, 생명과 울림의 에너지를 무대화한다.'},
 {title:'천공의 피아노 — For 8 Hands',type:'Score',year:'2021',isbn:'979-11-964855-5-9',image:'../assets/publications/publication-11.png',store:'Kyobo',url:'https://ebook-product.kyobobook.co.kr/dig/epd/ebook/E000002999578',desc:'네 명의 연주자가 한 대의 피아노를 연주하는 8 Hands 작품.'},
 {title:'현대음악 작품집',type:'Score Collection',year:'2021',isbn:'979-11-964855-4-2',image:'../assets/publications/publication-12.png',store:'Kyobo',url:'https://ebook-product.kyobobook.co.kr/dig/epd/ebook/E000002999577',desc:'안성희의 현대음악 작품을 선별해 수록한 작품집.'},
-{title:'‘하늘빛 그리움’ 가곡 모음집',type:'Art Song Collection',year:'2020',isbn:'979-11-964855-2-8',image:'../assets/publications/publication-13.png',store:'Kyobo',url:'https://ebook-product.kyobobook.co.kr/dig/epd/ebook/E000002999575',desc:'한국적 서정과 현대적 음악어법을 담은 가곡 모음집.'},
-{title:'논문 완전 정복 — Chicago Style',type:'Research Guide',year:'2019',isbn:'979-11-964855-1-1',image:'../assets/publications/publication-14.png',store:'Aladin',url:'https://aladin.kr/p/CMlF9',desc:'예술·문학·인문학 연구자를 위한 Chicago Style 논문 작성 안내서.'}
+{title:'노을',type:'Art Song Collection',year:'2026',isbn:'979-11-93553-12-1',image:'../assets/publications/publication-03.png',store:'Kyobo',url:'https://ebook-product.kyobobook.co.kr/dig/epd/ebook/480D260730020?LINK=NVE',desc:'이외수의 시와 안성희의 음악이 만난 춘천시립합창단 위촉 가곡 작품.'},
+{title:'가곡모음집 2권',type:'Art Song Collection',year:'2023',isbn:'979-11-93553-01-5',image:'../assets/publications/publication-07.png',store:'Kyobo',url:'https://ebook-product.kyobobook.co.kr/dig/epd/ebook/E000005623711',desc:'한국 시와 음악의 정서를 담은 안성희 가곡 작품 모음집.'},
+{title:'‘하늘빛 그리움’ 가곡 모음집',type:'Art Song Collection',year:'2020',isbn:'979-11-964855-2-8',image:'../assets/publications/publication-13.png',store:'Kyobo',url:'https://ebook-product.kyobobook.co.kr/dig/epd/ebook/E000002999575',desc:'한국적 서정과 현대적 음악어법을 담은 가곡 모음집.'}
 ];
 const menuBtn=document.getElementById('topMenu');
 const menuOverlay=document.getElementById('menuOverlay');
