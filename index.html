@@ -2,17 +2,21 @@
 <html lang="ko">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="color-scheme" content="dark" />
-  <title>AK ENM — Index</title>
+  <meta name="theme-color" content="#05070d" />
+  <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1" />
+  <meta name="description" content="AK ENM은 음악, 필름, 비주얼, 출판과 아티스트 프로젝트를 연결하는 서울 기반 크리에이티브 프로덕션입니다." />
+  <link rel="canonical" href="https://akenm.com/" />
+  <title>AK ENM — Music, Film, Visual & Creative Production</title>
   <style>
-    :root{ --bg:#05070d; --fg:#e9ecf1; }
-    html,body{ height:100%; margin:0; background:var(--bg); overflow:hidden; cursor:none; }
+    :root{ --bg:#03050a; --fg:#edf0f5; --silver:rgba(237,240,245,.82); }
+    html,body{ height:100%; margin:0; background:var(--bg); overflow:hidden; cursor:none; overscroll-behavior:none; }
     canvas{ cursor:none; }
     canvas{ position:fixed; inset:0; display:block; }
     .brand{
       position:fixed; left:18px; top:16px;
-      font-size:12px; letter-spacing:.32em;
+      font-size:10px; letter-spacing:.46em;
       color:rgba(233,236,241,.80);
       text-transform:uppercase;
       pointer-events:none;
@@ -22,20 +26,25 @@
     .enter{
       position:fixed; left:50%; top:50%;
       transform:translate(-50%,-50%);
-      font-size:12px; letter-spacing:.38em;
+      font-size:10px; letter-spacing:.46em; text-indent:.46em;
       color:rgba(233,236,241,.90);
       opacity:0; transition:opacity 1.6s ease;
-      border:1px solid rgba(233,236,241,.22);
-      padding:14px 18px; border-radius:999px;
+      border:1px solid rgba(233,236,241,.20);
+      padding:15px 22px; border-radius:999px;
       text-transform:uppercase;
       pointer-events:auto;
-      background:rgba(5,7,13,.14);
-      backdrop-filter: blur(10px);
+      background:rgba(5,7,13,.16);
+      backdrop-filter: blur(16px); -webkit-backdrop-filter:blur(16px);
+      box-shadow:0 0 0 1px rgba(255,255,255,.018) inset,0 18px 55px rgba(0,0,0,.28);
+      text-decoration:none;
     }
     .enter.show{ opacity:1; }
     .enter{ cursor:pointer; }
     .enter:focus{ outline:2px solid rgba(233,236,241,.25); outline-offset:6px; }
     .hud{ display:none; }
+    .transition-layer{position:fixed;inset:0;z-index:20;pointer-events:none;opacity:0;background:radial-gradient(circle at 50% 50%,#f6f8fb 0,#b8c7da 7%,#263447 24%,#05070d 58%);transform:scale(.15);border-radius:50%;filter:blur(2px)}
+    body.is-leaving .transition-layer{animation:warpOut .92s cubic-bezier(.62,0,.2,1) forwards}
+    body.is-leaving canvas{animation:canvasWarp .82s cubic-bezier(.65,0,.2,1) forwards}
     .vignette{
       position:fixed; inset:0; pointer-events:none;
       background:
@@ -43,13 +52,23 @@
         linear-gradient(to bottom, rgba(0,0,0,.12), rgba(0,0,0,0) 30%, rgba(0,0,0,0) 70%, rgba(0,0,0,.22));
       mix-blend-mode:multiply;
     }
+    @keyframes warpOut{0%{opacity:0;transform:scale(.08)}30%{opacity:.78}100%{opacity:1;transform:scale(5)}}
+    @keyframes canvasWarp{to{transform:scale(1.065);filter:blur(6px);opacity:.15}}
+    @media(pointer:coarse){html,body,canvas{cursor:auto}.enter{cursor:pointer}}
+    @media(max-width:600px){
+      .brand{left:14px;top:max(15px,env(safe-area-inset-top));font-size:9px;letter-spacing:.36em}
+      .enter{font-size:9px;padding:14px 19px}
+    }
+    @media(prefers-reduced-motion:reduce){
+      .enter{transition-duration:.01ms}.transition-layer,body.is-leaving canvas{animation-duration:.01ms!important}
+    }
   </style>
 
   <!-- Open Graph / KakaoTalk -->
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="AK ENM">
   <meta property="og:title" content="AK ENM">
-  <meta property="og:description" content="AK ENM 공식 사이트">
+  <meta property="og:description" content="음악, 필름, 비주얼, 출판과 아티스트 프로젝트를 연결하는 크리에이티브 프로덕션.">
   <meta property="og:url" content="https://akenm.com/">
   <meta property="og:image" content="https://akenm.com/og.jpg">
   <meta property="og:image:width" content="1200">
@@ -57,27 +76,53 @@
 
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="AK ENM">
+  <meta name="twitter:description" content="Music, film, visual, publishing and creative production.">
   <meta name="twitter:image" content="https://akenm.com/og.jpg">
-
-
-<script>
-  function enterSite() {
-    window.location.href = 'ko/home.html';
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Organization",
+        "@id": "https://akenm.com/#organization",
+        "name": "AK ENM",
+        "url": "https://akenm.com/",
+        "description": "Seoul-based creative production connecting music, film, visual arts, publishing and artist projects.",
+        "parentOrganization": {
+          "@type": "Organization",
+          "name": "ARA KOREA GROUP",
+          "url": "https://arakoreagroup.com/"
+        },
+        "knowsAbout": ["Music production", "Film", "Visual arts", "Publishing", "Artists", "Creative production"]
+      },
+      {
+        "@type": "WebSite",
+        "@id": "https://akenm.com/#website",
+        "url": "https://akenm.com/",
+        "name": "AK ENM",
+        "publisher": { "@id": "https://akenm.com/#organization" },
+        "inLanguage": ["ko", "en", "ja", "zh-CN"]
+      }
+    ]
   }
-</script>
-
+  </script>
 </head>
-<body>
+<body data-akenm-page="index">
   <canvas id="c"></canvas>
-    <div id="enter" class="enter" role="button" tabindex="0" aria-label="Enter">ENTER</div>
+  <div class="brand" aria-hidden="true">AK ENM</div>
+  <a id="enter" class="enter" href="/home/" aria-label="Enter AK ENM">ENTER</a>
   <div class="hud">UFO cursor • hover = instant light • press = tractor beam • idle = faint random pulses</div>
   <div class="vignette"></div>
+  <div class="transition-layer" aria-hidden="true"></div>
 
 <script>
 (() => {
   const canvas = document.getElementById('c');
   const ctx = canvas.getContext('2d');
   const enter = document.getElementById('enter');
+  const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const lowPower = (navigator.deviceMemory && navigator.deviceMemory <= 4) || matchMedia('(pointer:coarse)').matches;
 
   // ==========================
   // Trail buffer (light afterglow, premium)
@@ -171,20 +216,98 @@
   // ==========================
   let w,h,dpr;
   function resize(){
-    dpr = Math.min(2, window.devicePixelRatio || 1);
-    w = canvas.width = Math.floor(innerWidth * dpr);
-    h = canvas.height = Math.floor(innerHeight * dpr);
-    canvas.style.width = innerWidth + 'px';
-    canvas.style.height = innerHeight + 'px';
+    const vw = window.visualViewport ? visualViewport.width : innerWidth;
+    const vh = window.visualViewport ? visualViewport.height : innerHeight;
+    dpr = Math.min(lowPower ? 1.45 : 2, window.devicePixelRatio || 1);
+    w = canvas.width = Math.floor(vw * dpr);
+    h = canvas.height = Math.floor(vh * dpr);
+    canvas.style.width = vw + 'px';
+    canvas.style.height = vh + 'px';
     resizeTrail();
     buildWeb();
   }
   addEventListener('resize', resize, {passive:true});
+  window.visualViewport?.addEventListener('resize', resize, {passive:true});
 
   // ==========================
   // Pointer (NO smoothing -> instant)
   // ==========================
-  const pointer = { px:0, py:0, vx:0, vy:0, down:false, seen:false };
+  const beamPalettes = [
+    {name:'pearl',rgb:'233,236,241',accent:'153,180,214'},
+    {name:'ice',rgb:'137,205,255',accent:'64,134,255'},
+    {name:'violet',rgb:'204,162,255',accent:'118,78,229'},
+    {name:'champagne',rgb:'244,205,139',accent:'190,130,63'}
+  ];
+  const pointer = { px:0, py:0, vx:0, vy:0, down:false, seen:false, holdStart:0, holdMs:0, mode:(Math.random()*beamPalettes.length)|0 };
+  const palette = ()=>beamPalettes[pointer.mode];
+  const shockwaves = [];
+  const audio = {ctx:null,osc:null,harmonic:null,gain:null,filter:null,pan:null,active:false};
+
+  function ensureAudio(){
+    if(!audio.ctx){
+      const AudioContext = window.AudioContext || window.webkitAudioContext;
+      if(!AudioContext) return false;
+      audio.ctx = new AudioContext();
+    }
+    if(audio.ctx.state==='suspended') audio.ctx.resume();
+    return true;
+  }
+
+  function startHoldSound(){
+    if(!ensureAudio() || audio.active) return;
+    const ctx=audio.ctx,mode=pointer.mode;
+    const roots=[146.83,220,164.81,196];
+    audio.osc=ctx.createOscillator();
+    audio.harmonic=ctx.createOscillator();
+    audio.gain=ctx.createGain();
+    audio.filter=ctx.createBiquadFilter();
+    audio.pan=ctx.createStereoPanner ? ctx.createStereoPanner() : null;
+    audio.osc.type=mode===1?'triangle':'sine';
+    audio.harmonic.type=mode===2?'triangle':'sine';
+    audio.osc.frequency.setValueAtTime(roots[mode],ctx.currentTime);
+    audio.harmonic.frequency.setValueAtTime(roots[mode]*2.01,ctx.currentTime);
+    audio.filter.type='lowpass';
+    audio.filter.frequency.setValueAtTime(520,ctx.currentTime);
+    audio.filter.Q.setValueAtTime(3.2,ctx.currentTime);
+    audio.gain.gain.setValueAtTime(.0001,ctx.currentTime);
+    audio.gain.gain.exponentialRampToValueAtTime(.035,ctx.currentTime+.045);
+    audio.osc.connect(audio.filter);audio.harmonic.connect(audio.filter);
+    audio.filter.connect(audio.gain);
+    if(audio.pan){audio.gain.connect(audio.pan);audio.pan.connect(ctx.destination)}else audio.gain.connect(ctx.destination);
+    audio.osc.start();audio.harmonic.start();audio.active=true;
+  }
+
+  function updateHoldSound(ms){
+    if(!audio.active) return;
+    const ctx=audio.ctx,k=clamp(ms/900,0,1),mode=pointer.mode;
+    const roots=[146.83,220,164.81,196],root=roots[mode];
+    audio.osc.frequency.setTargetAtTime(root*(1+k*.48),ctx.currentTime,.035);
+    audio.harmonic.frequency.setTargetAtTime(root*(2.01+k*.72),ctx.currentTime,.04);
+    audio.filter.frequency.setTargetAtTime(520+k*(1700+mode*220),ctx.currentTime,.045);
+    audio.gain.gain.setTargetAtTime(.032+k*.025,ctx.currentTime,.05);
+    if(audio.pan) audio.pan.pan.setTargetAtTime(clamp(pointer.px/w*2-1,-.72,.72),ctx.currentTime,.06);
+  }
+
+  function stopHoldSound(withRelease=true){
+    if(!audio.active) return;
+    const ctx=audio.ctx,now=ctx.currentTime,osc=audio.osc,harmonic=audio.harmonic,gain=audio.gain;
+    gain.gain.cancelScheduledValues(now);
+    gain.gain.setValueAtTime(Math.max(.0001,gain.gain.value),now);
+    gain.gain.exponentialRampToValueAtTime(.0001,now+.18);
+    osc.stop(now+.2);harmonic.stop(now+.2);audio.active=false;
+    if(withRelease) playReleaseTone();
+  }
+
+  function playReleaseTone(){
+    if(!audio.ctx) return;
+    const ctx=audio.ctx,now=ctx.currentTime,mode=pointer.mode;
+    const o=ctx.createOscillator(),g=ctx.createGain(),f=ctx.createBiquadFilter();
+    const notes=[293.66,440,329.63,392];
+    o.type='sine';o.frequency.setValueAtTime(notes[mode],now);o.frequency.exponentialRampToValueAtTime(notes[mode]*.74,now+.42);
+    f.type='bandpass';f.frequency.value=900+mode*180;f.Q.value=1.2;
+    g.gain.setValueAtTime(.032,now);g.gain.exponentialRampToValueAtTime(.0001,now+.48);
+    o.connect(f);f.connect(g);g.connect(ctx.destination);o.start(now);o.stop(now+.5);
+  }
   let lastPointer = {px:0, py:0};
   let lastMoveAt = performance.now();
 
@@ -198,8 +321,27 @@
   }
 
   addEventListener('pointermove', (e)=>{ setPointerFromEvent(e); }, {passive:true});
-  addEventListener('pointerdown', (e)=>{ pointer.down=true; setPointerFromEvent(e); }, {passive:true});
-  addEventListener('pointerup', ()=>{ pointer.down=false; }, {passive:true});
+  addEventListener('pointerdown', (e)=>{
+    if(e.target.closest && e.target.closest('#enter')) return;
+    pointer.down=true;
+    pointer.mode=(pointer.mode+1)%beamPalettes.length;
+    pointer.holdStart=performance.now();
+    pointer.holdMs=0;
+    setPointerFromEvent(e);
+    startHoldSound();
+  }, {passive:true});
+  addEventListener('pointerup', ()=>{
+    if(pointer.down && pointer.holdMs>60){
+      shockwaves.push({x:pointer.px,y:pointer.py,born:performance.now(),power:clamp(pointer.holdMs/1050,.18,1),mode:pointer.mode});
+      if(shockwaves.length>5) shockwaves.shift();
+    }
+    pointer.down=false;
+    pointer.holdMs=0;
+    stopHoldSound(true);
+  }, {passive:true});
+  addEventListener('pointercancel', ()=>{ pointer.down=false; pointer.holdMs=0; stopHoldSound(false); }, {passive:true});
+  addEventListener('blur', ()=>{ pointer.down=false; pointer.holdMs=0; stopHoldSound(false); });
+  document.addEventListener('visibilitychange', ()=>{ if(document.hidden) stopHoldSound(false); });
   addEventListener('touchmove', (e)=>{ setPointerFromEvent(e); }, {passive:true});
 
   // ==========================
@@ -468,6 +610,70 @@ function beamTarget(){
     ctx.fillRect(0,0,w,h);
   }
 
+  // Press-and-hold evolves through three stages; release creates a soft shockwave.
+  function drawHoldExperience(now){
+    if(pointer.down) pointer.holdMs = now - pointer.holdStart;
+    if(pointer.down) updateHoldSound(pointer.holdMs);
+    const holdK = pointer.down ? clamp(pointer.holdMs/1050,0,1) : 0;
+    const colors = palette();
+
+    if(pointer.down && pointer.seen){
+      const x=pointer.px,y=pointer.py;
+      ctx.save();
+      ctx.globalCompositeOperation='screen';
+
+      // Stage 1: a precision ring charges around the craft.
+      const ringR=(28+holdK*54)*dpr;
+      ctx.strokeStyle=`rgba(${colors.rgb},${.14+holdK*.38})`;
+      ctx.lineWidth=(.7+holdK*1.1)*dpr;
+      ctx.setLineDash([3*dpr,(8-holdK*4)*dpr]);
+      ctx.lineDashOffset=-now*.012;
+      ctx.beginPath();ctx.arc(x,y,ringR,0,TAU);ctx.stroke();
+      ctx.setLineDash([]);
+
+      // Stage 2: orbital fragments appear after a short hold.
+      if(pointer.holdMs>90){
+        const stage2=clamp((pointer.holdMs-90)/280,0,1);
+        for(let i=0;i<12;i++){
+          const direction=pointer.mode%2?1:-1;
+          const a=i/12*TAU+now*(.00046+pointer.mode*.00008)*(i%2?direction:-direction);
+          const rr=(54+stage2*42+(i%3)*7)*dpr;
+          const sx=x+Math.cos(a)*rr,sy=y+Math.sin(a)*rr*.62;
+          const sz=(.7+(i%4)*.28+stage2*.8)*dpr;
+          ctx.fillStyle=`rgba(${i%3?colors.rgb:colors.accent},${(.08+stage2*.25)*(i%3?1:.7)})`;
+          ctx.beginPath();ctx.arc(sx,sy,sz,0,TAU);ctx.fill();
+        }
+      }
+
+      // Stage 3: a portal iris grows, but remains restrained and monochrome.
+      if(pointer.holdMs>320){
+        const stage3=clamp((pointer.holdMs-320)/300,0,1);
+        const pr=(88+stage3*52)*dpr;
+        const portal=ctx.createRadialGradient(x,y,pr*.1,x,y,pr);
+        portal.addColorStop(0,'rgba(233,236,241,0)');
+        portal.addColorStop(.64,`rgba(${colors.accent},${.025+stage3*.07})`);
+        portal.addColorStop(.84,`rgba(${colors.rgb},${.09+stage3*.2})`);
+        portal.addColorStop(1,'rgba(233,236,241,0)');
+        ctx.fillStyle=portal;ctx.beginPath();ctx.arc(x,y,pr,0,TAU);ctx.fill();
+      }
+      ctx.restore();
+    }
+
+    // Release: concentric energy travels through the lattice.
+    for(let i=shockwaves.length-1;i>=0;i--){
+      const s=shockwaves[i],age=now-s.born;
+      const shockColor=beamPalettes[s.mode]||beamPalettes[0];
+      if(age>1050){shockwaves.splice(i,1);continue}
+      const k=age/1050,ease=1-Math.pow(1-k,3),r=(24+ease*(240+150*s.power))*dpr;
+      ctx.save();ctx.globalCompositeOperation='screen';
+      ctx.strokeStyle=`rgba(${shockColor.rgb},${(1-k)*(.18+.24*s.power)})`;
+      ctx.lineWidth=(1.2-k*.7)*dpr;
+      ctx.beginPath();ctx.arc(s.x,s.y,r,0,TAU);ctx.stroke();
+      ctx.strokeStyle=`rgba(${shockColor.accent},${(1-k)*.15*s.power})`;
+      ctx.beginPath();ctx.arc(s.x,s.y,r*.72,0,TAU);ctx.stroke();ctx.restore();
+    }
+  }
+
   // ==========================
   // Main loop
   // ==========================
@@ -478,6 +684,7 @@ function beamTarget(){
 
   function frame(now){
     if(STOP) return;
+    if(document.hidden){ requestAnimationFrame(frame); return; }
     const t = now - start;
     const dt = Math.min(0.05, (now - last) / 1000);
     last = now;
@@ -538,6 +745,7 @@ function beamTarget(){
 // Tractor beam: UFO always shoots toward the screen center when pressing
 if(pointer.seen && pointer.down){
   ctx.globalCompositeOperation = 'screen';
+  const beamColor = palette();
 
   const p = ufoParams();
   const ux = pointer.px, uy = pointer.py;
@@ -558,10 +766,10 @@ if(pointer.seen && pointer.down){
 
   // main veil (soft)
   const g = ctx.createLinearGradient(sx, sy, tx, ty);
-  g.addColorStop(0, 'rgba(233,236,241,0.14)');
-  g.addColorStop(0.22,'rgba(233,236,241,0.09)');
-  g.addColorStop(0.62,'rgba(233,236,241,0.05)');
-  g.addColorStop(1, 'rgba(233,236,241,0)');
+  g.addColorStop(0, `rgba(${beamColor.rgb},0.18)`);
+  g.addColorStop(0.22,`rgba(${beamColor.rgb},0.11)`);
+  g.addColorStop(0.62,`rgba(${beamColor.accent},0.06)`);
+  g.addColorStop(1, `rgba(${beamColor.rgb},0)`);
   ctx.fillStyle = g;
 
   ctx.beginPath();
@@ -643,6 +851,8 @@ if(pointer.seen && pointer.down){
       ctx.fillRect(0,0,w,h);
       ctx.globalCompositeOperation = 'source-over';
     }
+
+    drawHoldExperience(now);
 
     // pre-project
     const P = new Array(nodes.length);
@@ -769,7 +979,8 @@ if(pointer.seen && pointer.down){
       ctx.globalCompositeOperation = 'screen';
 
       // outer glow (subtle, premium)
-      const glow = 0.16 + speedK*0.18 + (pointer.down?0.16:0);
+      const holdGlow = pointer.down ? clamp(pointer.holdMs/1800,0,.34) : 0;
+      const glow = 0.16 + speedK*0.18 + (pointer.down?0.16:0) + holdGlow;
       ctx.fillStyle = `rgba(233,236,241,${glow*0.20})`;
       ctx.beginPath();
       ctx.arc(0, 0, r*2.1, 0, TAU);
@@ -849,7 +1060,9 @@ if(pointer.seen && pointer.down){
 
     // Bee cursor draw (only after we've seen pointer movement; otherwise keep center calm)
     const ufoSpeedK = clamp(Math.sqrt(pointer.vx*pointer.vx + pointer.vy*pointer.vy) / (32*dpr), 0, 1);
-    if(pointer.seen){
+    const enterDistance = Math.hypot(pointer.px-w*.5, pointer.py-h*.5);
+    const inEnterCleanZone = enterShown && enterDistance < (isMobile()?115:155)*dpr;
+    if(pointer.seen && !inEnterCleanZone){
       drawUFO(pointer.px, pointer.py, ufoSpeedK);
     }
     // subtle scanline (very faint)
@@ -866,7 +1079,7 @@ if(pointer.seen && pointer.down){
     ctx.fillRect(0,0,w,h);
     ctx.globalAlpha = 1.0;
     ctx.globalCompositeOperation = 'source-over';
-    if(!enterShown && t > 4200){
+    if(!enterShown && t > 450){
       enter.classList.add('show');
       enterShown = true;
     }
@@ -882,102 +1095,19 @@ if(pointer.seen && pointer.down){
 
 
   // ==========================
-  // ENTER -> Warp scene transition
+  // ENTER -> native warp transition (no iframe)
   // ==========================
   function goWarp(){
-    // prevent repeat
     if(goWarp._done) return;
     goWarp._done = true;
-
-    // stop the render loop after we capture a snapshot
-    // (keeps the handoff clean and saves CPU)
-    const snap = new Image();
-    try{
-      snap.src = canvas.toDataURL('image/png');
-    }catch(_e){
-      // if tainted for any reason, fall back to solid color
-      snap.src = '';
-    }
-
-    // build home iframe behind the snapshot
-    const iframe = document.createElement('iframe');
-    iframe.src = 'ko/home.html';
-    iframe.setAttribute('title','home');
-    iframe.setAttribute('aria-hidden','false');
-    iframe.style.position = 'fixed';
-    iframe.style.inset = '0';
-    iframe.style.width = '100%';
-    iframe.style.height = '100%';
-    iframe.style.border = '0';
-    iframe.style.opacity = '0';
-    iframe.style.transition = 'opacity 900ms ease';
-    iframe.style.zIndex = '2';
-
-    // snapshot overlay (top), fades out to reveal home
-    const shot = document.createElement('div');
-    shot.style.position = 'fixed';
-    shot.style.inset = '0';
-    shot.style.zIndex = '3';
-    shot.style.background = '#05070d';
-    shot.style.opacity = '1';
-    shot.style.transition = 'opacity 1100ms ease';
-    shot.style.pointerEvents = 'none';
-
-    if(snap.src){
-      snap.style.width = '100%';
-      snap.style.height = '100%';
-      snap.style.objectFit = 'cover';
-      snap.style.display = 'block';
-      shot.appendChild(snap);
-    }
-
-    // hide ENTER immediately (if it exists)
-    if(enter){
-      enter.classList.remove('show');
-      enter.style.opacity = '0';
-      enter.style.pointerEvents = 'none';
-    }
-
-    // append in order: iframe (below), snapshot (above)
-    document.body.appendChild(iframe);
-    document.body.appendChild(shot);
-
-    // once home is ready, crossfade
-    const startFade = ()=>{
-      // stop drawing in index after we have our snapshot on top
-      STOP = true;
-
-      requestAnimationFrame(()=>{
-        iframe.style.opacity = '1';
-        shot.style.opacity = '0';
-        try{ history.replaceState(null, '', 'ko/home.html'); }catch(_e){}
-        try{ document.title = 'AK ENM — Home'; }catch(_e){}
-
-      });
-
-      // cleanup overlay after fade
-      setTimeout(()=>{
-        shot.remove();
-        // optional: keep URL clean-ish
-        try{
-document.title = 'AK ENM — Home';
-        }catch(_e){}
-      }, 1200);
-    };
-
-    // if iframe loads quickly, great; otherwise still fade after a short beat
-    let fired = false;
-    iframe.addEventListener('load', ()=>{
-      if(fired) return;
-      fired = true;
-      startFade();
-    });
-
+    enter.classList.remove('show');
+    enter.style.pointerEvents = 'none';
+    document.body.classList.add('is-leaving');
+    const delay = reducedMotion ? 30 : 380;
     setTimeout(()=>{
-      if(fired) return;
-      fired = true;
-      startFade();
-    }, 650);
+      STOP = true;
+      location.href = location.protocol === 'file:' ? 'home.html' : '/home/';
+    }, delay);
   }
 
   // Click/tap

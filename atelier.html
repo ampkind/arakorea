@@ -1,0 +1,558 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="color-scheme" content="dark" />
+  <meta name="theme-color" content="#05070d" />
+  <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1" />
+  <title>Atelier — Creative Studio &amp; Project Space | AK ENM</title>
+  <meta name="description" content="작업과 전시, 대화와 작은 모임이 유연하게 이어지는 ARA KOREA Atelier. AK ENM의 창작 과정과 실험이 머무는 스튜디오이자 프로젝트 공간입니다." />
+  <link rel="canonical" href="https://akenm.com/atelier/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="AK ENM" />
+  <meta property="og:title" content="Atelier — AK ENM" />
+  <meta property="og:description" content="A space for work, temporary exhibitions, conversation and creative process." />
+  <meta property="og:url" content="https://akenm.com/atelier/" />
+  <meta property="og:image" content="https://akenm.com/og.jpg" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Atelier — AK ENM" />
+  <meta name="twitter:description" content="A studio and project space where process determines when the room opens." />
+  <meta name="twitter:image" content="https://akenm.com/og.jpg" />
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@graph":[
+      {
+        "@type":"Organization",
+        "@id":"https://akenm.com/#organization",
+        "name":"AK ENM",
+        "url":"https://akenm.com/"
+      },
+      {
+        "@type":"WebSite",
+        "@id":"https://akenm.com/#website",
+        "url":"https://akenm.com/",
+        "name":"AK ENM",
+        "publisher":{"@id":"https://akenm.com/#organization"},
+        "inLanguage":["ko","en","ja","zh-CN"]
+      },
+      {
+        "@type":"AboutPage",
+        "@id":"https://akenm.com/atelier/#webpage",
+        "url":"https://akenm.com/atelier/",
+        "name":"Atelier — AK ENM",
+        "description":"ARA KOREA Atelier is a creative studio and project space for work, temporary exhibitions, conversation and small gatherings.",
+        "isPartOf":{"@id":"https://akenm.com/#website"},
+        "about":{"@id":"https://akenm.com/atelier/#space"},
+        "inLanguage":["ko","en","ja","zh-CN"]
+      },
+      {
+        "@type":"Place",
+        "@id":"https://akenm.com/atelier/#space",
+        "name":"ARA KOREA Atelier",
+        "description":"A flexible creative studio and project space where making, exhibition and conversation meet.",
+        "url":"https://akenm.com/atelier/"
+      }
+    ]
+  }
+  </script>
+  <script defer src="/akenm-common.js"></script>
+  <style>
+    :root{
+      --bg:#05070d;
+      --fg:rgba(233,236,241,.94);
+      --muted:rgba(224,231,243,.65);
+      --ice:#76afff;
+      --violet:#b77aff;
+      --line:rgba(218,228,255,.12);
+      --moon: 390px;
+
+      --rotA: 26s;
+      --rotB: 33s;
+    }
+
+    html,body{
+      /* allow scrolling for long wall-text */
+      min-height:100%;
+      height:auto;
+      margin:0;
+      background:
+        radial-gradient(circle at 50% 5%,rgba(80,126,240,.10),transparent 32rem),
+        radial-gradient(circle at 82% 28%,rgba(183,122,255,.07),transparent 28rem),
+        var(--bg);
+      overflow-x:hidden;
+      overflow-y:auto;
+      font-family: ui-sans-serif, system-ui, -apple-system, "Apple SD Gothic Neo","Noto Sans KR", Arial, sans-serif;
+      color:var(--fg);
+    }
+
+    .stage{
+      min-height:100vh;
+      height:auto;
+      display:flex;
+      align-items:flex-start;
+      justify-content:center;
+      padding:112px 0 130px;
+      box-sizing:border-box;
+    }
+    .center{
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:20px;
+      width:min(1100px,calc(100% - 40px));
+    }
+
+    .moon-wrap{
+      position:relative;
+      width:var(--moon);
+      height:var(--moon);
+      overflow:visible;
+    }
+
+    .moon-glow{
+      position:absolute;
+      inset:-48%;
+      border-radius:50%;
+      background: radial-gradient(circle,
+        rgba(255,255,255,0) 40%,
+        rgba(118,175,255,.07) 58%,
+        rgba(255,255,255,0) 74%);
+      filter: blur(2px);
+      opacity:.52;
+      pointer-events:none;
+    }
+
+    .moon{
+      position:absolute;
+      inset:0;
+      border-radius:50%;
+      overflow:hidden;
+      background:
+        radial-gradient(circle at 36% 30%,
+          rgba(255,255,255,.06),
+          rgba(255,255,255,.02) 46%,
+          rgba(0,0,0,.62) 72%,
+          rgba(0,0,0,.90) 100%);
+      box-shadow:
+        0 24px 80px rgba(0,0,0,.62),
+        0 0 100px rgba(118,175,255,.05),
+        inset 0 0 0 1px rgba(233,236,241,.08);
+      filter: saturate(.95);
+      transform: translateZ(0);
+    }
+
+    .depth-vignette{
+      position:absolute;
+      inset:-14%;
+      border-radius:50%;
+      pointer-events:none;
+      background: radial-gradient(circle,
+        rgba(0,0,0,0) 46%,
+        rgba(0,0,0,.18) 68%,
+        rgba(0,0,0,.60) 92%);
+      mix-blend-mode:multiply;
+      opacity:.55;
+    }
+
+    .lines{
+      position:absolute;
+      inset:0;
+      pointer-events:none;
+      -webkit-mask-image: radial-gradient(circle, rgba(0,0,0,1) 63%, rgba(0,0,0,0) 80%);
+              mask-image: radial-gradient(circle, rgba(0,0,0,1) 63%, rgba(0,0,0,0) 80%);
+      transform: translateZ(0);
+      mix-blend-mode: screen;
+      opacity:.92;
+    }
+
+    .thin{ opacity:.20; }
+    .thin2{ opacity:.13; }
+    .thin3{ opacity:.09; }
+
+    .ringA{ transform-origin:50% 50%; animation: spin var(--rotA) linear infinite; will-change: transform; }
+    .ringB{ transform-origin:50% 50%; animation: spin var(--rotB) linear infinite; will-change: transform; }
+    @keyframes spin{ to{ transform: rotate(360deg); } }
+
+    .snake{
+      stroke-dasharray: 18 250;
+      animation: crawl var(--dur) linear infinite;
+      will-change: stroke-dashoffset;
+      stroke-linecap: round;
+      opacity: .88;
+      filter: blur(.02px);
+    }
+    @keyframes crawl{ to{ stroke-dashoffset: -268; } }
+
+    .back{ opacity:.22; filter: blur(.55px); }
+    .front{ opacity:.86; filter: blur(.02px); }
+
+    .c1{ stroke: rgba(118,175,255,.96); }
+    .c2{ stroke: rgba(183,122,255,.94); }
+    .c3{ stroke: rgba(233,241,255,.90); }
+    .c4{ stroke: rgba(110,220,229,.90); }
+    .c5{ stroke: rgba(139,156,255,.94); }
+    .c6{ stroke: rgba(186,131,255,.92); }
+    .c7{ stroke: rgba(212,227,255,.88); }
+
+    .w1{ stroke-width: 0.95; }
+    .w2{ stroke-width: 0.90; }
+    .w3{ stroke-width: 0.85; }
+
+    .eyebrow{margin:0 0 16px;color:var(--ice);font-size:10px;font-weight:650;letter-spacing:.32em;text-transform:uppercase}
+    .meta{
+      font-size:13px;
+      letter-spacing:.18em;
+      color:rgba(233,236,241,.72);
+      margin-top:-8px;
+      text-transform:uppercase;
+    }
+
+    @media (max-width: 680px){
+      :root{ --moon: min(290px,82vw); }
+      .stage{ padding:94px 0 96px; }
+    }
+    @media (prefers-reduced-motion: reduce){
+      .ringA,.ringB,.snake{ animation:none; }
+    }
+
+    
+    /* ===== WALL TEXT (from atelier_final_beam_moon_nav.html, restyled) ===== */
+    .text{
+      width:min(880px,100%);
+      text-align:center;
+      color: rgba(233,236,241,.95);
+      margin-top: 34px;
+      z-index: 5;
+    }
+    .text h1{
+      margin:0 0 46px;
+      font-family:Georgia,"Times New Roman",serif;
+      font-size:clamp(58px,10vw,116px);
+      line-height:.82;
+      letter-spacing:-.055em;
+      font-weight:400;
+      opacity:.98;
+      text-transform: uppercase;
+    }
+    .text p{
+      position:relative;
+      margin:0 auto;
+      padding:30px 20px;
+      max-width:720px;
+      border-top:1px solid var(--line);
+      font-size:clamp(15px,1.7vw,18px);
+      line-height:1.92;
+      letter-spacing:-.005em;
+      opacity:.88;
+      text-shadow: 0 8px 28px rgba(0,0,0,.65);
+    }
+    .text .meta{
+      margin-top:46px;
+      font-size: 12px;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      color: rgba(233,236,241,.72);
+      opacity:.72;
+      padding-top:22px;
+      border-top:1px solid var(--line);
+    }
+    @media (max-width: 980px){
+      .text{width:100%}
+      .text p{line-height:1.88}
+    }
+
+
+    /* ====== NAV (from home.html) ====== */
+    /* Top-right menu (⋯) + overlay list */
+    .brand{position:fixed;left:18px;top:18px;z-index:20;color:rgba(233,236,241,.82);font-size:10px;letter-spacing:.46em;text-decoration:none;text-transform:uppercase}
+    .top-menu{
+      position:fixed; right:18px; top:14px; z-index:20;
+      width:44px; height:44px;
+      display:grid; place-items:center;
+      border-radius:999px;
+      border:1px solid rgba(233,236,241,.14);
+      background:rgba(5,7,13,.14);
+      backdrop-filter: blur(10px);
+      color:rgba(233,236,241,.86);
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple SD Gothic Neo","Noto Sans KR","Malgun Gothic", sans-serif;
+      letter-spacing:.18em;
+      cursor:pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .top-menu:hover{ border-color:rgba(233,236,241,.34); color:rgba(233,236,241,.96); }
+    .top-menu:focus{ outline:2px solid rgba(233,236,241,.20); outline-offset:6px; }
+
+    .menu-overlay{
+      position:fixed; inset:0; z-index:30;
+      display:none;
+      background:rgba(0,0,0,.55);
+      backdrop-filter: blur(12px);
+    }
+    .menu-overlay.open{ display:block; }
+    .menu-panel{
+      position:absolute; right:18px; top:68px;
+      min-width:240px;
+      padding:14px 14px 10px;
+      border-radius:18px;
+      border:1px solid rgba(233,236,241,.16);
+      background:rgba(5,7,13,.52);
+      box-shadow: 0 18px 60px rgba(0,0,0,.45);
+    }
+    .menu-list{ list-style:none; padding:0; margin:0; }
+    .menu-list a{
+      display:block;
+      padding:10px 10px;
+      border-radius:12px;
+      text-decoration:none;
+      color:rgba(233,236,241,.86);
+      letter-spacing:.16em;
+      text-transform:uppercase;
+      font-size:12px;
+      border:1px solid transparent;
+    }
+    .menu-list a:hover,.menu-list a[aria-current="page"]{
+      color:rgba(233,236,241,.96);
+      border-color:rgba(233,236,241,.18);
+      background:rgba(233,236,241,.06);
+    }
+    .menu-sep{
+      height:1px;
+      background:rgba(233,236,241,.12);
+      margin:10px 6px;
+    }
+    .lang-row{
+      display:flex;
+      align-items:center;
+      justify-content:flex-end;
+      gap:10px;
+      padding:6px 6px 2px;
+      font-size:12px;
+      letter-spacing:.18em;
+      color:rgba(233,236,241,.72);
+      text-transform:uppercase;
+    }
+    .lang-row button{
+      appearance:none;
+      color:rgba(233,236,241,.72);
+      padding:6px 8px;
+      border-radius:999px;
+      border:1px solid rgba(233,236,241,.14);
+      background:rgba(5,7,13,.20);
+      font:500 10px/1 ui-sans-serif,system-ui;
+      letter-spacing:.14em;
+      cursor:pointer;
+    }
+    .lang-row button:hover{
+      color:rgba(233,236,241,.96);
+      border-color:rgba(233,236,241,.34);
+    }
+    .lang-row button.active{color:#05070d;background:rgba(233,236,241,.92);border-color:rgba(233,236,241,.92)}
+    @media (max-width:560px){
+      .top-menu{ right:12px; top:10px; }
+      .menu-panel{ right:12px; top:62px; min-width:220px; }
+    }
+
+  
+  </style>
+</head>
+<body data-akenm-page="atelier">
+
+  <a class="brand route" data-route="home" href="/home/" aria-label="AK ENM Home">AK ENM</a>
+  <button id="topMenu" class="top-menu" aria-label="Menu" aria-expanded="false" type="button">⋯</button>
+
+  <div id="menuOverlay" class="menu-overlay" aria-hidden="true">
+    <nav class="menu-panel" aria-label="Site menu">
+      <ul class="menu-list">
+        <li><a class="route" data-route="home" data-i18n="navHome" href="/home/">홈</a></li>
+        <li><a class="route" data-route="about" data-i18n="navAbout" href="/about/">소개</a></li>
+        <li><a class="route" data-route="music" data-i18n="navMusic" href="/music/">음악</a></li>
+        <li><a class="route" data-route="film" data-i18n="navFilm" href="/film-visual/">필름 / 비주얼</a></li>
+        <li><a class="route" data-route="publish" data-i18n="navPublish" href="/publications/">출판</a></li>
+        <li><a class="route" data-route="artists" data-i18n="navArtists" href="/artists/">아티스트</a></li>
+        <li><a class="route" data-route="atelier" data-i18n="navAtelier" href="/atelier/" aria-current="page">아틀리에</a></li>
+        <li><a class="route" data-route="contact" data-i18n="navContact" href="/contact/">문의</a></li>
+      </ul>
+      <div class="menu-sep"></div>
+      <div class="lang-row" aria-label="Language">
+        <button type="button" data-lang="ko">KO</button>
+        <button type="button" data-lang="en">EN</button>
+        <button type="button" data-lang="ja">JP</button>
+        <button type="button" data-lang="zh">CN</button>
+      </div>
+    </nav>
+  </div>
+
+  <main class="stage">
+    <section class="center">
+      <p class="eyebrow">06 — Work in Progress</p>
+      <div class="moon-wrap" aria-hidden="true">
+        <div class="moon-glow"></div>
+
+        <div class="moon">
+          <svg class="lines" viewBox="0 0 100 100" width="100%" height="100%" aria-hidden="true">
+            <g class="ringA thin">
+              <ellipse cx="50" cy="50" rx="46" ry="12" fill="none" stroke="rgba(233,236,241,.95)" stroke-width="0.62" transform="rotate(18 50 50)"/>
+              <ellipse cx="50" cy="50" rx="44" ry="16" fill="none" stroke="rgba(233,236,241,.82)" stroke-width="0.60" transform="rotate(24 50 50)"/>
+              <ellipse cx="50" cy="50" rx="41" ry="20" fill="none" stroke="rgba(233,236,241,.76)" stroke-width="0.58" transform="rotate(30 50 50)"/>
+              <ellipse cx="50" cy="50" rx="37" ry="24" fill="none" stroke="rgba(233,236,241,.68)" stroke-width="0.56" transform="rotate(36 50 50)"/>
+              <ellipse cx="50" cy="50" rx="33" ry="28" fill="none" stroke="rgba(233,236,241,.60)" stroke-width="0.54" transform="rotate(42 50 50)"/>
+              <ellipse cx="50" cy="50" rx="28" ry="32" fill="none" stroke="rgba(233,236,241,.54)" stroke-width="0.52" transform="rotate(48 50 50)"/>
+            </g>
+
+            <g class="ringB thin2">
+              <ellipse cx="50" cy="50" rx="40" ry="38" fill="none" stroke="rgba(233,236,241,.70)" stroke-width="0.58" transform="rotate(-12 50 50)"/>
+              <ellipse cx="50" cy="50" rx="36" ry="42" fill="none" stroke="rgba(233,236,241,.60)" stroke-width="0.56" transform="rotate(-18 50 50)"/>
+              <ellipse cx="50" cy="50" rx="32" ry="45" fill="none" stroke="rgba(233,236,241,.52)" stroke-width="0.54" transform="rotate(-24 50 50)"/>
+              <ellipse cx="50" cy="50" rx="27" ry="47" fill="none" stroke="rgba(233,236,241,.46)" stroke-width="0.52" transform="rotate(-30 50 50)"/>
+            </g>
+
+            <g class="ringA thin3">
+              <ellipse cx="50" cy="50" rx="48" ry="30" fill="none" stroke="rgba(233,236,241,.50)" stroke-width="0.52" transform="rotate(72 50 50)"/>
+              <ellipse cx="50" cy="50" rx="28" ry="48" fill="none" stroke="rgba(233,236,241,.44)" stroke-width="0.50" transform="rotate(78 50 50)"/>
+            </g>
+
+            <!-- 7 moving lines -->
+            <g class="ringA back"><ellipse class="snake c1 w1" style="--dur:9.2s"  cx="50" cy="50" rx="45" ry="18" fill="none" transform="rotate(22 50 50)"/></g>
+            <g class="ringA front"><ellipse class="snake c1 w1" style="--dur:9.2s" cx="50" cy="50" rx="45" ry="18" fill="none" transform="rotate(22 50 50)"/></g>
+
+            <g class="ringB back"><ellipse class="snake c2 w2" style="--dur:10.6s" cx="50" cy="50" rx="38" ry="28" fill="none" transform="rotate(58 50 50)"/></g>
+            <g class="ringB front"><ellipse class="snake c2 w2" style="--dur:10.6s" cx="50" cy="50" rx="38" ry="28" fill="none" transform="rotate(58 50 50)"/></g>
+
+            <g class="ringA back"><ellipse class="snake c3 w2" style="--dur:12.2s" cx="50" cy="50" rx="30" ry="41" fill="none" transform="rotate(-18 50 50)"/></g>
+            <g class="ringA front"><ellipse class="snake c3 w2" style="--dur:12.2s" cx="50" cy="50" rx="30" ry="41" fill="none" transform="rotate(-18 50 50)"/></g>
+
+            <g class="ringB back"><ellipse class="snake c4 w3" style="--dur:11.0s" cx="50" cy="50" rx="22" ry="46" fill="none" transform="rotate(84 50 50)"/></g>
+            <g class="ringB front"><ellipse class="snake c4 w3" style="--dur:11.0s" cx="50" cy="50" rx="22" ry="46" fill="none" transform="rotate(84 50 50)"/></g>
+
+            <g class="ringA back"><ellipse class="snake c5 w1" style="--dur:9.8s" cx="50" cy="50" rx="46" ry="10" fill="none" transform="rotate(8 50 50)"/></g>
+            <g class="ringA front"><ellipse class="snake c5 w1" style="--dur:9.8s" cx="50" cy="50" rx="46" ry="10" fill="none" transform="rotate(8 50 50)"/></g>
+
+            <g class="ringB back"><ellipse class="snake c6 w2" style="--dur:13.0s" cx="50" cy="50" rx="40" ry="36" fill="none" transform="rotate(-34 50 50)"/></g>
+            <g class="ringB front"><ellipse class="snake c6 w2" style="--dur:13.0s" cx="50" cy="50" rx="40" ry="36" fill="none" transform="rotate(-34 50 50)"/></g>
+
+            <g class="ringA back"><ellipse class="snake c7 w3" style="--dur:14.2s" cx="50" cy="50" rx="26" ry="26" fill="none" transform="rotate(0 50 50)"/></g>
+            <g class="ringA front"><ellipse class="snake c7 w3" style="--dur:14.2s" cx="50" cy="50" rx="26" ry="26" fill="none" transform="rotate(0 50 50)"/></g>
+          </svg>
+
+          <div class="depth-vignette"></div>
+        </div>
+      </div>
+
+      <section class="text" aria-labelledby="atelier-heading">
+        <h1 id="atelier-heading">ATELIER</h1>
+
+        <p data-i18n-html="copy1">
+          이 공간에는<br>
+          작업이 진행되는 시간과<br>
+          아직 정리되지 않은 생각들이 함께 놓여 있습니다.
+        </p>
+
+        <p data-i18n-html="copy2">
+          조용한 날에는 작업실로,<br>
+          사람이 모이는 날에는 작은 전시장으로<br>
+          자연스럽게 모습을 바꿉니다.<br>
+          일과 전시, 대화와 만남은<br>
+          여기에서 하나의 흐름으로 이어집니다.
+        </p>
+
+        <p data-i18n-html="copy3">
+          작품은 벽에 걸리기도 하고<br>
+          책상 위에 놓이기도 하며,<br>
+          때로는 이름 없이 머뭅니다.<br>
+          이곳에서는<br>
+          과정이 머무는 방식이 중요합니다.
+        </p>
+
+        <p data-i18n-html="copy4">
+          아뜰리에는<br>
+          개인의 작업이 이어지는 장소이자,<br>
+          필요한 순간에만 열리는 공간입니다.<br>
+          언제나 준비되어 있지만,<br>
+          열림의 시점은 작업이 결정합니다.
+        </p>
+
+        <p data-i18n-html="copy5">
+          전시는<br>
+          하나의 장면처럼 지나가고,<br>
+          그 장면은 대화로,<br>
+          음악과 작은 모임으로 이어질 수 있습니다.
+        </p>
+
+        <p data-i18n-html="copy6">
+          이곳에서는<br>
+          무언가를 증명하기보다,<br>
+          사람과 작업이 함께 시간을 보냅니다.
+        </p>
+
+        <div class="meta">ARA KOREA Atelier</div>
+      </section>
+</section>
+  </main>
+
+  <script>
+  (() => {
+    const STORAGE_KEY='akenm-language';
+    const words={
+      ko:{
+        copy1:'이 공간에는<br>작업이 진행되는 시간과<br>아직 정리되지 않은 생각들이 함께 놓여 있습니다.',
+        copy2:'조용한 날에는 작업실로,<br>사람이 모이는 날에는 작은 전시장으로<br>자연스럽게 모습을 바꿉니다.<br>일과 전시, 대화와 만남은<br>여기에서 하나의 흐름으로 이어집니다.',
+        copy3:'작품은 벽에 걸리기도 하고<br>책상 위에 놓이기도 하며,<br>때로는 이름 없이 머뭅니다.<br>이곳에서는<br>과정이 머무는 방식이 중요합니다.',
+        copy4:'아뜰리에는<br>개인의 작업이 이어지는 장소이자,<br>필요한 순간에만 열리는 공간입니다.<br>언제나 준비되어 있지만,<br>열림의 시점은 작업이 결정합니다.',
+        copy5:'전시는<br>하나의 장면처럼 지나가고,<br>그 장면은 대화로,<br>음악과 작은 모임으로 이어질 수 있습니다.',
+        copy6:'이곳에서는<br>무언가를 증명하기보다,<br>사람과 작업이 함께 시간을 보냅니다.',
+        navHome:'홈',navAbout:'소개',navMusic:'음악',navFilm:'필름 / 비주얼',navPublish:'출판',navArtists:'아티스트',navAtelier:'아틀리에',navContact:'문의'
+      },
+      en:{
+        copy1:'This space holds<br>the time in which work unfolds<br>and thoughts that have not yet settled.',
+        copy2:'On quiet days, it is a studio.<br>When people gather, it becomes a small exhibition room.<br>Work and display, conversation and encounter<br>move here as one continuous current.',
+        copy3:'A work may hang on a wall,<br>rest on a table,<br>or remain without a name.<br>What matters here<br>is how the process is allowed to stay.',
+        copy4:'The atelier is a place<br>where individual practice continues,<br>opening only when the moment calls for it.<br>It is always ready,<br>but the work decides when the doors open.',
+        copy5:'An exhibition passes like a scene.<br>That scene may become conversation,<br>music or a small gathering.',
+        copy6:'Here, rather than proving something,<br>people and their work<br>spend time together.',
+        navHome:'Home',navAbout:'About',navMusic:'Music',navFilm:'Film / Visual',navPublish:'Publish',navArtists:'Artists',navAtelier:'Atelier',navContact:'Contact'
+      },
+      ja:{
+        copy1:'この空間には、<br>制作が進んでいく時間と、<br>まだ整理されていない思考が共に置かれています。',
+        copy2:'静かな日にはアトリエに、<br>人が集う日には小さな展示室へと<br>自然に姿を変えます。<br>仕事と展示、対話と出会いは、<br>ここでひとつの流れになります。',
+        copy3:'作品は壁に掛けられ、<br>机の上に置かれ、<br>時には名前のないまま留まります。<br>ここでは、<br>過程がどのように滞在するかが大切です。',
+        copy4:'アトリエは<br>個人の制作が続く場所であり、<br>必要な瞬間にだけ開く空間です。<br>いつでも準備されていますが、<br>開く時を決めるのは作品です。',
+        copy5:'展示は<br>ひとつの場面のように過ぎ、<br>その場面は対話へ、<br>音楽や小さな集いへと続いていきます。',
+        copy6:'ここでは何かを証明するよりも、<br>人と作品が<br>共に時間を過ごします。',
+        navHome:'ホーム',navAbout:'紹介',navMusic:'音楽',navFilm:'映像',navPublish:'出版',navArtists:'アーティスト',navAtelier:'アトリエ',navContact:'お問い合わせ'
+      },
+      zh:{
+        copy1:'这个空间容纳着<br>创作持续发生的时间，<br>也容纳尚未整理成形的思绪。',
+        copy2:'安静的日子里，它是一间工作室；<br>人们相聚时，它成为一处小型展览空间。<br>工作与展览、对话与相遇，<br>在这里汇入同一条流动的线索。',
+        copy3:'作品可以悬挂于墙面，<br>也可以停留在桌上，<br>有时甚至没有名字。<br>在这里，重要的是<br>让创作过程以自己的方式停留。',
+        copy4:'Atelier既是个人实践延续的场所，<br>也是只在需要时开启的空间。<br>它始终准备着，<br>但何时开放，由作品决定。',
+        copy5:'展览如同一个经过的场景。<br>它可以延续为对话、<br>音乐或一次小型聚会。',
+        copy6:'在这里，比起证明什么，<br>人与作品更愿意<br>共同度过一段时间。',
+        navHome:'首页',navAbout:'关于',navMusic:'音乐',navFilm:'影像',navPublish:'出版',navArtists:'艺术家',navAtelier:'创作空间',navContact:'联系'
+      }
+    };
+    const htmlLang={ko:'ko',en:'en',ja:'ja',zh:'zh-CN'};
+    const localRoutes={home:'home.html',about:'about.html',music:'music.html',film:'film-visual.html',publish:'publications.html',artists:'artists.html',atelier:'atelier.html',contact:'contact.html'};
+    let saved=null;try{saved=localStorage.getItem(STORAGE_KEY)}catch(_){}
+    const browser=(navigator.language||'en').slice(0,2).toLowerCase();
+    let language=words[saved]?saved:(words[browser]?browser:'en');
+    function render(){
+      document.documentElement.lang=htmlLang[language];
+      document.querySelectorAll('[data-i18n]').forEach(el=>{const value=words[language][el.dataset.i18n];if(value)el.textContent=value});
+      document.querySelectorAll('[data-i18n-html]').forEach(el=>{const value=words[language][el.dataset.i18nHtml];if(value)el.innerHTML=value});
+      document.querySelectorAll('[data-lang]').forEach(button=>{const active=button.dataset.lang===language;button.classList.toggle('active',active);button.setAttribute('aria-pressed',String(active))});
+      try{localStorage.setItem(STORAGE_KEY,language)}catch(_){}
+    }
+    document.querySelectorAll('[data-lang]').forEach(button=>button.addEventListener('click',()=>{language=button.dataset.lang;render()}));
+    render();
+    const topMenu=document.getElementById('topMenu'),overlay=document.getElementById('menuOverlay');
+    const setOpen=open=>{overlay.classList.toggle('open',open);overlay.setAttribute('aria-hidden',String(!open));topMenu.setAttribute('aria-expanded',String(open))};
+    topMenu.addEventListener('click',event=>{event.stopPropagation();setOpen(!overlay.classList.contains('open'))});
+    overlay.addEventListener('click',event=>{if(event.target===overlay)setOpen(false)});
+    addEventListener('keydown',event=>{if(event.key==='Escape')setOpen(false)});
+    if(location.protocol==='file:')document.querySelectorAll('.route').forEach(anchor=>{anchor.href=localRoutes[anchor.dataset.route]});
+  })();
+  </script>
+</body>
+</html>
